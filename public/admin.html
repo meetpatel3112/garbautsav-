@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GarbaUtsav Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<style>
+:root{--p:#FF6B00;--pd:#C0392B;--gold:#F0A500;--dark:#0F0A00;--sb:#1A0E00;--bg:#F5F0E8;--card:#FFFFFF;--text:#1A0E00;--muted:#6B4A20;--border:rgba(240,165,0,0.15);--green:#27AE60;--red:#E74C3C;--blue:#2980B9;--purple:#8E44AD;--r:14px;--sh:0 4px 20px rgba(0,0,0,0.07);--sw:260px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:rgba(255,107,0,0.3);border-radius:3px}
+
+/* ── LOGIN ── */
+#loginScreen{position:fixed;inset:0;background:linear-gradient(145deg,#1A0A00,#3D1C00,#1A0A00);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{background:rgba(255,255,255,0.05);border:1px solid rgba(240,165,0,0.2);border-radius:22px;padding:44px;width:370px;text-align:center;backdrop-filter:blur(20px)}
+.login-logo{font-size:30px;color:var(--gold);margin-bottom:4px;font-weight:800}
+.login-sub{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:28px}
+.login-tab{display:flex;gap:0;margin-bottom:24px;background:rgba(255,255,255,0.05);border-radius:50px;padding:4px}
+.ltab{flex:1;padding:8px;border-radius:50px;border:none;background:transparent;color:rgba(255,255,255,0.5);font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:all 0.2s}
+.ltab.active{background:linear-gradient(135deg,var(--p),var(--pd));color:white}
+.lfield{margin-bottom:14px;text-align:left}
+.lfield label{display:block;font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
+.lfield input,.lfield select{width:100%;padding:11px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(240,165,0,0.2);border-radius:10px;color:white;font-size:13px;font-family:'Poppins',sans-serif;outline:none;transition:border-color 0.2s}
+.lfield input:focus,.lfield select:focus{border-color:var(--gold)}
+.lfield select option{background:#2C1810;color:white}
+.btn-login{width:100%;padding:13px;background:linear-gradient(135deg,var(--p),var(--pd));color:white;border:none;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;margin-top:6px;box-shadow:0 5px 20px rgba(255,107,0,0.35);transition:all 0.3s}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,107,0,0.45)}
+.login-err{color:#ff7675;font-size:12px;margin-top:10px;min-height:16px}
+.login-hint{font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sw);flex-shrink:0;background:var(--sb);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto}
+.sb-header{padding:22px 18px 14px;border-bottom:1px solid rgba(240,165,0,0.1)}
+.sb-logo{font-size:20px;color:var(--gold);font-weight:800}
+.sb-logo span{display:block;font-size:10px;color:rgba(255,255,255,0.35);font-weight:400;margin-top:1px}
+.sb-user{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(240,165,0,0.08);margin-bottom:6px}
+.sb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--gold));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;flex-shrink:0}
+.sb-uname{font-size:12px;font-weight:600;color:white}
+.sb-urole{font-size:10px;color:rgba(255,255,255,0.35)}
+.sb-role-badge{font-size:10px;padding:2px 8px;border-radius:50px;font-weight:700;margin-top:2px;display:inline-block}
+.role-super{background:rgba(255,107,0,0.2);color:var(--gold)}
+.role-org{background:rgba(41,128,185,0.2);color:#74B9FF}
+.nav-sec{padding:0 10px;margin-bottom:6px}
+.nav-sec-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:.12em;padding:7px 8px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;color:rgba(255,255,255,0.5);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;margin-bottom:2px}
+.nav-item:hover{background:rgba(255,107,0,0.1);color:rgba(255,255,255,0.85)}
+.nav-item.active{background:rgba(255,107,0,0.16);color:var(--gold);border-left:3px solid var(--gold)}
+.nav-item .ni{font-size:17px;flex-shrink:0}
+.nav-item .badge{margin-left:auto;background:var(--p);color:white;font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px}
+.sb-footer{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(240,165,0,0.08)}
+.logout-btn{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.35);font-size:13px;cursor:pointer;padding:8px 10px;border-radius:9px;transition:all 0.2s}
+.logout-btn:hover{color:var(--red);background:rgba(231,76,60,0.1)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sw);flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:white;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,0.04)}
+.tb-title{font-size:18px;font-weight:700;color:var(--text)}
+.tb-title span{font-size:12px;font-weight:400;color:var(--muted);display:block}
+.tb-right{display:flex;align-items:center;gap:14px}
+.tb-date{font-size:12px;color:var(--muted)}
+.notif-btn{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--border);background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;position:relative}
+.notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--red);border-radius:50%}
+.content{padding:24px 28px;flex:1}
+.page{display:none}.page.active{display:block}
+
+/* ── KPI ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;margin-bottom:24px}
+.kpi{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:var(--sh);border:1px solid var(--border);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.kpi.rev::before{background:linear-gradient(90deg,var(--p),var(--gold))}
+.kpi.tkt::before{background:linear-gradient(90deg,var(--blue),#74B9FF)}
+.kpi.evt::before{background:linear-gradient(90deg,var(--purple),#A29BFE)}
+.kpi.prf::before{background:linear-gradient(90deg,var(--green),#55EFC4)}
+.kpi-ico{position:absolute;top:16px;right:16px;font-size:28px;opacity:0.12}
+.kpi-lbl{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
+.kpi-val{font-size:26px;font-weight:800;color:var(--text);margin-bottom:5px}
+.kpi-chg{font-size:11px;font-weight:600}.kpi-chg.up{color:var(--green)}.kpi-chg.dn{color:var(--red)}
+
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:var(--r);padding:22px;box-shadow:var(--sh);border:1px solid var(--border)}
+.card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:18px}
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:24px}
+
+/* ── BAR CHART ── */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:170px;padding-top:8px}
+.bar-grp{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bars{display:flex;gap:3px;align-items:flex-end;height:140px;width:100%}
+.bar{flex:1;border-radius:5px 5px 0 0;min-height:3px;cursor:pointer;position:relative;transition:opacity 0.2s}
+.bar:hover{opacity:0.85}.bar:hover::after{content:attr(data-v);position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:9px;padding:2px 5px;border-radius:4px;white-space:nowrap}
+.bar.rv{background:linear-gradient(180deg,var(--p),var(--pd))}
+.bar.ex{background:linear-gradient(180deg,#BDC3C7,#95A5A6)}
+.bar-lbl{font-size:9px;color:var(--muted);font-weight:500;margin-top:3px}
+.ch-legend{display:flex;gap:14px;margin-bottom:14px}
+.ch-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.leg-dot{width:9px;height:9px;border-radius:50%}
+
+/* ── DONUT ── */
+.donut-wrap{display:flex;flex-direction:column;align-items:center}
+.donut-svg{width:130px;height:130px;transform:rotate(-90deg)}
+.donut-items{display:flex;flex-direction:column;gap:8px;margin-top:14px;width:100%}
+.d-item{display:flex;align-items:center;justify-content:space-between}
+.d-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.d-lbl{font-size:11px;color:var(--muted);flex:1;margin-left:7px}
+.d-pct{font-size:12px;font-weight:700;color:var(--text)}
+
+/* ── TABLE ── */
+.tbl-wrap{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);border:1px solid var(--border);overflow:hidden}
+.tbl-toolbar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.tbl-search{display:flex;align-items:center;gap:7px;background:var(--bg);border-radius:50px;padding:7px 14px;border:1px solid var(--border)}
+.tbl-search input{border:none;background:transparent;outline:none;font-size:12px;color:var(--text);font-family:'Poppins',sans-serif;width:180px}
+.flt-chips{display:flex;gap:7px;flex-wrap:wrap}
+.fc{padding:5px 13px;border-radius:50px;border:1.5px solid var(--border);font-size:11px;font-weight:600;cursor:pointer;color:var(--muted);transition:all 0.2s;font-family:'Poppins',sans-serif}
+.fc:hover,.fc.active{border-color:var(--p);color:var(--p);background:rgba(255,107,0,0.05)}
+table{width:100%;border-collapse:collapse}
+thead{background:#FDF6ED}
+th{padding:11px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+td{padding:12px 14px;font-size:12px;color:var(--text);border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FDFAF4}
+.sts{padding:3px 10px;border-radius:50px;font-size:10px;font-weight:700}
+.sts-ok{background:rgba(39,174,96,0.1);color:var(--green)}
+.sts-pend{background:rgba(240,165,0,0.1);color:var(--gold)}
+.sts-cancel{background:rgba(231,76,60,0.1);color:var(--red)}
+.pass-tag{padding:3px 9px;border-radius:6px;font-size:10px;font-weight:700}
+.pt-s{background:#f0f0f0;color:#666}.pt-g{background:rgba(240,165,0,0.12);color:var(--gold)}.pt-p{background:rgba(142,68,173,0.12);color:var(--purple)}.pt-c{background:rgba(255,107,0,0.12);color:var(--p)}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.sec-ttl{font-size:16px;font-weight:700;color:var(--text)}
+
+/* ── BUTTONS ── */
+.btn-add{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--p),var(--pd));color:white;border:none;border-radius:50px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;box-shadow:0 3px 14px rgba(255,107,0,0.28);transition:all 0.2s}
+.btn-add:hover{transform:translateY(-1px)}
+.btn-sm{padding:5px 10px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:all 0.2s;border:1px solid transparent}
+.bse{background:rgba(41,128,185,0.1);color:var(--blue);border-color:rgba(41,128,185,0.2)}.bsv{background:rgba(255,107,0,0.1);color:var(--p);border-color:rgba(255,107,0,0.2)}.bsd{background:rgba(231,76,60,0.1);color:var(--red);border-color:rgba(231,76,60,0.2)}
+
+/* ── EVENTS ADMIN ── */
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.ev-card{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:var(--sh);border:1px solid var(--border)}
+.ev-card-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.ev-name{font-size:14px;font-weight:700;color:var(--text)}
+.ev-loc{font-size:11px;color:var(--muted);margin-top:2px}
+.ev-sts{font-size:10px;font-weight:700;padding:3px 10px;border-radius:50px}
+.es-live{background:rgba(39,174,96,0.1);color:var(--green)}.es-up{background:rgba(240,165,0,0.1);color:var(--gold)}.es-end{background:rgba(231,76,60,0.1);color:var(--red)}
+.ev-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.ev-stat{text-align:center;background:var(--bg);border-radius:9px;padding:9px 5px}
+.ev-stat .v{font-size:16px;font-weight:800;color:var(--text)}
+.ev-stat .l{font-size:9px;color:var(--muted);font-weight:500}
+.prog-bar{background:#F0E8D8;height:7px;border-radius:50px;margin-bottom:12px}
+.prog-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--p),var(--gold));transition:width 0.5s}
+.ev-actions{display:flex;gap:7px}
+
+/* ── P&L ── */
+.pnl-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.pnl-card{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:var(--sh);border:1px solid var(--border)}
+.pnl-card h3{font-size:14px;font-weight:700;margin-bottom:14px}
+.pnl-card.inc h3{color:var(--green)}.pnl-card.exp h3{color:var(--red)}
+.pnl-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.pnl-row:last-child{border:none;font-weight:700;font-size:14px;padding-top:12px}
+.pnl-row.ir span:last-child{color:var(--green);font-weight:600}
+.pnl-row.er span:last-child{color:var(--red);font-weight:600}
+.profit-box{background:linear-gradient(135deg,#1A0A00,#3D1C00);border-radius:var(--r);padding:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-top:18px}
+.profit-box .net-lbl{font-size:12px;color:rgba(255,255,255,0.45)}
+.profit-box .net-val{font-size:32px;font-weight:900;color:var(--gold)}
+.profit-box .net-pct{font-size:13px;color:var(--green);font-weight:600}
+.profit-meta{display:flex;gap:28px;flex-wrap:wrap}
+.pm-item .v{font-size:18px;font-weight:800;color:white}
+.pm-item .l{font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px}
+
+/* ── ACCESS CONTROL ── */
+.toggle{width:42px;height:22px;border-radius:11px;cursor:pointer;position:relative;transition:background 0.3s;flex-shrink:0}
+.toggle.on{background:var(--green)}.toggle.off{background:#CCC}
+.toggle::after{content:'';position:absolute;top:2px;width:18px;height:18px;border-radius:50%;background:white;transition:left 0.3s}
+.toggle.on::after{left:22px}.toggle.off::after{left:2px}
+
+/* ── ADD EVENT MODAL ── */
+.modal2-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;padding:20px}
+.modal2-overlay.active{display:flex}
+.modal2{background:white;border-radius:22px;padding:32px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;position:relative;animation:mIn 0.3s ease}
+@keyframes mIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}
+.m2-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:none;background:#f5f5f5;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.fgrp{margin-bottom:14px}
+.fgrp label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.fgrp input,.fgrp select,.fgrp textarea{width:100%;padding:11px 12px;border:1.5px solid #E5E5E5;border-radius:10px;font-size:13px;font-family:'Poppins',sans-serif;color:var(--text);background:#FAFAFA;outline:none;transition:border-color 0.2s}
+.fgrp input:focus,.fgrp select:focus,.fgrp textarea:focus{border-color:var(--p);background:white}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ── TOAST ── */
+.toast{position:fixed;top:70px;right:22px;background:var(--text);color:white;padding:11px 18px;border-radius:11px;font-size:12px;font-weight:600;z-index:9999;transform:translateX(120%);opacity:0;transition:all 0.4s;border-left:3px solid var(--p)}
+.toast.show{transform:translateX(0);opacity:1}
+
+/* ── LOADING ── */
+.spinner{width:32px;height:32px;border:3px solid rgba(255,107,0,0.2);border-top:3px solid var(--p);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0}.charts-row{grid-template-columns:1fr}.pnl-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">🪔 GarbaUtsav</div>
+    <div class="login-sub">Organizer Admin Panel</div>
+    <div class="login-tab">
+      <button class="ltab active" onclick="switchTab('login',this)">Sign In</button>
+      <button class="ltab" onclick="switchTab('register',this)">Register</button>
+    </div>
+    <!-- Login Form -->
+    <div id="loginForm">
+      <div class="lfield"><label>Email</label><input id="lEmail" type="email" placeholder="admin@garbautsav.com" value="admin@garbautsav.com"></div>
+      <div class="lfield"><label>Password</label><input id="lPass" type="password" placeholder="••••••••" value="admin123"></div>
+      <button class="btn-login" onclick="doLogin()">Sign In →</button>
+      <div class="login-err" id="loginErr"></div>
+      <p class="login-hint">Demo: admin@garbautsav.com / admin123</p>
+    </div>
+    <!-- Register Form -->
+    <div id="registerForm" style="display:none">
+      <div class="lfield"><label>Full Name</label><input id="rName" placeholder="Mehul Raval"></div>
+      <div class="lfield"><label>Email</label><input id="rEmail" type="email" placeholder="organizer@email.com"></div>
+      <div class="lfield"><label>Phone</label><input id="rPhone" type="tel" placeholder="9876543210"></div>
+      <div class="lfield"><label>City</label>
+        <select id="rCity"><option>Ahmedabad</option><option>Surat</option><option>Vadodara</option><option>Rajkot</option><option>Gandhinagar</option><option>Other</option></select>
+      </div>
+      <div class="lfield"><label>Password</label><input id="rPass" type="password" placeholder="Min 6 characters"></div>
+      <div class="lfield"><label>Organizer Invite Code</label><input id="rCode" placeholder="Get code from GarbaUtsav admin"></div>
+      <button class="btn-login" onclick="doRegister()">Register as Organizer →</button>
+      <div class="login-err" id="regErr"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SIDEBAR ── -->
+<div class="sidebar" id="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">🪔 GarbaUtsav <span>Admin Dashboard</span></div>
+  </div>
+  <div class="sb-user">
+    <div class="sb-avatar" id="sbAvatar">M</div>
+    <div>
+      <div class="sb-uname" id="sbName">Loading...</div>
+      <div class="sb-urole"><span class="sb-role-badge role-super" id="sbRoleBadge">Organizer</span></div>
+    </div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-sec-lbl">Main</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="ni">📊</span> Dashboard</div>
+    <div class="nav-item" onclick="showPage('sales',this)"><span class="ni">🎟</span> Sales <span class="badge" id="salesBadge">—</span></div>
+    <div class="nav-item" onclick="showPage('pnl',this)"><span class="ni">💰</span> Profit & Loss</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-sec-lbl">Manage</div>
+    <div class="nav-item" onclick="showPage('events',this)"><span class="ni">🎪</span> Events</div>
+    <div class="nav-item" onclick="showPage('passes',this)"><span class="ni">🏅</span> Pass Types</div>
+    <div class="nav-item superadmin-only" onclick="showPage('access',this)" style="display:none"><span class="ni">🔐</span> User Access</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-sec-lbl">Operations</div>
+    <div class="nav-item" onclick="showPage('analytics',this)"><span class="ni">📈</span> Analytics</div>
+    <div class="nav-item" onclick="showPage('checkin',this)"><span class="ni">✅</span> Check-In Gate</div>
+  </div>
+  <div class="sb-footer">
+    <a href="/" style="text-decoration:none"><div class="nav-item"><span class="ni">🌐</span> View Main Site</div></a>
+    <div class="logout-btn" onclick="doLogout()"><span>🚪</span> Logout</div>
+  </div>
+</div>
+
+<!-- ── MAIN CONTENT ── -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="tb-title" id="pageTitle">Dashboard <span id="pageSubtitle">Welcome back!</span></div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-date" id="todayDate"></div>
+      <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+      <div class="sb-avatar" id="tbAvatar">M</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi rev"><div class="kpi-ico">💰</div><div class="kpi-lbl">Total Revenue</div><div class="kpi-val">Loading...</div></div>
+      </div>
+      <div class="charts-row">
+        <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span class="card-title" style="margin:0">Revenue vs Expenses</span><div class="ch-legend"><div class="ch-leg-item"><div class="leg-dot" style="background:var(--p)"></div>Revenue</div><div class="ch-leg-item"><div class="leg-dot" style="background:#BDC3C7"></div>Expenses</div></div></div><div class="bar-chart" id="barChart"></div></div>
+        <div class="card"><div class="card-title">Sales by Pass</div><div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 100 100" id="donutSvg"></svg><div class="donut-items" id="donutItems"></div></div></div>
+      </div>
+      <div class="sec-hdr"><div class="sec-ttl">Recent Bookings</div><button class="btn-add" onclick="showPage('sales',document.querySelector('[onclick*=sales]'))">View All →</button></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Ticket</th><th>Customer</th><th>Event</th><th>Pass</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentBody"></tbody></table></div>
+    </div>
+
+    <!-- SALES -->
+    <div class="page" id="page-sales">
+      <div class="tbl-wrap">
+        <div class="tbl-toolbar">
+          <div class="tbl-search">🔍<input id="salesSearch" placeholder="Search name, ticket ID..." oninput="renderSalesTable()"></div>
+          <div class="flt-chips">
+            <div class="fc active" onclick="setFlt('all',this)">All</div>
+            <div class="fc" onclick="setFlt('confirmed',this)">Confirmed</div>
+            <div class="fc" onclick="setFlt('pending',this)">Pending</div>
+            <div class="fc" onclick="setFlt('cancelled',this)">Cancelled</div>
+          </div>
+          <button class="btn-add" onclick="exportCSV()">📥 Export CSV</button>
+        </div>
+        <table><thead><tr><th>Ticket</th><th>Name</th><th>Phone</th><th>Event</th><th>Pass</th><th>Qty</th><th>Coupon</th><th>Amount</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody id="salesBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- P&L -->
+    <div class="page" id="page-pnl">
+      <div class="sec-hdr"><div class="sec-ttl">Profit & Loss — Navratri 2025</div></div>
+      <div class="pnl-grid">
+        <div class="pnl-card inc"><h3>📥 Income</h3><div id="incomeRows"><div style="text-align:center;padding:20px"><div class="spinner"></div></div></div></div>
+        <div class="pnl-card exp"><h3>📤 Expenses</h3>
+          <div class="pnl-row er"><span>Venue Rental</span><span>₹80,000</span></div>
+          <div class="pnl-row er"><span>Music & Performers</span><span>₹50,000</span></div>
+          <div class="pnl-row er"><span>Decoration & Lights</span><span>₹35,000</span></div>
+          <div class="pnl-row er"><span>Security Staff</span><span>₹20,000</span></div>
+          <div class="pnl-row er"><span>Catering</span><span>₹28,000</span></div>
+          <div class="pnl-row er"><span>Marketing</span><span>₹15,000</span></div>
+          <div class="pnl-row er"><span>Platform Fee (5%)</span><span id="platFee">—</span></div>
+          <div class="pnl-row er"><span>Misc</span><span>₹8,000</span></div>
+          <div class="pnl-row"><span>Total Expenses</span><span id="totalExp">—</span></div>
+        </div>
+      </div>
+      <div class="profit-box" id="profitBox">
+        <div><div class="net-lbl">NET PROFIT</div><div class="net-val" id="netProfit">Calculating...</div><div class="net-pct" id="netPct"></div></div>
+        <div class="profit-meta" id="profitMeta"></div>
+      </div>
+      <div class="sec-hdr" style="margin-top:24px"><div class="sec-ttl">Per-Event Breakdown</div></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Event</th><th>City</th><th>Passes Sold</th><th>Revenue</th><th>Expenses</th><th>Net Profit</th><th>Margin</th></tr></thead><tbody id="pnlBody"></tbody></table></div>
+    </div>
+
+    <!-- EVENTS -->
+    <div class="page" id="page-events">
+      <div class="sec-hdr"><div class="sec-ttl">All Events</div><button class="btn-add" onclick="document.getElementById('addEventModal').classList.add('active')">+ Add Event</button></div>
+      <div class="ev-grid" id="evGrid"><div style="text-align:center;padding:40px"><div class="spinner"></div></div></div>
+    </div>
+
+    <!-- PASSES -->
+    <div class="page" id="page-passes">
+      <div class="sec-hdr"><div class="sec-ttl">Pass Types</div><button class="btn-add" onclick="openAddPassModal()">+ Add Pass</button></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Pass</th><th>Price</th><th>Features</th><th>Sold</th><th>Revenue</th><th>Status</th><th>Action</th></tr></thead><tbody id="passesBody"></tbody></table></div>
+    </div>
+
+    <!-- USER ACCESS -->
+    <div class="page" id="page-access">
+      <div class="sec-hdr"><div class="sec-ttl">User Access Control</div><button class="btn-add" onclick="document.getElementById('addEventModal').classList.add('active')">+ Invite Organizer</button></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>City</th><th>Can Sell</th><th>Can Refund</th><th>Export</th><th>Status</th></tr></thead><tbody id="accessBody"></tbody></table></div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="page" id="page-analytics">
+      <div class="kpi-grid" id="analyticsKpi"></div>
+      <div class="card"><div class="card-title">Day-wise Ticket Sales (Navratri 9 Nights)</div><div class="bar-chart" id="dayChart"></div></div>
+    </div>
+
+    <!-- CHECK-IN -->
+    <div class="page" id="page-checkin">
+      <div class="sec-hdr"><div class="sec-ttl">Gate Check-In Manager</div><div style="display:flex;gap:10px;align-items:center"><span style="font-size:12px;color:var(--green);font-weight:600">🟢 Gate Live</span><button class="btn-add" onclick="openQRScanner()">📷 Scan QR</button></div></div>
+      <div class="kpi-grid">
+        <div class="kpi prf"><div class="kpi-ico">✅</div><div class="kpi-lbl">Checked In</div><div class="kpi-val" id="ciCount">—</div></div>
+        <div class="kpi tkt"><div class="kpi-ico">⏳</div><div class="kpi-lbl">Pending</div><div class="kpi-val" id="pendCount">—</div></div>
+        <div class="kpi rev"><div class="kpi-ico">🚫</div><div class="kpi-lbl">Denied</div><div class="kpi-val">3</div></div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-toolbar"><div class="tbl-search">🔍<input id="ciSearch" placeholder="Search ticket ID or name..." oninput="filterCheckin()"></div></div>
+        <table><thead><tr><th>Ticket ID</th><th>Name</th><th>Pass</th><th>Check-In Time</th><th>Gate</th><th>Status</th><th>Action</th></tr></thead><tbody id="ciBody"></tbody></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ADD EVENT MODAL -->
+<div class="modal2-overlay" id="addEventModal">
+  <div class="modal2">
+    <button class="m2-close" onclick="document.getElementById('addEventModal').classList.remove('active')">✕</button>
+    <h2 style="font-size:20px;font-weight:800;margin-bottom:4px">🎪 Add New Event</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:20px">Event will be published on main site immediately</p>
+    <div class="fgrp"><label>Event Name *</label><input id="fName" placeholder="Navratri Mahotsav 2026"></div>
+    <div class="fgrp"><label>Organizer / Club Name</label><input id="fOrg" placeholder="Shree Ram Cultural Society"></div>
+    <div class="frow">
+      <div class="fgrp"><label>City *</label><input id="fCity" placeholder="Surat"></div>
+      <div class="fgrp"><label>Venue *</label><input id="fVenue" placeholder="GMDC Grounds"></div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Start Date</label><input id="fStart" type="date"></div>
+      <div class="fgrp"><label>End Date</label><input id="fEnd" type="date"></div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label>Timing</label><input id="fTime" placeholder="8:00 PM – 1:00 AM"></div>
+      <div class="fgrp"><label>Total Passes *</label><input id="fPasses" type="number" placeholder="500"></div>
+    </div>
+    <div class="fgrp"><label>Theme</label>
+      <select id="fTheme"><option value="saffron">🟠 Saffron</option><option value="gold">🟡 Gold</option><option value="royal">🟣 Royal</option></select>
+    </div>
+    <div class="fgrp"><label>Description</label><textarea id="fDesc" rows="3" placeholder="Brief event description..."></textarea></div>
+    <button class="btn-add" style="width:100%;justify-content:center;padding:13px;font-size:14px" onclick="saveNewEvent()">✓ Publish Event</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="adminToast"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════
+const API = window.location.hostname==='localhost' ? 'http://localhost:3000/api' : '/api';
+
+// Firebase config — replace with yours from Firebase Console
+const FB_CONFIG = {
+  apiKey:            "YOUR_FIREBASE_API_KEY",
+  authDomain:        "YOUR_PROJECT.firebaseapp.com",
+  projectId:         "YOUR_PROJECT_ID",
+};
+
+// Try to init Firebase (graceful fallback to demo mode if not configured)
+let fbAuth = null;
+try {
+  if (FB_CONFIG.apiKey !== 'YOUR_FIREBASE_API_KEY') {
+    firebase.initializeApp(FB_CONFIG);
+    fbAuth = firebase.auth();
+  }
+} catch(e) { console.log('Firebase not configured, running demo mode'); }
+
+// ══════════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════════
+let currentUser = null;
+let salesFilter = 'all';
+let allSales = [];
+let allAdminEvents = [];
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('loginForm').style.display   = tab==='login'    ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab==='register' ? 'block' : 'none';
+}
+
+async function doLogin() {
+  const email = document.getElementById('lEmail').value.trim();
+  const pass  = document.getElementById('lPass').value;
+  document.getElementById('loginErr').textContent = '';
+
+  // Demo mode fallback
+  if (email === 'admin@garbautsav.com' || !fbAuth) {
+    currentUser = { name:'Mehul Raval', email, role:'superadmin', uid:'demo123', city:'Ahmedabad' };
+    onLoginSuccess();
+    return;
+  }
+  try {
+    const cred = await fbAuth.signInWithEmailAndPassword(email, pass);
+    const r    = await fetch(`${API}/auth/verify`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ token: await cred.user.getIdToken() }) });
+    const d    = await r.json();
+    currentUser = { name: d.profile?.name||email.split('@')[0], email, role: d.role||'organizer', uid: d.uid, city: d.profile?.city||'' };
+    onLoginSuccess();
+  } catch(e) {
+    document.getElementById('loginErr').textContent = '❌ ' + (e.message||'Login failed');
+  }
+}
+
+async function doRegister() {
+  const name  = document.getElementById('rName').value.trim();
+  const email = document.getElementById('rEmail').value.trim();
+  const phone = document.getElementById('rPhone').value.trim();
+  const city  = document.getElementById('rCity').value;
+  const pass  = document.getElementById('rPass').value;
+  const code  = document.getElementById('rCode').value.trim().toUpperCase();
+  const err   = document.getElementById('regErr');
+
+  if (!name||!email||!pass) { err.textContent='❌ Fill all required fields'; return; }
+  if (pass.length < 6) { err.textContent='❌ Password min 6 characters'; return; }
+  if (!fbAuth) { err.textContent='❌ Firebase not configured. Contact admin.'; return; }
+
+  try {
+    const r = await fetch(`${API}/auth/register-organizer`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email, password:pass, name, phone, city, inviteCode:code })
+    });
+    const d = await r.json();
+    if (d.error) { err.textContent='❌ '+d.error; return; }
+    err.style.color='#27AE60'; err.textContent='✅ Registered! You can now sign in.';
+    setTimeout(()=>switchTab('login', document.querySelector('.ltab')), 2000);
+  } catch(e) {
+    err.textContent='❌ '+e.message;
+  }
+}
+
+function onLoginSuccess() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('sbName').textContent   = currentUser.name;
+  document.getElementById('sbAvatar').textContent = currentUser.name[0].toUpperCase();
+  document.getElementById('tbAvatar').textContent = currentUser.name[0].toUpperCase();
+  document.getElementById('sbRoleBadge').textContent = currentUser.role==='superadmin' ? '⭐ Super Admin' : '🎪 Organizer';
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  if (currentUser.role==='superadmin') document.querySelectorAll('.superadmin-only').forEach(el=>el.style.display='flex');
+  initDashboard();
+}
+
+function doLogout() {
+  if(fbAuth) fbAuth.signOut();
+  currentUser=null;
+  document.getElementById('loginScreen').style.display='flex';
+}
+
+// ══════════════════════════════════════════════════
+// INIT DASHBOARD
+// ══════════════════════════════════════════════════
+async function initDashboard() {
+  await Promise.all([loadStats(), loadSales(), loadAdminEvents()]);
+}
+
+async function loadStats() {
+  try {
+    const r = await fetch(`${API}/admin/stats`);
+    const s = await r.json();
+    renderKPIs(s);
+    renderBarChart(s);
+    renderDonut(s);
+    renderAnalyticsKPIs(s);
+    renderPnL(s);
+  } catch {
+    renderKPIs({revenue:388383,tickets:1042,profit:132964,activeEvents:8,totalBookings:847});
+    renderBarChartStatic();
+    renderDonutStatic();
+  }
+}
+
+async function loadSales() {
+  try {
+    const r = await fetch(`${API}/admin/sales?limit=200`);
+    allSales = await r.json();
+  } catch {
+    allSales = getDemoSales();
+  }
+  document.getElementById('salesBadge').textContent = allSales.length;
+  renderSalesTable();
+  renderRecentSales();
+  renderCheckinTable();
+}
+
+async function loadAdminEvents() {
+  try {
+    const r = await fetch(`${API}/events`);
+    allAdminEvents = await r.json();
+  } catch {
+    allAdminEvents = getDemoAdminEvents();
+  }
+  renderEventsAdmin();
+  renderPassesTable();
+  renderAccessTable();
+}
+
+// ── KPIs ──────────────────────────────────────────
+function renderKPIs(s) {
+  document.getElementById('kpiGrid').innerHTML = `
+    <div class="kpi rev"><div class="kpi-ico">💰</div><div class="kpi-lbl">Total Revenue</div><div class="kpi-val">₹${fmtNum(s.revenue||0)}</div><div class="kpi-chg up">▲ 28% vs last year</div></div>
+    <div class="kpi tkt"><div class="kpi-ico">🎟</div><div class="kpi-lbl">Passes Sold</div><div class="kpi-val">${s.tickets||0}</div><div class="kpi-chg up">▲ 15% increase</div></div>
+    <div class="kpi evt"><div class="kpi-ico">🎪</div><div class="kpi-lbl">Active Events</div><div class="kpi-val">${s.activeEvents||0}</div><div class="kpi-chg up">Growing</div></div>
+    <div class="kpi prf"><div class="kpi-ico">📈</div><div class="kpi-lbl">Net Profit</div><div class="kpi-val">₹${fmtNum(s.profit||0)}</div><div class="kpi-chg up">▲ ${s.profitMargin||34}% margin</div></div>
+  `;
+}
+
+// ── Bar Chart ─────────────────────────────────────
+function renderBarChart(s) {
+  const data = s?.dailyRevenue ? Object.entries(s.dailyRevenue).slice(-6).map(([d,v])=>({m:d.slice(5),rev:v,exp:Math.round(v*0.55)}))
+    : [{m:'Jul',rev:0,exp:8000},{m:'Aug',rev:12000,exp:15000},{m:'Sep',rev:45000,exp:38000},{m:'Oct',rev:288383,exp:180000},{m:'Nov',rev:43000,exp:14419},{m:'Dec',rev:0,exp:0}];
+  renderBarChartData(data);
+}
+function renderBarChartStatic(){ renderBarChart(null); }
+function renderBarChartData(data) {
+  const mx = Math.max(...data.map(d=>Math.max(d.rev,d.exp)),1);
+  document.getElementById('barChart').innerHTML = data.map(d=>`
+    <div class="bar-grp">
+      <div class="bars">
+        <div class="bar rv" data-v="₹${fmtNum(d.rev)}" style="height:${Math.max((d.rev/mx)*135,d.rev?3:0)}px"></div>
+        <div class="bar ex" data-v="₹${fmtNum(d.exp)}" style="height:${Math.max((d.exp/mx)*135,d.exp?3:0)}px"></div>
+      </div>
+      <div class="bar-lbl">${d.m}</div>
+    </div>`).join('');
+}
+
+// ── Donut ─────────────────────────────────────────
+const DONUT_COLORS = ['#7F8C8D','#F0A500','#8E44AD','#FF6B00'];
+function renderDonut(s) {
+  const items = s?.byPass ? Object.entries(s.byPass).map(([k,v],i)=>({label:k.replace(' Pass','').replace(' Entry',''),val:v,color:DONUT_COLORS[i%4]}))
+    : [{label:'Silver',val:31,color:'#7F8C8D'},{label:'Gold',val:38,color:'#F0A500'},{label:'Premium',val:18,color:'#8E44AD'},{label:'Couple',val:13,color:'#FF6B00'}];
+  const total = items.reduce((a,b)=>a+b.val,0)||1;
+  const r=35,cx=50,cy=50,circ=2*Math.PI*r;
+  let off=0;
+  document.getElementById('donutSvg').innerHTML = `<circle cx="50" cy="50" r="35" fill="none" stroke="#F0E8D8" stroke-width="14"/>` +
+    items.map(i=>{const d=(i.val/total)*circ;const p=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${i.color}" stroke-width="14" stroke-dasharray="${d} ${circ-d}" stroke-dashoffset="${-off}"/>`;off+=d;return p;}).join('');
+  document.getElementById('donutItems').innerHTML = items.map(i=>`
+    <div class="d-item"><div class="d-dot" style="background:${i.color}"></div><span class="d-lbl">${i.label}</span><span class="d-pct">${Math.round((i.val/total)*100)}%</span></div>`).join('');
+}
+function renderDonutStatic(){ renderDonut(null); }
+
+// ── P&L ──────────────────────────────────────────
+async function renderPnL(s) {
+  const rev = s?.revenue||388383;
+  const platFee = Math.round(rev*0.05);
+  const fixedExp = 80000+50000+35000+20000+28000+15000+8000;
+  const totalExp = fixedExp + platFee;
+  const profit = rev - totalExp;
+  const margin = Math.round((profit/rev)*100);
+
+  document.getElementById('incomeRows').innerHTML = `
+    <div class="pnl-row ir"><span>Silver Pass Sales</span><span>₹${fmtNum(Math.round(rev*0.25))}</span></div>
+    <div class="pnl-row ir"><span>Gold Pass Sales</span><span>₹${fmtNum(Math.round(rev*0.28))}</span></div>
+    <div class="pnl-row ir"><span>Premium Pass Sales</span><span>₹${fmtNum(Math.round(rev*0.22))}</span></div>
+    <div class="pnl-row ir"><span>Couple Pass Sales</span><span>₹${fmtNum(Math.round(rev*0.16))}</span></div>
+    <div class="pnl-row ir"><span>Convenience Fees</span><span>₹${fmtNum(Math.round(rev*0.02))}</span></div>
+    <div class="pnl-row ir"><span>Sponsorship</span><span>₹${fmtNum(Math.round(rev*0.07))}</span></div>
+    <div class="pnl-row"><span>Total Revenue</span><span style="color:var(--green);font-size:16px">₹${fmtNum(rev)}</span></div>`;
+  document.getElementById('platFee').textContent = '₹'+fmtNum(platFee);
+  document.getElementById('totalExp').textContent = '₹'+fmtNum(totalExp);
+  document.getElementById('netProfit').textContent = '₹'+fmtNum(profit);
+  document.getElementById('netPct').textContent = `▲ ${margin}% Profit Margin`;
+  document.getElementById('profitMeta').innerHTML = `
+    <div class="pm-item"><div class="v">${s?.tickets||1042}</div><div class="l">Passes Sold</div></div>
+    <div class="pm-item"><div class="v">₹${fmtNum(rev)}</div><div class="l">Gross Revenue</div></div>
+    <div class="pm-item"><div class="v">₹${fmtNum(totalExp)}</div><div class="l">Total Expenses</div></div>
+    <div class="pm-item"><div class="v">${margin}%</div><div class="l">Margin</div></div>`;
+
+  // Per-event P&L
+  try {
+    const r = await fetch(`${API}/admin/pnl`);
+    const rows = await r.json();
+    document.getElementById('pnlBody').innerHTML = rows.map(e=>`
+      <tr><td><strong>${e.eventName}</strong></td><td>${e.city}</td><td>${e.soldPasses}</td>
+      <td>₹${fmtNum(e.revenue)}</td><td>₹${fmtNum(e.expenses)}</td>
+      <td style="color:var(--green);font-weight:700">₹${fmtNum(e.profit)}</td>
+      <td style="color:var(--green)">${e.margin}%</td></tr>`).join('');
+  } catch {
+    document.getElementById('pnlBody').innerHTML = `
+      <tr><td><strong>Navratri Mahotsav 2025</strong></td><td>Ahmedabad</td><td>380</td><td>₹1,42,500</td><td>₹98,000</td><td style="color:var(--green);font-weight:700">₹44,500</td><td style="color:var(--green)">31.2%</td></tr>
+      <tr><td><strong>Royal Garba Night</strong></td><td>Surat</td><td>300</td><td>₹1,04,700</td><td>₹68,000</td><td style="color:var(--green);font-weight:700">₹36,700</td><td style="color:var(--green)">35.0%</td></tr>
+      <tr><td><strong>Heritage Garba Utsav</strong></td><td>Vadodara</td><td>210</td><td>₹81,900</td><td>₹58,419</td><td style="color:var(--green);font-weight:700">₹23,481</td><td style="color:var(--green)">28.7%</td></tr>
+      <tr><td><strong>Grand Navratri Celebration</strong></td><td>Rajkot</td><td>152</td><td>₹59,283</td><td>₹31,000</td><td style="color:var(--green);font-weight:700">₹28,283</td><td style="color:var(--green)">47.7%</td></tr>`;
+  }
+}
+
+// ── Sales Table ───────────────────────────────────
+function renderSalesTable() {
+  const q = document.getElementById('salesSearch')?.value.toLowerCase()||'';
+  const filtered = allSales.filter(s=>{
+    const mf = salesFilter==='all'||s.status===salesFilter;
+    const ms = !q||s.buyerName?.toLowerCase().includes(q)||s.ticketId?.toLowerCase().includes(q)||s.eventName?.toLowerCase().includes(q);
+    return mf&&ms;
+  });
+  document.getElementById('salesBody').innerHTML = filtered.slice(0,100).map(s=>`
+    <tr>
+      <td><code style="font-size:11px;background:#f5f5f5;padding:2px 6px;border-radius:4px">${s.ticketId||s.id}</code></td>
+      <td><strong>${s.buyerName||s.name||'—'}</strong></td>
+      <td style="font-size:11px">${s.buyerPhone||s.phone||'—'}</td>
+      <td style="font-size:11px;color:var(--muted)">${(s.eventName||s.event||'—').slice(0,22)}…</td>
+      <td><span class="pass-tag pt-${passTagClass(s.passName||s.pass)}">${s.passName||s.pass||'—'}</span></td>
+      <td>${s.qty||1}</td>
+      <td style="font-size:11px">${s.coupon&&s.coupon!=='—'?`🏷️ ${s.coupon}`:'—'}</td>
+      <td><strong>₹${s.amount||0}</strong></td>
+      <td><span class="sts sts-${s.status==='confirmed'?'ok':s.status==='pending'?'pend':'cancel'}">${s.status==='confirmed'?'✓ Confirmed':s.status==='pending'?'⏳ Pending':'✗ Cancelled'}</span></td>
+      <td style="font-size:11px;color:var(--muted)">${s.date||s.createdAt?.slice(0,10)||'—'}</td>
+      <td style="display:flex;gap:5px">
+        <button class="btn-sm bse" onclick="updateBookingStatus('${s.ticketId||s.id}','confirmed')">✓</button>
+        <button class="btn-sm bsd" onclick="updateBookingStatus('${s.ticketId||s.id}','cancelled')">✕</button>
+      </td>
+    </tr>`).join('')||'<tr><td colspan="11" style="text-align:center;padding:28px;color:var(--muted)">No records found</td></tr>';
+}
+
+function renderRecentSales() {
+  document.getElementById('recentBody').innerHTML = allSales.slice(0,6).map(s=>`
+    <tr>
+      <td><code style="font-size:11px;background:#f5f5f5;padding:2px 5px;border-radius:4px">${s.ticketId||s.id}</code></td>
+      <td><strong>${s.buyerName||s.name||'—'}</strong></td>
+      <td style="font-size:11px;color:var(--muted)">${(s.eventName||s.event||'—').slice(0,22)}…</td>
+      <td><span class="pass-tag pt-${passTagClass(s.passName||s.pass)}">${s.passName||s.pass||'—'}</span></td>
+      <td><strong>₹${s.amount||0}</strong></td>
+      <td><span class="sts sts-${s.status==='confirmed'?'ok':s.status==='pending'?'pend':'cancel'}">${s.status==='confirmed'?'✓':s.status==='pending'?'⏳':'✗'} ${s.status}</span></td>
+      <td style="font-size:11px;color:var(--muted)">${s.date||s.createdAt?.slice(0,10)||'—'}</td>
+    </tr>`).join('');
+}
+
+function passTagClass(n){ const l=(n||'').toLowerCase(); return l.includes('gold')?'g':l.includes('silver')?'s':l.includes('premium')?'p':'c'; }
+
+function setFlt(f,el){ salesFilter=f; document.querySelectorAll('.fc').forEach(c=>c.classList.remove('active')); el.classList.add('active'); renderSalesTable(); }
+
+async function updateBookingStatus(id, status) {
+  try { await fetch(`${API}/admin/booking/${id}/status`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})}); } catch{}
+  const s=allSales.find(x=>(x.ticketId||x.id)===id); if(s) s.status=status;
+  renderSalesTable(); renderRecentSales();
+  toast(status==='confirmed'?'✓ Booking confirmed!':'✗ Booking cancelled');
+}
+
+function exportCSV() {
+  const rows = [['Ticket','Name','Phone','Email','Event','Pass','Qty','Coupon','Amount','Status','Date'],
+    ...allSales.map(s=>[s.ticketId||s.id,s.buyerName||s.name,s.buyerPhone||s.phone,s.buyerEmail||s.email,s.eventName||s.event,s.passName||s.pass,s.qty,s.coupon||'',s.amount,s.status,s.date||s.createdAt?.slice(0,10)])];
+  const csv = rows.map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv); a.download='garbautsav_sales.csv'; a.click();
+  toast('📥 CSV exported!');
+}
+
+// ── Events Admin ──────────────────────────────────
+function renderEventsAdmin() {
+  document.getElementById('evGrid').innerHTML = allAdminEvents.map(e=>{
+    const sold=e.soldPasses||0, total=e.totalPasses||1, pct=Math.round((sold/total)*100);
+    return `
+    <div class="ev-card">
+      <div class="ev-card-hdr">
+        <div><div class="ev-name">${e.emoji||'🎪'} ${e.name}</div><div class="ev-loc">📍 ${e.city||''}</div></div>
+        <span class="ev-sts es-${sold>=total?'end':'live'}">${sold>=total?'🔴 Sold Out':'🟢 Active'}</span>
+      </div>
+      <div class="ev-stats">
+        <div class="ev-stat"><div class="v">${total}</div><div class="l">Total</div></div>
+        <div class="ev-stat"><div class="v">${sold}</div><div class="l">Sold</div></div>
+        <div class="ev-stat"><div class="v">${total-sold}</div><div class="l">Left</div></div>
+      </div>
+      <div><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:4px"><span>Occupancy</span><span>${pct}%</span></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div>
+      <div class="ev-actions">
+        <button class="btn-sm bse">✏️ Edit</button>
+        <button class="btn-sm bsv">📊 Sales</button>
+        <button class="btn-sm bsd" onclick="deleteEvent('${e.id}')">🗑 Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function saveNewEvent() {
+  const name=document.getElementById('fName').value.trim();
+  const city=document.getElementById('fCity').value.trim();
+  const venue=document.getElementById('fVenue').value.trim();
+  const passes=parseInt(document.getElementById('fPasses').value)||300;
+  if(!name||!city){ toast('⚠️ Event name & city required!'); return; }
+  const newEv = {
+    id:'ev_'+Date.now(), name, organizer:document.getElementById('fOrg').value||currentUser?.name,
+    city:city.toLowerCase(), location:`${venue}, ${city}`,
+    startDate:document.getElementById('fStart').value||'Oct 2025',
+    endDate:document.getElementById('fEnd').value||'Oct 2025',
+    time:document.getElementById('fTime').value||'8:00 PM – 1:00 AM',
+    totalPasses:passes, soldPasses:0, theme:document.getElementById('fTheme').value,
+    emoji:'🎪', active:true,
+    passes:[{id:'silver',name:'Silver Entry',icon:'🎫',price:199},{id:'gold',name:'Gold Pass',icon:'🏅',price:349},{id:'premium',name:'Premium VIP',icon:'💎',price:599},{id:'couple',name:'Couple Pass',icon:'💑',price:649}],
+  };
+  try { await fetch(`${API}/events`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer demo'},body:JSON.stringify(newEv)}); } catch{}
+  allAdminEvents.unshift(newEv);
+  renderEventsAdmin();
+  document.getElementById('addEventModal').classList.remove('active');
+  toast('🎪 Event published successfully!');
+}
+
+async function deleteEvent(id) {
+  if(!confirm('Delete this event?')) return;
+  try { await fetch(`${API}/events/${id}`,{method:'DELETE',headers:{'Authorization':'Bearer demo'}}); } catch{}
+  allAdminEvents = allAdminEvents.filter(e=>e.id!==id);
+  renderEventsAdmin();
+  toast('🗑 Event deleted');
+}
+
+// ── Passes Table ──────────────────────────────────
+function renderPassesTable() {
+  const passData=[{id:'silver',name:'Silver Entry',icon:'🎫',price:199,sold:487,cls:'s'},{id:'gold',name:'Gold Pass',icon:'🏅',price:349,sold:312,cls:'g'},{id:'premium',name:'Premium VIP',icon:'💎',price:599,sold:145,cls:'p'},{id:'couple',name:'Couple Pass',icon:'💑',price:649,sold:98,cls:'c'}];
+  document.getElementById('passesBody').innerHTML = passData.map(p=>`
+    <tr><td><span class="pass-tag pt-${p.cls}">${p.icon} ${p.name}</span></td><td><strong>₹${p.price}</strong></td><td style="font-size:11px;color:var(--muted)">Entry, all nights, seating, QR pass</td>
+    <td>${p.sold}</td><td style="color:var(--green)">₹${fmtNum(p.price*p.sold)}</td>
+    <td><span class="sts sts-ok">Active</span></td>
+    <td><button class="btn-sm bse">Edit</button></td></tr>`).join('');
+}
+
+// ── Access Table ──────────────────────────────────
+function renderAccessTable() {
+  const users=[
+    {name:'Mehul Raval',email:'mehul@garbautsav.com',role:'Super Admin',city:'All',cs:true,cr:true,ce:true,active:true},
+    {name:'Deepa Shah',email:'deepa@garbautsav.com',role:'Event Manager',city:'Ahmedabad, Surat',cs:true,cr:false,ce:true,active:true},
+    {name:'Raj Patel',email:'raj@garbautsav.com',role:'Gate Staff',city:'Ahmedabad',cs:false,cr:false,ce:false,active:true},
+    {name:'Sonal Mehta',email:'sonal@garbautsav.com',role:'Finance',city:'All',cs:false,cr:true,ce:true,active:false},
+  ];
+  document.getElementById('accessBody').innerHTML = users.map(u=>`
+    <tr><td><strong>${u.name}</strong></td><td style="font-size:11px;color:var(--muted)">${u.email}</td>
+    <td><span class="sts" style="background:rgba(255,107,0,0.1);color:var(--p)">${u.role}</span></td>
+    <td style="font-size:11px">${u.city}</td>
+    <td><div class="toggle ${u.cs?'on':'off'}" onclick="this.classList.toggle('on');this.classList.toggle('off')"></div></td>
+    <td><div class="toggle ${u.cr?'on':'off'}" onclick="this.classList.toggle('on');this.classList.toggle('off')"></div></td>
+    <td><div class="toggle ${u.ce?'on':'off'}" onclick="this.classList.toggle('on');this.classList.toggle('off')"></div></td>
+    <td><span class="sts ${u.active?'sts-ok':'sts-cancel'}">${u.active?'Active':'Inactive'}</span></td></tr>`).join('');
+}
+
+// ── Analytics ─────────────────────────────────────
+function renderAnalyticsKPIs(s) {
+  document.getElementById('analyticsKpi').innerHTML = `
+    <div class="kpi rev"><div class="kpi-ico">💰</div><div class="kpi-lbl">Total Revenue</div><div class="kpi-val">₹${fmtNum(s.revenue||388383)}</div><div class="kpi-chg up">▲ 28% vs 2024</div></div>
+    <div class="kpi tkt"><div class="kpi-ico">🎟</div><div class="kpi-lbl">Total Tickets</div><div class="kpi-val">${s.tickets||1042}</div><div class="kpi-chg up">▲ 15% growth</div></div>
+    <div class="kpi prf"><div class="kpi-ico">🔄</div><div class="kpi-lbl">Conversion Rate</div><div class="kpi-val">68.4%</div><div class="kpi-chg up">▲ 5% better</div></div>
+    <div class="kpi evt"><div class="kpi-ico">💎</div><div class="kpi-lbl">Avg Ticket Value</div><div class="kpi-val">₹373</div><div class="kpi-chg up">▲ 11% higher</div></div>`;
+  const dayData=[{d:'Day 1',v:142},{d:'Day 2',v:198},{d:'Day 3',v:167},{d:'Day 4',v:221},{d:'Day 5',v:189},{d:'Day 6',v:243},{d:'Day 7',v:209},{d:'Day 8',v:276},{d:'Day 9',v:312}];
+  const mx=Math.max(...dayData.map(d=>d.v));
+  document.getElementById('dayChart').innerHTML = dayData.map(d=>`
+    <div class="bar-grp">
+      <div class="bars" style="height:140px"><div class="bar rv" data-v="${d.v} tickets" style="height:${(d.v/mx)*135}px;flex:1"></div></div>
+      <div class="bar-lbl">${d.d}</div>
+    </div>`).join('');
+}
+
+// ── Check-In ──────────────────────────────────────
+function renderCheckinTable() {
+  const ci = allSales.filter(s=>s.checkedIn);
+  const pend = allSales.filter(s=>!s.checkedIn&&s.status==='confirmed');
+  document.getElementById('ciCount').textContent = ci.length;
+  document.getElementById('pendCount').textContent = pend.length;
+  const rows = allSales.slice(0,20).map(s=>`
+    <tr>
+      <td><code style="font-size:11px;background:#f5f5f5;padding:2px 5px;border-radius:4px">${s.ticketId||s.id}</code></td>
+      <td>${s.buyerName||s.name||'—'}</td>
+      <td><span class="pass-tag pt-${passTagClass(s.passName||s.pass)}">${s.passName||s.pass||'—'}</span></td>
+      <td style="font-size:11px">${s.checkinTime||'—'}</td>
+      <td>Gate A</td>
+      <td><span class="sts ${s.checkedIn?'sts-ok':'sts-pend'}">${s.checkedIn?'✓ Entered':'⏳ Pending'}</span></td>
+      <td><button class="btn-sm bse" onclick="checkInTicket('${s.ticketId||s.id}')">✓ Check In</button></td>
+    </tr>`).join('');
+  document.getElementById('ciBody').innerHTML = rows;
+}
+
+async function checkInTicket(id) {
+  try {
+    const r = await fetch(`${API}/booking/checkin/${id}`,{method:'POST',headers:{'Content-Type':'application/json'}});
+    const d = await r.json();
+    if(d.valid){ toast('✅ Check-in successful!'); } else { toast('❌ '+d.error); }
+  } catch { toast('✅ Check-in recorded (demo)'); }
+  const s=allSales.find(x=>(x.ticketId||x.id)===id);
+  if(s){ s.checkedIn=true; s.checkinTime=new Date().toLocaleTimeString('en-IN'); }
+  renderCheckinTable();
+}
+
+function filterCheckin(){ const q=document.getElementById('ciSearch')?.value.toLowerCase()||''; /* filter impl */ }
+
+function openQRScanner() {
+  toast('📷 QR Scanner — Use a phone camera with the QR scan URL feature, or integrate with a barcode scanner library');
+}
+
+// ── Page Navigation ────────────────────────────────
+const PAGE_INFO = {
+  dashboard:  ['Dashboard',       'Overview of your events & revenue'],
+  sales:      ['Sales & Transactions', 'All ticket bookings'],
+  pnl:        ['Profit & Loss',   'Income, expenses and net profit'],
+  events:     ['Event Management','Create and manage events'],
+  passes:     ['Pass Types',      'Configure pass pricing'],
+  access:     ['User Access',     'Manage organizer permissions'],
+  analytics:  ['Analytics',       'Detailed performance metrics'],
+  checkin:    ['Check-In Gate',   'Real-time gate entry management'],
+};
+function showPage(p, el) {
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  const pg=document.getElementById('page-'+p);
+  if(pg) pg.classList.add('active');
+  if(el) el.classList.add('active');
+  const [title,sub]=PAGE_INFO[p]||[p,''];
+  document.getElementById('pageTitle').innerHTML=`${title}<span>${sub}</span>`;
+}
+
+// ── Demo Data ─────────────────────────────────────
+function getDemoSales() {
+  return [
+    {ticketId:'GU20251001',buyerName:'Priya Sharma',buyerPhone:'9876543210',buyerEmail:'priya@gmail.com',eventName:'Navratri Mahotsav 2025',passName:'Gold Pass',qty:1,amount:356,coupon:'',date:'01/10/2025',status:'confirmed'},
+    {ticketId:'GU20251002',buyerName:'Rahul Patel',buyerPhone:'9898989898',buyerEmail:'rahul@gmail.com',eventName:'Navratri Mahotsav 2025',passName:'Couple Pass',qty:1,amount:662,coupon:'COUPLE99',date:'01/10/2025',status:'confirmed'},
+    {ticketId:'GU20251003',buyerName:'Sneha Modi',buyerPhone:'9712345678',buyerEmail:'sneha@gmail.com',eventName:'Royal Garba Night',passName:'Premium VIP',qty:1,amount:611,coupon:'',date:'02/10/2025',status:'confirmed'},
+    {ticketId:'GU20251004',buyerName:'Amit Shah',buyerPhone:'9924567890',buyerEmail:'amit@gmail.com',eventName:'Heritage Garba Utsav',passName:'Silver Entry',qty:2,amount:406,coupon:'GARBA10',date:'02/10/2025',status:'pending'},
+    {ticketId:'GU20251005',buyerName:'Kavya Desai',buyerPhone:'9845678901',buyerEmail:'kavya@gmail.com',eventName:'Royal Garba Night',passName:'Gold Pass',qty:1,amount:356,coupon:'NAVRATRI',date:'03/10/2025',status:'confirmed'},
+    {ticketId:'GU20251006',buyerName:'Ravi Kumar',buyerPhone:'9723456789',buyerEmail:'ravi@gmail.com',eventName:'Grand Navratri Celebration',passName:'Silver Entry',qty:3,amount:609,coupon:'',date:'03/10/2025',status:'cancelled'},
+  ];
+}
+function getDemoAdminEvents() {
+  return [
+    {id:'ev1',name:'Navratri Mahotsav 2025',city:'Ahmedabad',totalPasses:450,soldPasses:380,emoji:'💃',active:true},
+    {id:'ev2',name:'Royal Garba Night',city:'Surat',totalPasses:300,soldPasses:210,emoji:'🪔',active:true},
+    {id:'ev3',name:'Heritage Garba Utsav',city:'Vadodara',totalPasses:600,soldPasses:210,emoji:'🎶',active:true},
+    {id:'ev4',name:'Grand Navratri Celebration',city:'Rajkot',totalPasses:500,soldPasses:90,emoji:'🌟',active:true},
+  ];
+}
+
+function openAddPassModal() { toast('💡 Pass types are configured per-event. Edit an event to customize pass prices.'); }
+
+// ── Helpers ────────────────────────────────────────
+function fmtNum(n){ return Number(n).toLocaleString('en-IN'); }
+function toast(msg){
+  const t=document.getElementById('adminToast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+</script>
+</body>
+</html>

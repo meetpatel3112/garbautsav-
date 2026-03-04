@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GarbaUtsav — Premium Navratri Pass Booking | Ahmedabad, Gujarat</title>
+<meta name="description" content="Book Navratri Garba passes online. Premium events in Ahmedabad, Surat, Vadodara, Rajkot. Instant e-ticket, secure Razorpay payment. Costume rental available.">
+<meta name="keywords" content="navratri pass booking, garba pass, navratri 2025, ahmedabad garba, gujarat navratri, garba ticket online">
+<meta property="og:title" content="GarbaUtsav — Premium Navratri Pass Booking">
+<meta property="og:description" content="Book Navratri Garba passes online. Instant e-tickets, secure payments.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#FF6B00">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪔</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Hind:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+:root{--saffron:#FF6B00;--deep-red:#C0392B;--gold:#F0A500;--golden-light:#FFD166;--maroon:#8B0000;--cream:#FFF8EE;--dark:#1A0A00;--text:#2C1810;--text-muted:#6B4226;--card-bg:#FFFDF8;--border:rgba(240,165,0,0.2);--shadow:0 8px 40px rgba(192,57,43,0.12);--radius:18px;--green:#27AE60;--red:#E74C3C}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Hind',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--cream)}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;background:rgba(10,4,0,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(240,165,0,0.18);z-index:1000;padding:0 4%;display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--saffron),var(--gold));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 14px rgba(255,107,0,0.4)}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1}
+.nav-logo-name{font-family:'Yatra One',cursive;font-size:20px;background:linear-gradient(135deg,var(--saffron),var(--golden-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-logo-tag{font-size:10px;color:rgba(255,255,255,0.35);font-family:'Hind',sans-serif;letter-spacing:.05em;margin-top:1px}
+.nav-links{display:flex;gap:2px;align-items:center;flex:1;justify-content:center}
+.nav-links a{text-decoration:none;color:rgba(255,255,255,0.6);font-weight:500;font-size:13px;transition:all 0.2s;padding:6px 12px;border-radius:8px;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.nav-links a:hover{color:white;background:rgba(255,107,0,0.12)}
+.nav-links a.active-link{color:var(--golden-light);background:rgba(255,107,0,0.1)}
+.nav-links a .nl-icon{font-size:14px;opacity:0.8}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+/* Language Switcher — redesigned */
+.lang-switcher{display:flex;align-items:center;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;overflow:hidden;height:34px}
+.lang-btn{padding:0 12px;height:100%;border:none;background:transparent;font-size:12px;font-weight:700;cursor:pointer;color:rgba(255,255,255,0.45);transition:all 0.2s;font-family:'Hind',sans-serif;position:relative}
+.lang-btn:not(:last-child)::after{content:'';position:absolute;right:0;top:20%;height:60%;width:1px;background:rgba(255,255,255,0.1)}
+.lang-btn.active{background:linear-gradient(135deg,var(--saffron),var(--gold));color:white}
+.lang-btn:hover:not(.active){color:white;background:rgba(255,255,255,0.08)}
+/* CTA Button */
+.nav-cta{background:linear-gradient(135deg,var(--saffron),var(--deep-red));color:white;border:none;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;box-shadow:0 4px 16px rgba(255,107,0,0.35);transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,107,0,0.45)}
+.nav-cta-pulse{width:7px;height:7px;background:#4CAF50;border-radius:50%;animation:live-pulse 1.5s ease-in-out infinite;flex-shrink:0}
+@keyframes live-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.4)}}
+/* ── PAGE LOADER ── */
+#pageLoader{position:fixed;inset:0;background:linear-gradient(135deg,#1A0A00,#3D1C00);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.4s}
+.loader-diya{font-size:64px;animation:float 1s ease-in-out infinite}
+.loader-name{font-family:'Yatra One',cursive;font-size:32px;background:linear-gradient(135deg,var(--saffron),var(--golden-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-top:14px}
+.loader-bar{width:200px;height:3px;background:rgba(255,255,255,0.1);border-radius:3px;margin-top:20px;overflow:hidden}
+.loader-fill{height:100%;background:linear-gradient(90deg,var(--saffron),var(--gold));border-radius:3px;animation:load-fill 0.8s ease forwards}
+@keyframes load-fill{from{width:0}to{width:100%}}
+.scroll-top{position:fixed;bottom:88px;right:20px;width:40px;height:40px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;border:none;border-radius:10px;font-size:18px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(255,107,0,0.35);z-index:998;opacity:0;pointer-events:none;transition:all 0.3s;display:flex;align-items:center;justify-content:center}
+.scroll-top.visible{opacity:1;pointer-events:all}
+.scroll-top:hover{transform:translateY(-3px)}
+.hamburger{display:none;font-size:22px;cursor:pointer;color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);width:36px;height:36px;border-radius:8px;align-items:center;justify-content:center}
+
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,107,0,0.1) 0%,transparent 70%),var(--cream);display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 5% 60px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;border:2px dashed rgba(240,165,0,0.15);top:50%;left:50%;transform:translate(-50%,-50%);animation:rotate 30s linear infinite}
+.hero::after{content:'';position:absolute;width:900px;height:900px;border-radius:50%;border:1px dashed rgba(255,107,0,0.08);top:50%;left:50%;transform:translate(-50%,-50%);animation:rotate 50s linear infinite reverse}
+@keyframes rotate{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.hero-diya{font-size:72px;display:block;margin-bottom:16px;animation:float 3s ease-in-out infinite;position:relative;z-index:1}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(255,107,0,0.1),rgba(240,165,0,0.1));border:1px solid rgba(240,165,0,0.4);padding:6px 18px;border-radius:50px;font-size:12px;font-weight:600;color:var(--saffron);margin-bottom:18px;position:relative;z-index:1}
+.hero h1{font-family:'Yatra One',cursive;font-size:clamp(40px,7vw,78px);line-height:1.1;background:linear-gradient(135deg,var(--dark) 0%,var(--maroon) 40%,var(--saffron) 70%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:18px;position:relative;z-index:1}
+.hero p{font-size:clamp(15px,2vw,18px);color:var(--text-muted);max-width:540px;margin:0 auto 32px;line-height:1.7;position:relative;z-index:1}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.btn-fire{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--saffron),var(--deep-red));color:white;border:none;padding:14px 32px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;box-shadow:0 8px 28px rgba(255,107,0,0.38);transition:all 0.3s}
+.btn-fire:hover{transform:translateY(-3px);box-shadow:0 14px 38px rgba(255,107,0,0.48)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--saffron);border:2px solid var(--saffron);padding:12px 30px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;transition:all 0.3s}
+.btn-ghost:hover{background:rgba(255,107,0,0.07)}
+.hero-stats{display:flex;justify-content:center;gap:40px;margin-top:48px;position:relative;z-index:1;flex-wrap:wrap}
+.hero-stat .num{font-family:'Poppins',sans-serif;font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--saffron),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-stat .lbl{font-size:12px;color:var(--text-muted);font-weight:500;margin-top:2px}
+
+/* ── SECTIONS ── */
+section{padding:72px 5%}
+.section-tag{display:inline-flex;align-items:center;gap:6px;color:var(--saffron);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.section-title{font-family:'Yatra One',cursive;font-size:clamp(26px,4vw,42px);color:var(--text);margin-bottom:12px;line-height:1.2}
+.section-sub{font-size:15px;color:var(--text-muted);max-width:540px;line-height:1.7}
+.section-head-row{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:36px}
+
+/* ── FILTER BAR ── */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+.filt-chip{padding:8px 18px;border-radius:50px;border:1.5px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;color:var(--text-muted);transition:all 0.2s;font-family:'Hind',sans-serif;background:white}
+.filt-chip:hover,.filt-chip.active{border-color:var(--saffron);color:var(--saffron);background:rgba(255,107,0,0.05)}
+
+/* ── EVENTS GRID ── */
+.events-section{background:white}
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+.event-card{background:var(--card-bg);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);transition:transform 0.3s,box-shadow 0.3s;cursor:pointer}
+.event-card:hover{transform:translateY(-6px);box-shadow:0 20px 56px rgba(192,57,43,0.16)}
+.event-banner{height:170px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.event-banner.saffron{background:linear-gradient(135deg,#FF6B00,#C0392B,#8B0000)}
+.event-banner.gold{background:linear-gradient(135deg,#F0A500,#E67E22,#C0392B)}
+.event-banner.royal{background:linear-gradient(135deg,#6C3483,#A569BD,#E91E63)}
+.banner-emoji{font-size:60px;animation:float 3s ease-in-out infinite}
+.event-badge{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.92);padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700;color:var(--saffron)}
+.event-badge.sold{color:var(--red)}
+.event-body{padding:18px}
+.event-title{font-family:'Poppins',sans-serif;font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px}
+.event-org{font-size:12px;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:5px}
+.event-meta{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.event-meta-row{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text-muted)}
+.event-meta-row strong{color:var(--text);font-weight:600}
+.event-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border)}
+.event-price .from{font-size:11px;color:var(--text-muted)}
+.event-price .amount{font-size:20px;font-weight:800;color:var(--saffron);font-family:'Poppins',sans-serif}
+.event-price .per{font-size:11px;color:var(--text-muted)}
+.passes-left{font-size:11px;color:var(--red);font-weight:600;margin-top:3px}
+.btn-book{background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;border:none;padding:9px 20px;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;transition:all 0.2s}
+.btn-book:hover{transform:scale(1.05)}
+.btn-book:disabled{background:#ccc;cursor:not-allowed;transform:none}
+
+/* ── SKELETON LOADER ── */
+.skeleton{background:linear-gradient(90deg,#f0e8d8 25%,#fdf6ed 50%,#f0e8d8 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.event-skeleton{background:white;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border)}
+.ev-sk-banner{height:170px}.ev-sk-body{padding:18px}.ev-sk-title{height:20px;margin-bottom:8px;width:75%}.ev-sk-sub{height:14px;margin-bottom:20px;width:50%}.ev-sk-row{height:12px;margin-bottom:8px}.ev-sk-row:last-child{width:60%}
+
+/* ── PASSES SECTION ── */
+.passes-section{background:linear-gradient(135deg,#1A0A00 0%,#3D1C00 100%);color:white;position:relative;overflow:hidden}
+.passes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;margin-top:40px}
+.pass-card{border-radius:var(--radius);padding:26px;position:relative;overflow:hidden;transition:transform 0.3s;cursor:pointer}
+.pass-card:hover{transform:translateY(-5px)}
+.pass-card.silver{background:linear-gradient(145deg,#2C2C2C,#4A4A4A);border:1px solid rgba(192,192,192,0.3)}
+.pass-card.gold-pass{background:linear-gradient(145deg,#3D2B00,#6B4A00);border:1px solid rgba(240,165,0,0.5)}
+.pass-card.premium{background:linear-gradient(145deg,#1A0033,#4A0066);border:1px solid rgba(180,0,255,0.4)}
+.pass-card.couple{background:linear-gradient(145deg,#1A0A00,#4A1500);border:1px solid rgba(255,107,0,0.5)}
+.pass-popular{position:absolute;top:-8px;right:16px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;font-size:10px;font-weight:700;padding:3px 12px;border-radius:50px}
+.pass-icon{font-size:36px;margin-bottom:12px;display:block}
+.pass-name{font-family:'Poppins',sans-serif;font-size:18px;font-weight:700;margin-bottom:6px}
+.pass-card.silver .pass-name{color:#E0E0E0}.pass-card.gold-pass .pass-name{color:var(--golden-light)}.pass-card.premium .pass-name{color:#DDB4FF}.pass-card.couple .pass-name{color:#FFB88C}
+.pass-price{font-family:'Poppins',sans-serif;font-size:32px;font-weight:900;margin-bottom:18px}
+.pass-card.silver .pass-price{color:white}.pass-card.gold-pass .pass-price{color:var(--golden-light)}.pass-card.premium .pass-price{color:#DDB4FF}.pass-card.couple .pass-price{color:#FFB88C}
+.pass-features{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.pass-features li{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,0.7)}
+.pass-features li::before{content:'✦';color:var(--gold);font-size:9px;flex-shrink:0}
+.btn-pass{width:100%;padding:12px;border-radius:50px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;transition:all 0.2s}
+.pass-card.silver .btn-pass{background:rgba(255,255,255,0.12);color:white;border:1px solid rgba(255,255,255,0.25)}
+.pass-card.gold-pass .btn-pass{background:linear-gradient(135deg,var(--gold),var(--saffron));color:white}
+.pass-card.premium .btn-pass{background:linear-gradient(135deg,#8B00FF,#E91E63);color:white}
+.pass-card.couple .btn-pass{background:linear-gradient(135deg,var(--saffron),var(--deep-red));color:white}
+.btn-pass:hover{transform:scale(1.03)}
+
+/* ── HOW IT WORKS ── */
+.how-section{background:white}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px;margin-top:40px}
+.step-card{text-align:center}
+.step-num{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(255,107,0,0.1),rgba(240,165,0,0.1));border:2px solid rgba(255,107,0,0.2);display:flex;align-items:center;justify-content:center;font-family:'Yatra One',cursive;font-size:22px;color:var(--saffron);margin:0 auto 14px}
+.step-icon{font-size:26px;display:block;margin-bottom:12px}
+.step-card h4{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:7px}
+.step-card p{font-size:13px;color:var(--text-muted);line-height:1.7}
+.step-arr{display:flex;align-items:center;justify-content:center;font-size:22px;color:rgba(255,107,0,0.25);padding-top:30px}
+
+/* ── TESTIMONIALS ── */
+.testimonials-section{background:var(--cream)}
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:40px}
+.t-card{background:white;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.t-stars{color:var(--gold);font-size:16px;margin-bottom:10px}
+.t-text{font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:14px;font-style:italic}
+.t-user{display:flex;align-items:center;gap:10px}
+.t-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--gold));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white}
+.t-name{font-weight:700;font-size:13px;color:var(--text)}
+.t-city{font-size:11px;color:var(--text-muted)}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal{background:white;border-radius:24px;padding:32px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;position:relative;animation:modalIn 0.3s ease}
+@keyframes modalIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:none;background:#F5F5F5;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal h2{font-family:'Yatra One',cursive;font-size:24px;color:var(--saffron);margin-bottom:4px}
+.modal .subtitle{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.form-group input,.form-group select{width:100%;padding:11px 14px;border:1.5px solid #E5E5E5;border-radius:12px;font-size:14px;font-family:'Hind',sans-serif;color:var(--text);background:#FAFAFA;transition:border-color 0.2s;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:var(--saffron);background:white}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pass-summary{background:var(--cream);border-radius:12px;padding:14px;margin:14px 0;border:1px solid var(--border)}
+.pass-summary-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:7px}
+.pass-summary-row:last-child{margin-bottom:0;border-top:1px dashed var(--border);padding-top:7px;font-weight:700;font-size:15px}
+.discount-row{display:flex;justify-content:space-between;padding:7px 0;font-size:13px;color:var(--green);font-weight:700;border-top:1px dashed rgba(39,174,96,0.3);animation:fadeIn 0.3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.btn-pay{width:100%;padding:15px;background:linear-gradient(135deg,var(--saffron),var(--deep-red));color:white;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;box-shadow:0 6px 24px rgba(255,107,0,0.35);transition:all 0.3s}
+.btn-pay:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(255,107,0,0.45)}
+.btn-pay:disabled{background:#ccc;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* ── COUPON ── */
+.coupon-box{display:flex;gap:8px;margin-bottom:8px}
+.coupon-input-wrap{flex:1;position:relative}
+.coupon-input-wrap input{padding-left:38px;border:1.5px dashed rgba(240,165,0,0.5);background:rgba(255,248,238,0.6);text-transform:uppercase;letter-spacing:.08em}
+.coupon-input-wrap input:focus{border-color:var(--saffron);background:white;border-style:solid}
+.coupon-input-wrap input.success{border-color:var(--green);border-style:solid}
+.coupon-input-wrap input.error{border-color:var(--red);border-style:solid}
+.coupon-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:16px}
+.btn-apply{padding:11px 18px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;border:none;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;white-space:nowrap;transition:all 0.2s}
+.btn-apply:hover{transform:translateY(-1px)}
+.btn-apply:disabled{background:#ccc;cursor:not-allowed;transform:none}
+.coupon-msg{font-size:12px;font-weight:600;padding:0 2px;margin-bottom:8px;min-height:16px}
+.coupon-msg.success{color:var(--green)}.coupon-msg.error{color:var(--red)}
+.coupon-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.coupon-tag{display:inline-flex;align-items:center;gap:4px;background:rgba(255,107,0,0.07);border:1px dashed rgba(255,107,0,0.3);color:var(--saffron);font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;cursor:pointer;transition:all 0.2s;letter-spacing:.04em}
+.coupon-tag:hover{background:rgba(255,107,0,0.14);border-color:var(--saffron)}
+
+/* ── SUCCESS SCREEN ── */
+.success-screen{text-align:center;padding:16px 0}
+.checkmark{font-size:68px;display:block;animation:pop 0.5s ease;margin-bottom:14px}
+@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.2)}100%{transform:scale(1)}}
+.success-screen h3{font-family:'Yatra One',cursive;font-size:24px;color:var(--saffron);margin-bottom:8px}
+.success-screen p{color:var(--text-muted);font-size:14px;margin-bottom:20px}
+.ticket-stub{background:linear-gradient(135deg,#1A0A00,#3D1C00);border-radius:14px;padding:18px;border:2px dashed rgba(240,165,0,0.35);text-align:left;margin-bottom:20px}
+.ticket-stub .t-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px}
+.ticket-stub .t-label{color:rgba(255,255,255,0.45)}
+.ticket-stub .t-value{color:white;font-weight:600}
+.ticket-stub .t-id{color:var(--golden-light);font-family:'Poppins',sans-serif;font-weight:800;font-size:18px}
+.qr-ph{width:80px;height:80px;background:white;border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;padding:6px}
+.qr-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;width:100%;height:100%}
+.qb{border-radius:1px}
+.download-btn{width:100%;padding:12px;background:rgba(240,165,0,0.15);border:1.5px solid rgba(240,165,0,0.4);color:var(--gold);border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;margin-bottom:10px;transition:all 0.2s}
+.download-btn:hover{background:rgba(240,165,0,0.25)}
+
+/* ── LOADING SPINNER ── */
+.spinner{width:36px;height:36px;border:4px solid rgba(255,107,0,0.2);border-top:4px solid var(--saffron);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--dark);color:white;padding:12px 18px;border-radius:12px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:0 8px 28px rgba(0,0,0,0.28);z-index:9999;transform:translateY(100px);opacity:0;transition:all 0.4s;border-left:4px solid var(--saffron)}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── FOOTER ── */
+footer{background:var(--dark);color:white;padding:52px 5% 26px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;margin-bottom:36px}
+.footer-brand .logo{font-family:'Yatra One',cursive;font-size:26px;color:var(--gold)}
+.footer-brand p{font-size:13px;color:rgba(255,255,255,0.45);margin-top:8px;line-height:1.7}
+.footer-col h4{font-size:12px;font-weight:700;color:white;margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em}
+.footer-col a{display:block;font-size:13px;color:rgba(255,255,255,0.45);text-decoration:none;margin-bottom:7px;transition:color 0.2s}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.footer-bottom p{font-size:12px;color:rgba(255,255,255,0.3)}
+
+/* ══════════════════════════════════════════
+   NEW FEATURES CSS
+══════════════════════════════════════════ */
+
+/* ── LANGUAGE SWITCHER ── */
+.lang-switcher{display:flex;align-items:center;gap:4px;background:rgba(255,107,0,0.07);border:1.5px solid rgba(255,107,0,0.2);border-radius:50px;padding:3px;overflow:hidden}
+.lang-btn{padding:5px 11px;border-radius:50px;border:none;background:transparent;font-size:12px;font-weight:700;cursor:pointer;color:var(--text-muted);transition:all 0.2s;font-family:'Hind',sans-serif;white-space:nowrap}
+.lang-btn.active{background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;box-shadow:0 2px 8px rgba(255,107,0,0.3)}
+
+/* ── WHATSAPP BUTTON ── */
+.wa-btn{position:fixed;bottom:20px;right:20px;z-index:999;width:58px;height:58px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 6px 24px rgba(37,211,102,0.45);cursor:pointer;transition:all 0.3s;text-decoration:none}
+.wa-btn:hover{transform:scale(1.12) rotate(-5deg);box-shadow:0 10px 32px rgba(37,211,102,0.55)}
+.wa-pulse{position:absolute;width:100%;height:100%;border-radius:50%;background:rgba(37,211,102,0.4);animation:wa-pulse 2s ease-out infinite}
+@keyframes wa-pulse{0%{transform:scale(1);opacity:1}100%{transform:scale(1.7);opacity:0}}
+.wa-tooltip{position:absolute;right:70px;background:#1A0A00;color:white;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.wa-btn:hover .wa-tooltip{opacity:1}
+
+/* ── GALLERY ── */
+.gallery-section{background:white}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:32px}
+.gallery-item{border-radius:14px;overflow:hidden;position:relative;cursor:pointer;aspect-ratio:1;background:linear-gradient(135deg,#FF6B00,#C0392B);display:flex;align-items:center;justify-content:center;transition:transform 0.3s}
+.gallery-item:hover{transform:scale(1.03)}
+.gallery-item:hover .gallery-overlay{opacity:1}
+.gallery-item.tall{grid-row:span 2}
+.gallery-item.wide{grid-column:span 2}
+.gallery-emoji{font-size:70px;opacity:0.85}
+.gallery-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s}
+.gallery-overlay span{color:white;font-size:30px}
+.gallery-label{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,0.6);color:white;font-size:11px;font-weight:600;padding:3px 10px;border-radius:50px}
+/* Lightbox */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:3000;align-items:center;justify-content:center}
+.lightbox.active{display:flex}
+.lb-inner{position:relative;max-width:700px;width:90%;text-align:center}
+.lb-img{width:100%;border-radius:16px;background:linear-gradient(135deg,#FF6B00,#C0392B);height:400px;display:flex;align-items:center;justify-content:center;font-size:120px}
+.lb-close{position:absolute;top:-40px;right:0;color:white;font-size:28px;cursor:pointer;background:none;border:none}
+.lb-caption{color:white;margin-top:14px;font-size:15px;font-weight:600}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:none;color:white;font-size:24px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s}
+.lb-nav:hover{background:rgba(255,255,255,0.25)}
+.lb-prev{left:-60px}.lb-next{right:-60px}
+
+/* ── REVIEWS ── */
+.reviews-section{background:var(--cream)}
+.reviews-header{display:flex;align-items:center;gap:32px;flex-wrap:wrap;margin-bottom:32px}
+.review-score{text-align:center;background:linear-gradient(135deg,var(--saffron),var(--gold));border-radius:20px;padding:20px 28px;color:white}
+.rs-num{font-size:52px;font-weight:900;font-family:'Poppins',sans-serif;line-height:1}
+.rs-stars{font-size:20px;margin:6px 0}
+.rs-count{font-size:12px;opacity:0.85}
+.rating-bars{flex:1;min-width:200px}
+.rb-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.rb-lbl{font-size:12px;font-weight:600;color:var(--text);width:30px;text-align:right}
+.rb-bar{flex:1;height:8px;background:#e0d5c5;border-radius:50px;overflow:hidden}
+.rb-fill{height:100%;background:linear-gradient(90deg,var(--saffron),var(--gold));border-radius:50px}
+.rb-cnt{font-size:11px;color:var(--text-muted);width:24px}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-bottom:28px}
+.review-card{background:white;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.rc-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.rc-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--gold));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:white;flex-shrink:0}
+.rc-name{font-weight:700;font-size:14px;color:var(--text)}
+.rc-meta{font-size:11px;color:var(--text-muted)}
+.rc-stars{color:var(--gold);font-size:14px;margin-bottom:8px}
+.rc-text{font-size:13px;color:var(--text-muted);line-height:1.6;font-style:italic}
+.rc-event{font-size:11px;color:var(--saffron);font-weight:600;margin-top:8px}
+.rc-verified{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--green);font-weight:600;margin-top:6px}
+/* Add review form */
+.add-review-box{background:white;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.star-picker{display:flex;gap:6px;margin-bottom:14px;cursor:pointer}
+.star-pick{font-size:28px;filter:grayscale(1);transition:all 0.15s;cursor:pointer}
+.star-pick.lit{filter:none}
+
+/* ── GROUP BOOKING ── */
+.group-section{background:linear-gradient(135deg,#1A0A00,#2C1200)}
+.group-tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:32px}
+.gt-card{background:rgba(255,255,255,0.06);border-radius:var(--radius);padding:22px;text-align:center;border:1px solid rgba(240,165,0,0.15);transition:all 0.3s;cursor:pointer}
+.gt-card:hover,.gt-card.active{background:rgba(255,107,0,0.12);border-color:rgba(255,107,0,0.5);transform:translateY(-4px)}
+.gt-emoji{font-size:40px;display:block;margin-bottom:10px}
+.gt-label{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:4px}
+.gt-people{font-size:22px;font-weight:800;color:white;margin-bottom:6px}
+.gt-discount{font-size:28px;font-weight:900;color:var(--golden-light)}
+.gt-save{font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px}
+.group-booking-bar{background:rgba(255,255,255,0.05);border-radius:var(--radius);padding:22px;margin-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;border:1px solid rgba(240,165,0,0.15)}
+
+/* ── REFERRAL ── */
+.referral-section{background:white}
+.referral-box{background:linear-gradient(135deg,#FF6B00,#C0392B);border-radius:20px;padding:36px;text-align:center;color:white;position:relative;overflow:hidden}
+.referral-box::before{content:'🎁';position:absolute;font-size:200px;opacity:0.05;right:-30px;bottom:-30px}
+.ref-code-display{background:rgba(255,255,255,0.15);border:2px dashed rgba(255,255,255,0.5);border-radius:14px;padding:16px 24px;font-size:28px;font-weight:900;letter-spacing:.15em;margin:20px auto;display:inline-block;cursor:pointer;transition:all 0.2s}
+.ref-code-display:hover{background:rgba(255,255,255,0.25)}
+.ref-stats{display:flex;justify-content:center;gap:40px;margin-top:20px;flex-wrap:wrap}
+.ref-stat .v{font-size:28px;font-weight:900}
+.ref-stat .l{font-size:12px;opacity:0.75}
+.ref-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px}
+.ref-step{text-align:center;padding:20px}
+.ref-step-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.ref-step h4{font-size:14px;font-weight:700;margin-bottom:6px}
+.ref-step p{font-size:12px;color:var(--text-muted)}
+@media(max-width:768px){.ref-steps{grid-template-columns:1fr}.lb-nav{display:none}}
+
+/* ── LUCKY DRAW ── */
+.lucky-section{background:linear-gradient(160deg,#1A0A00,#3D0050)}
+.wheel-wrap{display:flex;flex-direction:column;align-items:center;margin-top:32px}
+.wheel-container{position:relative;width:300px;height:300px;margin-bottom:20px}
+.wheel{width:300px;height:300px;border-radius:50%;position:relative;transition:transform 4s cubic-bezier(0.17,0.67,0.12,0.99);border:6px solid var(--gold);box-shadow:0 0 40px rgba(240,165,0,0.4)}
+.wheel-pointer{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:32px;z-index:10;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5))}
+.spin-btn{background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;border:none;padding:16px 40px;border-radius:50px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Hind',sans-serif;box-shadow:0 8px 28px rgba(255,107,0,0.4);transition:all 0.3s;margin-top:8px}
+.spin-btn:hover{transform:translateY(-3px) scale(1.05)}
+.spin-btn:disabled{background:#555;cursor:not-allowed;transform:none}
+.prizes-list{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:20px;max-width:500px}
+.prize-chip{background:rgba(255,255,255,0.08);border:1px solid rgba(240,165,0,0.2);padding:6px 14px;border-radius:50px;font-size:12px;color:rgba(255,255,255,0.7)}
+.prize-chip.highlight{background:rgba(255,107,0,0.2);border-color:rgba(255,107,0,0.5);color:var(--golden-light);font-weight:700}
+.lucky-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:3000;align-items:center;justify-content:center}
+.lucky-modal.active{display:flex}
+.lucky-result{background:linear-gradient(135deg,#1A0A00,#3D1C00);border-radius:24px;padding:40px;text-align:center;border:2px solid var(--gold);max-width:380px;width:90%;animation:modalIn 0.4s ease}
+.lucky-prize-icon{font-size:80px;display:block;animation:pop 0.5s ease;margin-bottom:12px}
+
+/* ── URGENCY BANNER ── */
+.urgency-bar{background:linear-gradient(135deg,var(--deep-red),var(--maroon));color:white;text-align:center;padding:10px;font-size:13px;font-weight:600;position:sticky;top:70px;z-index:999}
+.urgency-bar span{color:var(--golden-light);font-weight:800}
+
+/* ── SOCIAL PROOF TICKER ── */
+.proof-ticker{background:rgba(255,107,0,0.06);border-top:1px solid rgba(255,107,0,0.1);border-bottom:1px solid rgba(255,107,0,0.1);padding:10px 0;overflow:hidden;white-space:nowrap}
+.proof-track{display:inline-flex;gap:0;animation:ticker 25s linear infinite}
+.proof-track:hover{animation-play-state:paused}
+.proof-item{display:inline-flex;align-items:center;gap:7px;padding:0 28px;font-size:13px;color:var(--text-muted);border-right:1px solid rgba(255,107,0,0.15)}
+.proof-item strong{color:var(--text)}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.costume-section{background:linear-gradient(160deg,#FFF8EE 0%,#FFF0D8 100%);position:relative;overflow:hidden}
+.costume-section::before{content:'👗';position:absolute;font-size:300px;opacity:0.04;right:-40px;top:-40px;transform:rotate(15deg)}
+.costume-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:24px;margin-top:36px}
+.costume-card{background:white;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);transition:transform 0.3s,box-shadow 0.3s;cursor:pointer}
+.costume-card:hover{transform:translateY(-6px);box-shadow:0 20px 56px rgba(192,57,43,0.16)}
+.costume-img{height:200px;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative}
+.costume-img.c1{background:linear-gradient(135deg,#FF6B00,#C0392B)}
+.costume-img.c2{background:linear-gradient(135deg,#8E44AD,#E91E63)}
+.costume-img.c3{background:linear-gradient(135deg,#F0A500,#E67E22)}
+.costume-img.c4{background:linear-gradient(135deg,#27AE60,#2ECC71)}
+.costume-img.c5{background:linear-gradient(135deg,#2980B9,#8E44AD)}
+.costume-img.c6{background:linear-gradient(135deg,#C0392B,#8B0000)}
+.costume-avail{position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.92);padding:3px 10px;border-radius:50px;font-size:10px;font-weight:700;color:var(--green)}
+.costume-avail.low{color:var(--red)}
+.costume-body{padding:16px}
+.costume-name{font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
+.costume-desc{font-size:12px;color:var(--text-muted);margin-bottom:10px;line-height:1.5}
+.costume-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.c-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:50px;background:rgba(255,107,0,0.08);color:var(--saffron);border:1px solid rgba(255,107,0,0.2)}
+.costume-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border)}
+.costume-price .per-day{font-size:10px;color:var(--text-muted)}
+.costume-price .price-val{font-size:20px;font-weight:800;color:var(--saffron);font-family:'Poppins',sans-serif}
+.costume-price .deposit{font-size:10px;color:var(--text-muted)}
+.btn-rent{background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;border:none;padding:9px 18px;border-radius:50px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;transition:all 0.2s}
+.btn-rent:hover{transform:scale(1.05)}
+.costume-features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:32px;margin-bottom:0}
+.cf-item{background:white;border-radius:14px;padding:16px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border)}
+.cf-icon{font-size:28px;display:block;margin-bottom:8px}
+.cf-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.cf-desc{font-size:11px;color:var(--text-muted);line-height:1.5}
+
+/* ── RENT MODAL ── */
+.size-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.size-btn{padding:10px 5px;border:1.5px solid var(--border);border-radius:10px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;color:var(--text-muted);background:white;font-family:'Hind',sans-serif}
+.size-btn:hover,.size-btn.active{border-color:var(--saffron);color:var(--saffron);background:rgba(255,107,0,0.05)}
+.size-btn.na{background:#f5f5f5;color:#ccc;cursor:not-allowed}
+.rent-summary{background:var(--cream);border-radius:12px;padding:14px;margin:12px 0;border:1px solid var(--border)}
+.rent-summary-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.rent-summary-row:last-child{border-top:1px dashed var(--border);padding-top:6px;margin-bottom:0;font-weight:700;font-size:15px}
+.days-selector{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.days-selector button{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Hind',sans-serif;transition:all 0.2s}
+.days-selector button:hover{border-color:var(--saffron);color:var(--saffron)}
+.days-val{font-size:20px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;min-width:30px;text-align:center}
+@media(max-width:768px){.costume-features{grid-template-columns:1fr}}
+
+
+/* ── PHOTO GALLERY ── */
+.gallery-section{background:var(--dark);padding:72px 5%}
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,200px);gap:12px;margin-top:32px}
+.g-item{border-radius:14px;overflow:hidden;position:relative;cursor:pointer}.g-item:first-child{grid-column:span 2;grid-row:span 2}.g-photo{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:60px;transition:transform 0.4s}.g-item:hover .g-photo{transform:scale(1.06)}
+.g-photo.gp1{background:linear-gradient(135deg,#FF6B00,#C0392B)}.g-photo.gp2{background:linear-gradient(135deg,#8E44AD,#2980B9)}.g-photo.gp3{background:linear-gradient(135deg,#F0A500,#E67E22)}.g-photo.gp4{background:linear-gradient(135deg,#27AE60,#2ECC71)}.g-photo.gp5{background:linear-gradient(135deg,#E91E63,#C0392B)}.g-photo.gp6{background:linear-gradient(135deg,#3498DB,#8E44AD)}
+.g-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent);opacity:0;transition:opacity 0.3s;display:flex;align-items:flex-end;padding:14px}.g-item:hover .g-overlay{opacity:1}.g-label{color:white;font-size:13px;font-weight:700}.g-tag{position:absolute;top:10px;left:10px;background:rgba(255,107,0,0.85);color:white;font-size:10px;font-weight:700;padding:3px 9px;border-radius:50px}
+/* ── REVIEWS ── */
+.reviews-section{background:white}
+.reviews-header{display:flex;align-items:center;gap:28px;margin-bottom:32px;flex-wrap:wrap}
+.rating-big{text-align:center;background:linear-gradient(135deg,var(--saffron),var(--gold));border-radius:20px;padding:24px 32px;color:white;min-width:150px}.rating-big .num{font-size:52px;font-weight:900;line-height:1;font-family:'Poppins',sans-serif}.rating-big .stars{font-size:22px;margin:4px 0}.rating-big .count{font-size:12px;opacity:0.85}
+.rating-bars{flex:1;min-width:200px}.rb-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}.rb-label{font-size:12px;color:var(--text-muted);width:30px;text-align:right;flex-shrink:0}.rb-bar{flex:1;background:#F0E8D8;height:8px;border-radius:4px;overflow:hidden}.rb-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--saffron),var(--gold))}.rb-count{font-size:11px;color:var(--text-muted);width:24px;flex-shrink:0}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.review-card{background:var(--cream);border-radius:var(--radius);padding:20px;border:1px solid var(--border);transition:transform 0.2s,box-shadow 0.2s}.review-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.rc-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}.rc-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--gold));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:white;flex-shrink:0}.rc-name{font-weight:700;font-size:14px;color:var(--text)}.rc-meta{font-size:11px;color:var(--text-muted)}.rc-stars{color:var(--gold);font-size:14px;margin-bottom:8px}.rc-text{font-size:13px;color:var(--text-muted);line-height:1.7}.rc-event{font-size:11px;color:var(--saffron);font-weight:600;margin-top:8px}.rc-likes{display:flex;align-items:center;gap:5px;margin-top:10px;font-size:11px;color:var(--text-muted);cursor:pointer}.rc-likes:hover{color:var(--saffron)}.verified-badge{background:rgba(39,174,96,0.1);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:50px;margin-left:auto}
+.add-review-btn{display:flex;align-items:center;gap:8px;background:var(--cream);border:2px dashed rgba(255,107,0,0.3);color:var(--saffron);padding:16px 24px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;width:100%;justify-content:center;transition:all 0.2s;font-family:'Hind',sans-serif}.add-review-btn:hover{background:rgba(255,107,0,0.05);border-color:var(--saffron)}
+/* ── GROUP BOOKING ── */
+.group-section{background:linear-gradient(135deg,#1A0A00 0%,#3D1C00 50%,#1A0A00 100%);padding:72px 5%;position:relative;overflow:hidden}.group-section::before{content:'👥';position:absolute;font-size:280px;opacity:0.04;right:-30px;bottom:-30px}
+.group-tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:36px}
+.gt-card{border-radius:var(--radius);padding:24px;text-align:center;border:1px solid rgba(240,165,0,0.15);transition:transform 0.3s;cursor:pointer;position:relative}.gt-card:hover{transform:translateY(-5px)}.gt-card.gt1{background:rgba(255,255,255,0.04)}.gt-card.gt2{background:rgba(255,107,0,0.08);border-color:rgba(255,107,0,0.3)}.gt-card.gt3{background:rgba(240,165,0,0.1);border-color:rgba(240,165,0,0.4)}.gt-card.gt4{background:rgba(255,215,0,0.08);border-color:rgba(255,215,0,0.4)}
+.gt-best{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;font-size:10px;font-weight:700;padding:4px 14px;border-radius:50px;white-space:nowrap}
+.gt-icon{font-size:40px;display:block;margin-bottom:10px}.gt-people{font-size:14px;font-weight:800;color:white;margin-bottom:4px;font-family:'Poppins',sans-serif}.gt-disc{font-size:36px;font-weight:900;font-family:'Poppins',sans-serif;margin:8px 0}.gt-card.gt1 .gt-disc{color:rgba(255,255,255,0.6)}.gt-card.gt2 .gt-disc{color:#FFB88C}.gt-card.gt3 .gt-disc{color:var(--golden-light)}.gt-card.gt4 .gt-disc{color:#FFD700}.gt-save{font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:14px}
+.gt-btn{width:100%;padding:10px;border-radius:50px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;transition:all 0.2s}.gt-card.gt1 .gt-btn{background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2)}.gt-card.gt2 .gt-btn{background:linear-gradient(135deg,var(--saffron),#E67E22);color:white}.gt-card.gt3 .gt-btn{background:linear-gradient(135deg,var(--gold),var(--saffron));color:white}.gt-card.gt4 .gt-btn{background:linear-gradient(135deg,#FFD700,var(--gold));color:var(--dark)}.gt-btn:hover{transform:scale(1.04)}
+/* ── REFERRAL ── */
+.referral-section{background:var(--cream);padding:72px 5%}
+.referral-box{background:linear-gradient(135deg,#1A0A00,#3D1C00);border-radius:24px;padding:40px;display:flex;align-items:center;gap:40px;flex-wrap:wrap;position:relative;overflow:hidden}.referral-box::before{content:'🎁';position:absolute;font-size:200px;opacity:0.05;right:-20px;top:-20px}
+.referral-left{flex:1;min-width:260px}.referral-left h3{font-family:'Yatra One',cursive;font-size:28px;color:var(--golden-light);margin-bottom:8px}.referral-left p{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:20px}
+.ref-steps{display:flex;flex-direction:column;gap:10px}.ref-step{display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)}.ref-step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.referral-right{background:rgba(255,255,255,0.06);border-radius:18px;padding:28px;min-width:280px;text-align:center;border:1px solid rgba(240,165,0,0.2)}.ref-code-lbl{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em}.ref-code{font-size:28px;font-weight:900;color:var(--golden-light);letter-spacing:.1em;font-family:'Poppins',sans-serif;margin-bottom:14px}
+.ref-copy-btn{background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;border:none;padding:11px 28px;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;width:100%;margin-bottom:12px;transition:all 0.2s}.ref-copy-btn:hover{transform:translateY(-2px)}
+.ref-share-btns{display:flex;gap:8px;justify-content:center}.rsb{padding:9px 16px;border-radius:50px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Hind',sans-serif;transition:all 0.2s}.rsb.wa{background:#25D366;color:white}.rsb.tw{background:#1DA1F2;color:white}.rsb:hover{transform:scale(1.05)}
+.ref-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.ref-stat{background:rgba(255,255,255,0.05);border-radius:10px;padding:10px;text-align:center}.ref-stat .v{font-size:20px;font-weight:800;color:var(--golden-light);font-family:'Poppins',sans-serif}.ref-stat .l{font-size:10px;color:rgba(255,255,255,0.35)}
+/* ── LUCKY DRAW ── */
+.lucky-section{background:linear-gradient(160deg,#1A0033,#3D0066,#1A0A00);padding:72px 5%;text-align:center;position:relative;overflow:hidden}.lucky-section::before{content:'🎰';position:absolute;font-size:300px;opacity:0.04;left:50%;top:50%;transform:translate(-50%,-50%)}
+.lucky-prizes{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;max-width:700px;margin:24px auto}.lp-item{background:rgba(255,255,255,0.06);border:1px solid rgba(240,165,0,0.2);border-radius:12px;padding:14px;text-align:center}.lp-item .prize-icon{font-size:28px;display:block;margin-bottom:6px}.lp-item .prize-name{font-size:12px;font-weight:700;color:white}.lp-item .prize-val{font-size:11px;color:var(--golden-light)}
+.spin-btn{background:linear-gradient(135deg,#FFD700,var(--gold),var(--saffron));color:var(--dark);border:none;padding:16px 48px;border-radius:50px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Hind',sans-serif;box-shadow:0 8px 32px rgba(255,215,0,0.4);transition:all 0.3s;margin-top:8px}.spin-btn:hover{transform:translateY(-3px)}.spin-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.lucky-note{font-size:12px;color:rgba(255,255,255,0.35);margin-top:12px}
+/* ── WHATSAPP FLOAT ── */
+.wa-float{position:fixed;bottom:90px;right:24px;z-index:1000;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.wa-btn{width:58px;height:58px;border-radius:50%;background:#25D366;border:none;font-size:26px;cursor:pointer;box-shadow:0 6px 24px rgba(37,211,102,0.45);transition:all 0.3s;display:flex;align-items:center;justify-content:center;animation:waPulse 2.5s ease-in-out infinite}
+@keyframes waPulse{0%,100%{box-shadow:0 6px 24px rgba(37,211,102,0.45)}50%{box-shadow:0 6px 40px rgba(37,211,102,0.7),0 0 0 10px rgba(37,211,102,0.1)}}.wa-btn:hover{transform:scale(1.1);animation:none}
+.wa-tooltip{background:var(--dark);color:white;padding:8px 14px;border-radius:50px;font-size:12px;font-weight:600;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.2)}
+.wa-bubble{position:absolute;bottom:70px;right:0;background:white;border-radius:18px 18px 0 18px;padding:14px 18px;width:250px;box-shadow:0 8px 32px rgba(0,0,0,0.15);display:none}.wa-bubble.show{display:block;animation:modalIn 0.3s ease}.wa-bubble h4{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}.wa-bubble p{font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6}.wa-start{width:100%;padding:10px;background:#25D366;color:white;border:none;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif}
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .nav-links{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(10,4,0,0.98);backdrop-filter:blur(20px);flex-direction:column;padding:16px;gap:4px;border-bottom:1px solid rgba(240,165,0,0.15);z-index:999}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:12px 16px;border-radius:10px;font-size:14px}
+  .hamburger{display:flex !important}
+  .footer-grid{grid-template-columns:1fr 1fr}.events-grid,.passes-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.steps-grid{grid-template-columns:1fr}.step-arr{display:none}.gallery-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:auto}.g-item:first-child{grid-column:span 2;grid-row:span 1}.group-tiers{grid-template-columns:1fr 1fr}
+  .nav-logo-tag{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE LOADER -->
+<div id="pageLoader">
+  <div class="loader-diya">🪔</div>
+  <div class="loader-name">GarbaUtsav</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<nav>
+  <!-- Logo -->
+  <a class="nav-logo" href="#home">
+    <div class="nav-logo-icon">🪔</div>
+    <div class="nav-logo-text">
+      <div class="nav-logo-name">GarbaUtsav</div>
+      <div class="nav-logo-tag" data-t="nav_tagline">Premium Navratri Booking</div>
+    </div>
+  </a>
+
+  <!-- Nav Links -->
+  <div class="nav-links" id="navLinks">
+    <a href="#events" data-t="nav_events"><span class="nl-icon">🪔</span>Events</a>
+    <a href="#passes" data-t="nav_passes"><span class="nl-icon">🎟</span>Passes</a>
+    <a href="#costume" data-t="nav_costume"><span class="nl-icon">👗</span>Costume</a>
+    <a href="#gallery" data-t="nav_gallery"><span class="nl-icon">📸</span>Gallery</a>
+    <a href="#lucky" data-t="nav_lucky"><span class="nl-icon">🎰</span>Lucky Draw</a>
+    <a href="#contact" data-t="nav_contact"><span class="nl-icon">📞</span>Contact</a>
+    <a href="/admin.html" style="color:var(--golden-light);" data-t="nav_admin"><span class="nl-icon">🔒</span>Admin</a>
+  </div>
+
+  <!-- Right Side -->
+  <div class="nav-right">
+    <!-- Language Switcher -->
+    <div class="lang-switcher" title="Change Language">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('hi',this)">हि</button>
+      <button class="lang-btn" onclick="setLang('gu',this)">ગુ</button>
+    </div>
+    <!-- Book Now -->
+    <button class="nav-cta" onclick="scrollTo('events')" data-t="nav_book">
+      <div class="nav-cta-pulse"></div>
+      Book Now
+    </button>
+  </div>
+
+  <div class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()" style="display:none">☰</div>
+</nav>
+
+<!-- URGENCY BAR -->
+<div class="urgency-bar">🔥 <span id="urgencyCount">347</span> log abhi is website pe hain! · Navratri passes fast bik rahe hain · <span>Sirf <span id="urgencyHours">06:24:11</span> mein sale khatam!</span></div>
+
+<!-- SOCIAL PROOF TICKER -->
+<div class="proof-ticker">
+  <div class="proof-track" id="proofTrack"></div>
+</div>
+<section class="hero" id="home">
+  <div>
+    <span class="hero-diya">🪔</span>
+    <div class="hero-badge" data-t="hero_badge">✦ Navratri 2025 — Limited Passes Available</div>
+    <h1 data-t="hero_h1">Book Your<br>Garba Pass<br>Online</h1>
+    <p data-t="hero_p">Gujarat's most trusted platform for Navratri Garba events. Instant e-tickets, secure payments, and memories for life!</p>
+    <div class="hero-btns">
+      <button class="btn-fire" onclick="scrollTo('events')" data-t="hero_btn1">🎟 Explore Events</button>
+      <button class="btn-ghost" onclick="scrollTo('passes')" data-t="hero_btn2">View Passes</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">50,000+</div><div class="lbl" data-t="stat1">Passes Sold</div></div>
+      <div class="hero-stat"><div class="num">120+</div><div class="lbl" data-t="stat2">Events Listed</div></div>
+      <div class="hero-stat"><div class="num">4.9 ★</div><div class="lbl" data-t="stat3">User Rating</div></div>
+      <div class="hero-stat"><div class="num">15+</div><div class="lbl" data-t="stat4">Cities</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section class="events-section" id="events">
+  <div class="section-head-row">
+    <div>
+      <div class="section-tag">🪔 Live Events</div>
+      <h2 class="section-title">Upcoming Garba Events</h2>
+      <p class="section-sub">Handpicked premium events near you. Book early — sells out fast!</p>
+    </div>
+  </div>
+  <div class="filter-bar" id="filterBar">
+    <button class="filt-chip active" onclick="filterEvents('all',this)">All Cities</button>
+    <button class="filt-chip" onclick="filterEvents('ahmedabad',this)">Ahmedabad</button>
+    <button class="filt-chip" onclick="filterEvents('surat',this)">Surat</button>
+    <button class="filt-chip" onclick="filterEvents('vadodara',this)">Vadodara</button>
+    <button class="filt-chip" onclick="filterEvents('rajkot',this)">Rajkot</button>
+    <button class="filt-chip" onclick="filterEvents('gandhinagar',this)">Gandhinagar</button>
+  </div>
+  <div class="events-grid" id="eventsGrid">
+    <!-- Skeleton loaders -->
+    ${[1,2,3,4,5,6].map(()=>`
+    <div class="event-skeleton">
+      <div class="ev-sk-banner skeleton"></div>
+      <div class="ev-sk-body">
+        <div class="ev-sk-title skeleton"></div>
+        <div class="ev-sk-sub skeleton"></div>
+        <div class="ev-sk-row skeleton"></div>
+        <div class="ev-sk-row skeleton"></div>
+      </div>
+    </div>`).join('')}
+  </div>
+</section>
+
+<!-- PASSES -->
+<section class="passes-section" id="passes">
+  <div style="max-width:600px">
+    <div class="section-tag" style="color:var(--golden-light)">🎟 Pass Categories</div>
+    <h2 class="section-title">Choose Your Pass</h2>
+    <p class="section-sub" style="color:rgba(255,255,255,0.6)">From solo entry to VIP couple packages — pick what's perfect for you.</p>
+  </div>
+  <div class="passes-grid" id="passesGrid"></div>
+</section>
+
+<!-- COSTUME RENT -->
+<section class="costume-section" id="costume">
+  <div class="section-head-row">
+    <div>
+      <div class="section-tag">👗 New Feature</div>
+      <h2 class="section-title">Navratri Costume Rental</h2>
+      <p class="section-sub">Stunning traditional outfits on rent! Chaniya Choli, Kediya, Sherwani — delivered to your door.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <div style="background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);padding:8px 16px;border-radius:50px;font-size:12px;font-weight:700;color:var(--green)">🚚 Free Home Delivery</div>
+      <div style="background:rgba(255,107,0,0.1);border:1px solid rgba(255,107,0,0.3);padding:8px 16px;border-radius:50px;font-size:12px;font-weight:700;color:var(--saffron)">✨ Dry Cleaned & Ready</div>
+    </div>
+  </div>
+  <div class="costume-features">
+    <div class="cf-item"><span class="cf-icon">🚚</span><div class="cf-title">Free Delivery</div><div class="cf-desc">Delivered 1 day before event. Free pickup after!</div></div>
+    <div class="cf-item"><span class="cf-icon">✨</span><div class="cf-title">Dry Cleaned</div><div class="cf-desc">Every costume professionally cleaned before delivery.</div></div>
+    <div class="cf-item"><span class="cf-icon">📸</span><div class="cf-title">Photo Ready</div><div class="cf-desc">Premium embroidery & mirror work. Instagram perfect!</div></div>
+  </div>
+  <div class="costume-grid" id="costumeGrid"></div>
+</section>
+
+<!-- COSTUME MODAL -->
+<div class="modal-overlay" id="costumeModal">
+  <div class="modal" id="costumeModalContent"></div>
+</div>
+
+<!-- HOW IT WORKS -->
+  <div style="text-align:center;max-width:560px;margin:0 auto 0">
+    <div class="section-tag">⚡ Simple Process</div>
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub" style="margin:0 auto">Book your Garba pass in 3 easy steps. From selection to entry at the venue.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card"><span class="step-icon">🔍</span><div class="step-num">01</div><h4>Browse Events</h4><p>Explore verified Navratri events filtered by city, date, and price.</p></div>
+    <div class="step-arr">→</div>
+    <div class="step-card"><span class="step-icon">🎟</span><div class="step-num">02</div><h4>Select & Buy Pass</h4><p>Choose your pass type and complete secure Razorpay payment.</p></div>
+    <div class="step-arr">→</div>
+    <div class="step-card"><span class="step-icon">📱</span><div class="step-num">03</div><h4>Get Digital Pass</h4><p>Instant e-pass with QR code on email + WhatsApp. PDF download too!</p></div>
+    <div class="step-arr">→</div>
+    <div class="step-card"><span class="step-icon">💃</span><div class="step-num">04</div><h4>Enjoy Garba!</h4><p>Scan QR at gate and enjoy a magical Navratri night!</p></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div style="text-align:center;max-width:560px;margin:0 auto">
+    <div class="section-tag">❤️ Happy Dancers</div>
+    <h2 class="section-title">What People Say</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"Super easy to book! Got my QR pass instantly. Entry was so smooth — no queue!"</p><div class="t-user"><div class="t-avatar">P</div><div><div class="t-name">Priya Sharma</div><div class="t-city">Ahmedabad, Gujarat</div></div></div></div>
+    <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"Couple pass totally worth it! PDF ticket, WhatsApp confirmation — very professional!"</p><div class="t-user"><div class="t-avatar">R</div><div><div class="t-name">Rahul & Neha Patel</div><div class="t-city">Surat, Gujarat</div></div></div></div>
+    <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"Used NAVRATRI coupon and got 15% off! Booked 4 passes for family in 2 minutes!"</p><div class="t-user"><div class="t-avatar">K</div><div><div class="t-name">Kavya Desai</div><div class="t-city">Vadodara, Gujarat</div></div></div></div>
+  </div>
+</section>
+
+<!-- PHOTO GALLERY -->
+<section class="gallery-section" id="gallery">
+  <div class="section-head-row">
+    <div>
+      <div class="section-tag">📸 Memories</div>
+      <h2 class="section-title">Navratri Vibes Gallery</h2>
+      <p class="section-sub">Pichhle saalon ki khoobsurat yaadein. Is saal aap bhi part bano!</p>
+    </div>
+    <button class="btn-fire" onclick="document.getElementById('galleryUpload').click()">📤 Upload Your Photo</button>
+    <input type="file" id="galleryUpload" accept="image/*" style="display:none" onchange="addUserPhoto(this)">
+  </div>
+  <div class="gallery-grid" id="galleryGrid"></div>
+</section>
+<div class="lightbox" id="lightbox">
+  <div class="lb-inner">
+    <button class="lb-close" onclick="closeLightbox()">✕</button>
+    <button class="lb-nav lb-prev" onclick="lbNav(-1)">‹</button>
+    <button class="lb-nav lb-next" onclick="lbNav(1)">›</button>
+    <div class="lb-img" id="lbImg"></div>
+    <div class="lb-caption" id="lbCaption"></div>
+  </div>
+</div>
+
+<!-- LIVE REVIEWS -->
+<section class="reviews-section" id="reviews">
+  <div class="section-head-row">
+    <div>
+      <div class="section-tag">⭐ Live Reviews</div>
+      <h2 class="section-title">Customer Reviews</h2>
+    </div>
+  </div>
+  <div class="reviews-header">
+    <div class="review-score">
+      <div class="rs-num" id="avgScore">4.9</div>
+      <div class="rs-stars">★★★★★</div>
+      <div class="rs-count" id="totalReviews">2,847 reviews</div>
+    </div>
+    <div class="rating-bars" id="ratingBars"></div>
+  </div>
+  <div class="reviews-grid" id="reviewsGrid"></div>
+  <!-- Add Review -->
+  <div class="add-review-box">
+    <h3 style="font-family:'Poppins',sans-serif;font-size:17px;font-weight:700;margin-bottom:16px">✍️ Apna Review Likho!</h3>
+    <div class="form-row">
+      <div class="form-group"><label>Aapka Naam</label><input id="rvName" placeholder="Priya Sharma"></div>
+      <div class="form-group"><label>City</label><input id="rvCity" placeholder="Ahmedabad"></div>
+    </div>
+    <div class="form-group"><label>Rating</label>
+      <div class="star-picker" id="starPicker">
+        <span class="star-pick" onclick="setRating(1)" data-v="1">★</span>
+        <span class="star-pick" onclick="setRating(2)" data-v="2">★</span>
+        <span class="star-pick" onclick="setRating(3)" data-v="3">★</span>
+        <span class="star-pick" onclick="setRating(4)" data-v="4">★</span>
+        <span class="star-pick" onclick="setRating(5)" data-v="5">★</span>
+      </div>
+    </div>
+    <div class="form-group"><label>Aapka Experience</label><input id="rvText" placeholder="Event bahut accha tha! Pass booking super easy thi..."></div>
+    <button class="btn-fire" onclick="submitReview()" style="margin-top:8px">⭐ Review Submit Karo</button>
+  </div>
+</section>
+
+<!-- GROUP BOOKING -->
+<section class="group-section" id="group">
+  <div style="max-width:600px">
+    <div class="section-tag" style="color:var(--golden-light)">🤝 Best Deal</div>
+    <h2 class="section-title" style="color:white">Group Booking Discount</h2>
+    <p class="section-sub" style="color:rgba(255,255,255,0.6)">Jitna bada group — utna bada discount! Family aur dosto ke saath aao, zyada bachao!</p>
+  </div>
+  <div class="group-tiers" id="groupTiers"></div>
+  <div class="group-booking-bar">
+    <div>
+      <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-bottom:4px">Selected Group Size</div>
+      <div style="color:var(--golden-light);font-size:22px;font-weight:800" id="selectedGroupLabel">4 log — 10% OFF</div>
+    </div>
+    <div>
+      <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-bottom:4px">Aap bachoge</div>
+      <div style="color:var(--green);font-size:22px;font-weight:800" id="groupSaving">₹140</div>
+    </div>
+    <button class="btn-fire" onclick="openGroupBooking()">🤝 Group Book Karo →</button>
+  </div>
+</section>
+
+<!-- REFERRAL -->
+<section class="referral-section" id="referral">
+  <div class="section-head-row">
+    <div>
+      <div class="section-tag">📢 Invite & Earn</div>
+      <h2 class="section-title">Refer Karo, ₹50 Kamao!</h2>
+      <p class="section-sub">Har ek dost jo aapke code se booking kare — aapko ₹50 cashback milega!</p>
+    </div>
+  </div>
+  <div class="referral-box">
+    <div style="font-size:14px;opacity:0.85;margin-bottom:8px">Aapka Personal Referral Code</div>
+    <div class="ref-code-display" id="refCode" onclick="copyRefCode()">MEET50</div>
+    <div style="font-size:13px;opacity:0.75;margin-bottom:16px">👆 Click karke copy karo!</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button onclick="shareWhatsApp()" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.4);padding:10px 22px;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif">📱 WhatsApp Share</button>
+      <button onclick="copyRefCode()" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.4);padding:10px 22px;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif">🔗 Link Copy Karo</button>
+    </div>
+    <div class="ref-stats">
+      <div class="ref-stat"><div class="v" id="refInvited">0</div><div class="l">Friends Invited</div></div>
+      <div class="ref-stat"><div class="v" id="refBooked">0</div><div class="l">Booked via Link</div></div>
+      <div class="ref-stat"><div class="v">₹<span id="refEarned">0</span></div><div class="l">Total Earned</div></div>
+    </div>
+  </div>
+  <div class="ref-steps">
+    <div class="ref-step"><div class="ref-step-num">1</div><h4>Code Share Karo</h4><p>WhatsApp pe apna code dosto ko bhejo</p></div>
+    <div class="ref-step"><div class="ref-step-num">2</div><h4>Dost Book Kare</h4><p>Wo aapka code use karke pass kharide</p></div>
+    <div class="ref-step"><div class="ref-step-num">3</div><h4>₹50 Pao!</h4><p>Har successful booking pe ₹50 cashback aapke account mein</p></div>
+  </div>
+</section>
+
+<!-- LUCKY DRAW -->
+<section class="lucky-section" id="lucky" style="padding:72px 5%;text-align:center">
+  <div class="section-tag" style="color:var(--golden-light);justify-content:center">🎰 Free Contest</div>
+  <h2 class="section-title" style="color:white;text-align:center">Lucky Draw Spin Karo!</h2>
+  <p class="section-sub" style="color:rgba(255,255,255,0.6);text-align:center;margin:0 auto 0">Roz ek chance — Free passes, discounts, aur surprise gifts jeeto!</p>
+  <div class="wheel-wrap">
+    <div class="wheel-container">
+      <div class="wheel-pointer">▼</div>
+      <canvas id="wheelCanvas" width="300" height="300" style="border-radius:50%;cursor:pointer" onclick="spinWheel()"></canvas>
+    </div>
+    <button class="spin-btn" id="spinBtn" onclick="spinWheel()">🎰 Spin the Wheel!</button>
+    <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-top:10px">Aaj ke <span id="spinsLeft">1</span> spin baaki hain</p>
+    <div class="prizes-list">
+      <div class="prize-chip highlight">🎟 Free Gold Pass</div>
+      <div class="prize-chip highlight">💎 VIP Upgrade</div>
+      <div class="prize-chip">🏷️ 20% Discount</div>
+      <div class="prize-chip">🏷️ 15% Discount</div>
+      <div class="prize-chip">👗 Free Costume</div>
+      <div class="prize-chip">₹100 Cashback</div>
+      <div class="prize-chip">₹50 Cashback</div>
+      <div class="prize-chip">🎁 Try Again</div>
+    </div>
+  </div>
+</section>
+<div class="lucky-modal" id="luckyModal">
+  <div class="lucky-result" id="luckyResult"></div>
+</div>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">🪔 GarbaUtsav</div>
+      <p>Gujarat's most trusted Navratri pass booking platform.<br>Secure payments · Instant e-tickets · 50,000+ happy dancers</p>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <a href="#" onclick="openWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;background:rgba(37,211,102,0.15);color:#25D366;border:1px solid rgba(37,211,102,0.3);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none">💬 WhatsApp Support</a>
+        <a href="mailto:support@garbautsav.in" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,107,0,0.1);color:var(--golden-light);border:1px solid rgba(255,107,0,0.2);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none">📧 Email Us</a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Quick Links</h4><a href="#events">Browse Events</a><a href="#passes">Pass Types</a><a href="#how">How It Works</a><a href="/admin.html">Organizer Login</a></div>
+    <div class="footer-col"><h4>Support</h4><a href="#">FAQ</a><a href="#">Refund Policy</a><a href="#">Contact Us</a><a href="#">WhatsApp Support</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="#">Terms of Use</a><a href="#">Privacy Policy</a><a href="#">Cookie Policy</a></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 GarbaUtsav Events Pvt Ltd. Made with ❤️ in Gujarat</p>
+    <p>🔒 Razorpay Secured | Jai Mataji 🙏</p>
+  </div>
+</footer>
+
+<!-- WHATSAPP BUTTON -->
+<a class="wa-btn" href="https://wa.me/91XXXXXXXXXX?text=Namaste!%20GarbaUtsav%20mein%20pass%20book%20karna%20hai." target="_blank">
+  <div class="wa-pulse"></div>
+  <span>💬</span>
+  <div class="wa-tooltip">WhatsApp pe poochho!</div>
+</a>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- SCROLL TO TOP -->
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+// ⚙️ CONFIG — Sirf yahan changes karo!
+// ══════════════════════════════════════════════════
+const CONFIG = {
+  whatsapp: '91XXXXXXXXXX',        // 👈 Apna WhatsApp number daalo
+  companyName: 'GarbaUtsav',       // 👈 Apni company name
+  city: 'Ahmedabad, Gujarat',      // 👈 Apna city
+  supportEmail: 'support@garbautsav.in', // 👈 Apni email
+  razorpayLive: false,             // 👈 Live mode ke liye true karo
+};
+
+const API_BASE = window.location.hostname === 'localhost'
+  ? 'http://localhost:3000/api'
+  : '/api';
+
+// ── Coupon codes (also validated server-side) ────
+const COUPONS = {
+  'GARBA10':   { type:'percent', value:10,  label:'10% OFF' },
+  'NAVRATRI':  { type:'percent', value:15,  label:'15% OFF' },
+  'WELCOME50': { type:'flat',    value:50,  label:'₹50 OFF' },
+  'COUPLE99':  { type:'flat',    value:99,  label:'₹99 OFF' },
+  'VIP20':     { type:'percent', value:20,  label:'20% OFF' },
+  'FIRSTBUY':  { type:'flat',    value:30,  label:'₹30 OFF' },
+};
+
+// ── Pass type defaults (overridden per-event) ────
+const DEFAULT_PASSES = [
+  { id:'silver',  name:'Silver Entry', icon:'🎫', price:199, color:'silver',   features:['Single entry','All 9 nights','Basic seating','Parking','Digital QR pass'] },
+  { id:'gold',    name:'Gold Pass',    icon:'🏅', price:349, color:'gold-pass',popular:true, features:['Single entry','All 9 nights','Premium seating','Snacks','VIP parking','Digital QR'] },
+  { id:'premium', name:'Premium VIP',  icon:'💎', price:599, color:'premium',  features:['Single entry','All 9 nights','VIP lounge','Dinner buffet','Dedicated parking','Gift hamper'] },
+  { id:'couple',  name:'Couple Pass',  icon:'💑', price:649, color:'couple',   features:['2 persons','All 9 nights','Couple seating','Welcome drinks','Photo session','Parking'] },
+];
+
+let allEvents     = [];
+let selectedEvent = null;
+let selectedPass  = null;
+let appliedCoupon = null;
+let rzpKeyId      = 'rzp_test_XXXXXXXXXXXXXXXX'; // fetched from backend
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+  await fetchRzpKey();
+  await loadEvents();
+  renderPasses();
+});
+
+async function fetchRzpKey() {
+  try {
+    const r = await fetch(`${API_BASE}/payment/key`);
+    const d = await r.json();
+    if (d.keyId) rzpKeyId = d.keyId;
+  } catch { /* use default */ }
+}
+
+// ══════════════════════════════════════════════════
+// EVENTS
+// ══════════════════════════════════════════════════
+async function loadEvents() {
+  try {
+    const r = await fetch(`${API_BASE}/events`);
+    const data = await r.json();
+    allEvents = Array.isArray(data) ? data : [];
+  } catch {
+    // Fallback demo events
+    allEvents = getDemoEvents();
+  }
+  renderEvents('all');
+}
+
+function getDemoEvents() {
+  return [
+    { id:'ev1', name:'Navratri Mahotsav 2025', organizer:'Shree Ram Cultural Club', location:'GMDC Grounds, Ahmedabad', city:'ahmedabad', startDate:'2 Oct', endDate:'11 Oct 2025', time:'8:00 PM - 1:00 AM', totalPasses:500, soldPasses:180, theme:'saffron', emoji:'💃', featured:true, passes:DEFAULT_PASSES },
+    { id:'ev2', name:'Royal Garba Night', organizer:'Patel Cultural Society', location:'Sports Complex, Surat', city:'surat', startDate:'3 Oct', endDate:'12 Oct 2025', time:'7:30 PM - 12:30 AM', totalPasses:400, soldPasses:120, theme:'gold', emoji:'🪔', passes:DEFAULT_PASSES },
+    { id:'ev3', name:'Heritage Garba Utsav', organizer:'Vadodara Navratri Samiti', location:'Sayaji Park, Vadodara', city:'vadodara', startDate:'2 Oct', endDate:'11 Oct 2025', time:'8:00 PM - 1:30 AM', totalPasses:600, soldPasses:210, theme:'royal', emoji:'🎶', passes:DEFAULT_PASSES },
+    { id:'ev4', name:'Grand Navratri Celebration', organizer:'Rajkot Sanskriti Mandal', location:'Race Course Ground, Rajkot', city:'rajkot', startDate:'4 Oct', endDate:'13 Oct 2025', time:'8:30 PM - 1:00 AM', totalPasses:500, soldPasses:90, theme:'saffron', emoji:'🌟', passes:DEFAULT_PASSES },
+    { id:'ev5', name:'Falguni Pathak Nite 2025', organizer:'Gandhinagar Events', location:'Sector 7 Grounds, Gandhinagar', city:'gandhinagar', startDate:'5 Oct', endDate:'14 Oct 2025', time:'9:00 PM - 2:00 AM', totalPasses:800, soldPasses:310, theme:'gold', emoji:'🎤', featured:true, passes:DEFAULT_PASSES },
+    { id:'ev6', name:'Dandiya Dhamaka Night', organizer:'Anand Cultural Sangam', location:'Town Hall Grounds, Anand', city:'anand', startDate:'2 Oct', endDate:'11 Oct 2025', time:'8:00 PM - 1:00 AM', totalPasses:350, soldPasses:60, theme:'royal', emoji:'🎀', passes:DEFAULT_PASSES },
+    { id:'ev7', name:'VIP Garba Gala 2025', organizer:'Luxury Events Gujarat', location:'Taj Convention, Surat', city:'surat', startDate:'3 Oct', endDate:'12 Oct 2025', time:'8:00 PM - 2:00 AM', totalPasses:200, soldPasses:45, theme:'saffron', emoji:'👑', passes:DEFAULT_PASSES },
+    { id:'ev8', name:'Family Navratri Mela', organizer:'Mehsana Seva Samiti', location:'Exhibition Ground, Mehsana', city:'mehsana', startDate:'2 Oct', endDate:'11 Oct 2025', time:'7:00 PM - 12:00 AM', totalPasses:700, soldPasses:230, theme:'gold', emoji:'🎠', passes:DEFAULT_PASSES },
+  ];
+}
+
+function renderEvents(cityFilter) {
+  const filtered = cityFilter === 'all'
+    ? allEvents
+    : allEvents.filter(e => (e.city||'').toLowerCase() === cityFilter);
+
+  const grid = document.getElementById('eventsGrid');
+  if (!filtered.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--text-muted)"><div style="font-size:48px;margin-bottom:12px">🔍</div><p>Is city mein koi events nahi hain abhi</p></div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map(e => {
+    const left    = (e.totalPasses||0) - (e.soldPasses||0);
+    const soldOut = left <= 0;
+    const minPrice = Math.min(...(e.passes||DEFAULT_PASSES).map(p=>p.price));
+    return `
+    <div class="event-card" onclick="${!soldOut?`openBooking('${e.id}')`:''}" >
+      <div class="event-banner ${e.theme||'saffron'}">
+        <div class="banner-emoji">${e.emoji||'💃'}</div>
+        <div class="event-badge ${soldOut?'sold':''}">${soldOut?'🔴 Sold Out':e.featured?'⭐ Featured':'🟢 Available'}</div>
+      </div>
+      <div class="event-body">
+        <div class="event-title">${e.name}</div>
+        <div class="event-org">👤 ${e.organizer||''}</div>
+        <div class="event-meta">
+          <div class="event-meta-row">📍 <strong>${e.location}</strong></div>
+          <div class="event-meta-row">📅 <strong>${e.startDate} – ${e.endDate}</strong></div>
+          <div class="event-meta-row">⏰ <strong>${e.time}</strong></div>
+          <div class="event-meta-row">🎟 <strong>${e.totalPasses||0} passes</strong> · ${left} remaining</div>
+        </div>
+        <div class="event-footer">
+          <div class="event-price">
+            <div class="from">Starting from</div>
+            <div class="amount">₹${minPrice}</div>
+            <div class="per">per person</div>
+            ${left>0&&left<50?`<div class="passes-left">⚠️ Only ${left} left!</div>`:''}
+          </div>
+          <button class="btn-book" ${soldOut?'disabled':''} onclick="event.stopPropagation();${!soldOut?`openBooking('${e.id}')`:''}">${soldOut?'Sold Out':'Book Now →'}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterEvents(city, el) {
+  document.querySelectorAll('.filt-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderEvents(city);
+}
+
+// ══════════════════════════════════════════════════
+// PASSES
+// ══════════════════════════════════════════════════
+function renderPasses() {
+  document.getElementById('passesGrid').innerHTML = DEFAULT_PASSES.map(p=>`
+    <div class="pass-card ${p.color}" onclick="openPassBooking('${p.id}')">
+      ${p.popular?'<div class="pass-popular">🔥 Most Popular</div>':''}
+      <span class="pass-icon">${p.icon}</span>
+      <div class="pass-name">${p.name}</div>
+      <div class="pass-price">₹${p.price}<span style="font-size:14px;opacity:0.6">/person</span></div>
+      <ul class="pass-features">${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+      <button class="btn-pass">Select ${p.name} →</button>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════
+// BOOKING MODAL
+// ══════════════════════════════════════════════════
+function openBooking(eventId) {
+  const ev = allEvents.find(e=>e.id===eventId||e.id==eventId);
+  if (!ev) return;
+  selectedEvent = ev;
+  selectedPass  = (ev.passes||DEFAULT_PASSES)[1];
+  appliedCoupon = null;
+  renderBookingForm();
+  document.getElementById('bookingModal').classList.add('active');
+}
+
+function openPassBooking(passId) {
+  selectedEvent = allEvents[0] || getDemoEvents()[0];
+  selectedPass  = DEFAULT_PASSES.find(p=>p.id===passId)||DEFAULT_PASSES[1];
+  appliedCoupon = null;
+  renderBookingForm();
+  document.getElementById('bookingModal').classList.add('active');
+}
+
+function renderBookingForm() {
+  const passes = selectedEvent.passes || DEFAULT_PASSES;
+  const { subtotal, discount, conv, total } = calcAmounts();
+  document.getElementById('modalContent').innerHTML = `
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>🎟 Book Your Pass</h2>
+    <p class="subtitle">${selectedEvent.name} · ${selectedEvent.startDate} – ${selectedEvent.endDate}</p>
+    <div class="form-group"><label>Pass Type</label>
+      <select id="passSelect" onchange="updatePassSel(this.value)">
+        ${passes.map(p=>`<option value="${p.id}" ${p.id===selectedPass?.id?'selected':''}>${p.icon} ${p.name} — ₹${p.price}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-group"><label>Event</label>
+      <select id="eventSelect" onchange="updateEventSel(this.value)">
+        ${allEvents.filter(e=>(e.soldPasses||0)<(e.totalPasses||0)).map(e=>`<option value="${e.id}" ${e.id===selectedEvent.id?'selected':''}>${e.name} · ${e.location}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Full Name *</label><input id="buyerName" placeholder="Rahul Patel"></div>
+      <div class="form-group"><label>Mobile *</label><input id="buyerPhone" type="tel" placeholder="9876543210" maxlength="10"></div>
+    </div>
+    <div class="form-group"><label>Email *</label><input id="buyerEmail" type="email" placeholder="rahul@example.com"></div>
+    <div class="form-group"><label>Number of Passes</label>
+      <select id="qtySelect" onchange="updateSummary()">
+        <option value="1">1 Pass</option><option value="2">2 Passes</option><option value="3">3 Passes</option><option value="4">4 Passes</option>
+      </select>
+    </div>
+    <div class="form-group"><label>🏷️ Have a Coupon?</label></div>
+    <div class="coupon-tags">
+      <span class="coupon-tag" onclick="fillCoupon('GARBA10')">GARBA10 — 10%</span>
+      <span class="coupon-tag" onclick="fillCoupon('NAVRATRI')">NAVRATRI — 15%</span>
+      <span class="coupon-tag" onclick="fillCoupon('WELCOME50')">WELCOME50 — ₹50</span>
+      <span class="coupon-tag" onclick="fillCoupon('COUPLE99')">COUPLE99 — ₹99</span>
+    </div>
+    <div class="coupon-box">
+      <div class="coupon-input-wrap">
+        <span class="coupon-icon">🏷️</span>
+        <input id="couponInput" placeholder="ENTER CODE" oninput="this.value=this.value.toUpperCase()">
+      </div>
+      <button class="btn-apply" id="applyBtn" onclick="applyCoupon()">Apply</button>
+    </div>
+    <div class="coupon-msg" id="couponMsg"></div>
+    <div class="pass-summary" id="passSummary"></div>
+    <button class="btn-pay" id="payBtn" onclick="processPayment()">🔒 Pay via Razorpay</button>
+    <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:10px">🔐 Powered by Razorpay · UPI · Cards · Netbanking · Wallets</p>
+  `;
+  updateSummary();
+}
+
+function calcAmounts() {
+  const qty      = parseInt(document.getElementById('qtySelect')?.value||1);
+  const price    = selectedPass?.price||0;
+  const subtotal = price * qty;
+  const c        = appliedCoupon ? COUPONS[appliedCoupon] : null;
+  const discount = c ? (c.type==='percent' ? Math.round(subtotal*c.value/100) : Math.min(c.value,subtotal)) : 0;
+  const after    = subtotal - discount;
+  const conv     = Math.round(after * 0.02);
+  const total    = after + conv;
+  return { qty, subtotal, discount, conv, total };
+}
+
+function updateSummary() {
+  const { qty, subtotal, discount, conv, total } = calcAmounts();
+  const el = document.getElementById('passSummary');
+  if(!el) return;
+  const discRow = discount>0 ? `<div class="discount-row"><span>🏷️ Coupon (${appliedCoupon})</span><strong>−₹${discount}</strong></div>` : '';
+  el.innerHTML = `
+    <div class="pass-summary-row"><span>Pass</span><strong>${selectedPass?.icon} ${selectedPass?.name}</strong></div>
+    <div class="pass-summary-row"><span>Price × ${qty}</span><strong>₹${subtotal}</strong></div>
+    ${discRow}
+    <div class="pass-summary-row"><span>Convenience Fee</span><strong>₹${conv}</strong></div>
+    <div class="pass-summary-row"><span>Total</span><strong style="color:var(--saffron);font-size:16px">₹${total}</strong></div>
+  `;
+}
+
+function updatePassSel(id) {
+  const passes = selectedEvent.passes||DEFAULT_PASSES;
+  selectedPass = passes.find(p=>p.id===id)||passes[0];
+  appliedCoupon = null;
+  updateSummary();
+}
+function updateEventSel(id) {
+  selectedEvent = allEvents.find(e=>e.id===id)||selectedEvent;
+}
+function fillCoupon(code) {
+  const el = document.getElementById('couponInput');
+  if(el){ el.value=code; el.classList.remove('success','error'); }
+  const msg = document.getElementById('couponMsg');
+  if(msg){ msg.textContent=''; msg.className='coupon-msg'; }
+}
+function applyCoupon() {
+  const input = document.getElementById('couponInput');
+  const msg   = document.getElementById('couponMsg');
+  const btn   = document.getElementById('applyBtn');
+  const code  = input?.value.trim().toUpperCase();
+  if(!code){ msg.textContent='⚠️ Enter a coupon code'; msg.className='coupon-msg error'; return; }
+  if(appliedCoupon===code){ msg.textContent='✓ Already applied!'; msg.className='coupon-msg success'; return; }
+  if(COUPONS[code]){
+    appliedCoupon=code;
+    input.classList.add('success');
+    msg.textContent=`✅ ${code} applied! ${COUPONS[code].label} discount`;
+    msg.className='coupon-msg success';
+    btn.textContent='✓ Applied'; btn.disabled=true; btn.style.background='#27AE60';
+    updateSummary();
+    showToast(`🎉 ${COUPONS[code].label} discount applied!`);
+  } else {
+    appliedCoupon=null;
+    input.classList.add('error');
+    msg.textContent='❌ Invalid coupon code. Try: GARBA10, NAVRATRI';
+    msg.className='coupon-msg error';
+    updateSummary();
+  }
+}
+
+// ══════════════════════════════════════════════════
+// PAYMENT
+// ══════════════════════════════════════════════════
+async function processPayment() {
+  const name  = document.getElementById('buyerName')?.value.trim();
+  const phone = document.getElementById('buyerPhone')?.value.trim();
+  const email = document.getElementById('buyerEmail')?.value.trim();
+  if(!name||!phone||!email){ showToast('⚠️ Please fill all fields'); return; }
+  if(phone.length<10){ showToast('⚠️ Enter valid 10-digit phone number'); return; }
+
+  const { qty, total, discount } = calcAmounts();
+  const btn = document.getElementById('payBtn');
+  btn.disabled=true; btn.textContent='Processing...';
+
+  try {
+    // Create Razorpay order on backend
+    let orderId = null;
+    try {
+      const r = await fetch(`${API_BASE}/payment/create-order`,{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ amount:total, eventId:selectedEvent.id, passId:selectedPass.id, qty, buyerName:name, buyerEmail:email, buyerPhone:phone, coupon:appliedCoupon||'' })
+      });
+      const d = await r.json();
+      orderId = d.orderId;
+    } catch { /* offline/demo mode */ }
+
+    if(!orderId || rzpKeyId.includes('XXXXXX')) {
+      // Demo mode — simulate payment
+      btn.disabled=false; btn.textContent='🔒 Pay via Razorpay';
+      showDemoPaymentFlow(name, phone, email, qty, total, discount);
+      return;
+    }
+
+    // Real Razorpay checkout
+    const rzp = new Razorpay({
+      key:         rzpKeyId,
+      order_id:    orderId,
+      amount:      total * 100,
+      currency:    'INR',
+      name:        'GarbaUtsav 🪔',
+      description: `${selectedPass.icon} ${selectedPass.name} × ${qty}`,
+      prefill:     { name, email, contact: phone },
+      theme:       { color: '#FF6B00' },
+      handler: async (response) => {
+        // Verify payment
+        await verifyAndConfirm(response.razorpay_order_id, response.razorpay_payment_id, response.razorpay_signature, name, phone, email, qty, total, discount);
+      }
+    });
+    rzp.on('payment.failed', e => {
+      showToast('❌ Payment failed: '+e.error.description);
+      btn.disabled=false; btn.textContent='🔒 Pay via Razorpay';
+    });
+    rzp.open();
+  } catch(err) {
+    btn.disabled=false; btn.textContent='🔒 Pay via Razorpay';
+    showToast('❌ Error: '+err.message);
+  }
+}
+
+async function verifyAndConfirm(orderId, paymentId, signature, name, phone, email, qty, amount, discount) {
+  showLoadingModal();
+  try {
+    // Verify signature
+    await fetch(`${API_BASE}/payment/verify`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({razorpay_order_id:orderId,razorpay_payment_id:paymentId,razorpay_signature:signature})});
+    // Confirm booking
+    const r = await fetch(`${API_BASE}/booking/confirm`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId,orderId,eventId:selectedEvent.id,passId:selectedPass.id,qty,buyerName:name,buyerEmail:email,buyerPhone:phone,coupon:appliedCoupon||'',discount,finalAmount:amount})});
+    const d = await r.json();
+    if(d.ticketId) showSuccessScreen(name, d.ticketId, amount, qty, discount, paymentId);
+    else throw new Error(d.error||'Booking failed');
+  } catch(e) {
+    showToast('❌ '+e.message);
+    closeModal();
+  }
+}
+
+function showDemoPaymentFlow(name, phone, email, qty, amount, discount) {
+  document.getElementById('modalContent').innerHTML = `
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div style="text-align:center;padding:8px 0 16px">
+      <div style="font-size:48px;margin-bottom:10px">💳</div>
+      <h2 style="font-family:'Yatra One',cursive;color:var(--saffron);margin-bottom:4px">Complete Payment</h2>
+      <p style="color:var(--text-muted);font-size:13px;margin-bottom:20px">Demo mode · Add Razorpay key to go live</p>
+      <div style="background:linear-gradient(135deg,#1A0A00,#3D1C00);border-radius:14px;padding:18px;margin-bottom:18px;border:1.5px dashed rgba(240,165,0,0.3)">
+        <div style="color:rgba(255,255,255,0.45);font-size:11px;margin-bottom:4px">AMOUNT TO PAY</div>
+        <div style="color:var(--golden-light);font-size:34px;font-weight:900">₹${amount}</div>
+        ${discount>0?`<div style="color:#4CAF50;font-size:12px;margin-top:4px">🏷️ Saved ₹${discount} with coupon!</div>`:''}
+        <div style="color:rgba(255,255,255,0.55);font-size:12px;margin-top:6px">${selectedPass.icon} ${selectedPass.name} × ${qty}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+        ${['📱 UPI','💳 Card','🏦 Bank','👛 Wallet'].map(m=>`<div style="background:#f8f8f8;border-radius:10px;padding:12px 6px;text-align:center;font-size:11px;font-weight:700;color:var(--text-muted);cursor:pointer" onclick="this.parentElement.querySelectorAll('div').forEach(d=>{d.style.borderColor='transparent';d.style.background='#f8f8f8'});this.style.borderColor='var(--saffron)';this.style.background='rgba(255,107,0,0.05)'" style="border:1.5px solid transparent;transition:all 0.2s">${m}</div>`).join('')}
+      </div>
+      <button class="btn-pay" onclick="completeDemoPayment('${name}','${phone}','${email}',${qty},${amount},${discount})">🔒 Pay ₹${amount}</button>
+      <p style="font-size:10px;color:var(--text-muted);margin-top:8px">Demo mode · No real money charged</p>
+    </div>`;
+}
+
+async function completeDemoPayment(name, phone, email, qty, amount, discount) {
+  const demoPayId = 'pay_DEMO'+Date.now();
+  showLoadingModal();
+  try {
+    const r = await fetch(`${API_BASE}/booking/confirm`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:demoPayId,orderId:'',eventId:selectedEvent.id,passId:selectedPass.id,qty,buyerName:name,buyerEmail:email,buyerPhone:phone,coupon:appliedCoupon||'',discount,finalAmount:amount})});
+    const d = await r.json();
+    const ticketId = d.ticketId||('GU'+Date.now().toString().slice(-8));
+    showSuccessScreen(name, ticketId, amount, qty, discount, demoPayId);
+    updateLocalEventCount(selectedEvent.id, qty);
+  } catch {
+    // Fully offline fallback
+    const ticketId = 'GU'+Date.now().toString().slice(-8);
+    showSuccessScreen(name, ticketId, amount, qty, discount, demoPayId);
+    updateLocalEventCount(selectedEvent.id, qty);
+  }
+  appliedCoupon=null;
+}
+
+function updateLocalEventCount(id, qty) {
+  const ev = allEvents.find(e=>e.id===id);
+  if(ev) ev.soldPasses = Math.min((ev.soldPasses||0)+qty, ev.totalPasses||999);
+}
+
+function showLoadingModal() {
+  document.getElementById('modalContent').innerHTML = `
+    <div style="text-align:center;padding:48px 24px">
+      <div class="spinner" style="margin-bottom:20px"></div>
+      <p style="color:var(--text-muted);font-size:14px;font-weight:600">Processing your booking...</p>
+      <p style="color:var(--text-muted);font-size:12px;margin-top:6px">Sending email & WhatsApp confirmation</p>
+    </div>`;
+}
+
+function showSuccessScreen(name, ticketId, amount, qty, discount, paymentId) {
+  const qrCells = Array.from({length:49},(_,i)=>{
+    const c=[0,1,2,3,4,5,6,7,13,14,20,21,28,35,42,43,44,45,46,47,48];
+    return `<div class="qb" style="background:${(c.includes(i)||Math.random()>.5)?'#1A0A00':'transparent'}"></div>`;
+  }).join('');
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="success-screen">
+      <span class="checkmark">🎉</span>
+      <h3>Booking Confirmed!</h3>
+      <p>Email & WhatsApp confirmation sent to you, <strong>${name.split(' ')[0]}</strong>!</p>
+      <div class="ticket-stub">
+        <div style="text-align:center;margin-bottom:12px">
+          <div class="qr-ph"><div class="qr-grid">${qrCells}</div></div>
+          <div class="t-id">${ticketId}</div>
+        </div>
+        <div class="t-row"><span class="t-label">Event</span><span class="t-value">${selectedEvent.name}</span></div>
+        <div class="t-row"><span class="t-label">Pass</span><span class="t-value">${selectedPass.icon} ${selectedPass.name} × ${qty}</span></div>
+        <div class="t-row"><span class="t-label">Date</span><span class="t-value">${selectedEvent.startDate} – ${selectedEvent.endDate}</span></div>
+        ${discount>0?`<div class="t-row"><span class="t-label">Saved</span><span class="t-value" style="color:#4CAF50">🏷️ ₹${discount}</span></div>`:''}
+        <div class="t-row"><span class="t-label">Paid</span><span class="t-value" style="color:var(--golden-light)">₹${amount}</span></div>
+        <div class="t-row"><span class="t-label">Status</span><span class="t-value" style="color:#4CAF50">✓ Confirmed</span></div>
+      </div>
+      <button class="download-btn" onclick="downloadTicket('${ticketId}')">📄 Download PDF Ticket</button>
+      <button class="btn-fire" style="width:100%" onclick="closeModal()">🕺 Awesome! Jai Mataji 🙏</button>
+    </div>`;
+}
+
+async function downloadTicket(ticketId) {
+  try {
+    window.open(`${API_BASE}/ticket/download/${ticketId}`, '_blank');
+  } catch {
+    showToast('❌ Download failed. Try again.');
+  }
+}
+
+function closeModal() {
+  document.getElementById('bookingModal').classList.remove('active');
+  loadEvents(); // Refresh to show updated pass counts
+}
+document.getElementById('bookingModal').addEventListener('click', e => {
+  if(e.target.id==='bookingModal') closeModal();
+});
+
+// ══════════════════════════════════════════════════
+// COSTUME RENT
+// ══════════════════════════════════════════════════
+const COSTUMES = [
+  { id:'c1', name:'Bridal Chaniya Choli', emoji:'👗', color:'c1', desc:'Heavy embroidery, mirror work, dupatta included. Perfect for Navratri celebrations!', tags:['Women','Traditional','Bridal'], pricePerDay:299, deposit:500, sizes:['XS','S','M','L','XL'], available:8, rating:4.9, reviews:124 },
+  { id:'c2', name:'Designer Lehenga Set', emoji:'🥻', color:'c2', desc:'Floral print lehenga with matching blouse & dupatta. Silk fabric, premium finish.', tags:['Women','Silk','Designer'], pricePerDay:349, deposit:600, sizes:['S','M','L','XL'], available:5, rating:4.8, reviews:89 },
+  { id:'c3', name:'Rajasthani Kediya Set', emoji:'🧥', color:'c3', desc:'Traditional men\'s Kediya with dhoti & pagdi. Authentic mirror work, multiple colors.', tags:['Men','Traditional','Rajasthani'], pricePerDay:249, deposit:400, sizes:['S','M','L','XL','XXL'], available:12, rating:4.7, reviews:67 },
+  { id:'c4', name:'Kids Chaniya Choli', emoji:'🎀', color:'c4', desc:'Cute & comfortable for little girls. Soft fabric, easy to wear, bright colors.', tags:['Kids','Girls','Comfortable'], pricePerDay:149, deposit:200, sizes:['2-3Y','4-5Y','6-7Y','8-9Y','10-11Y'], available:15, rating:5.0, reviews:203 },
+  { id:'c5', name:'Boys Ethnic Dhoti Kurta', emoji:'👘', color:'c5', desc:'Traditional dhoti kurta set for boys. Premium cotton, comfortable for dancing!', tags:['Kids','Boys','Cotton'], pricePerDay:149, deposit:200, sizes:['2-3Y','4-5Y','6-7Y','8-9Y','10-11Y'], available:10, rating:4.9, reviews:156 },
+  { id:'c6', name:'Groom Sherwani Set', emoji:'🤵', color:'c6', desc:'Premium sherwani with churidar & dupatta. Perfect for couple Garba nights!', tags:['Men','Premium','Couple'], pricePerDay:499, deposit:800, sizes:['S','M','L','XL','XXL'], available:3, rating:4.9, reviews:45 },
+];
+
+let selectedCostume = null;
+let rentDays = 1;
+let selectedSize = null;
+
+function renderCostumes() {
+  document.getElementById('costumeGrid').innerHTML = COSTUMES.map(c => `
+    <div class="costume-card" onclick="openCostumeModal('${c.id}')">
+      <div class="costume-img ${c.color}">
+        <span style="font-size:80px">${c.emoji}</span>
+        <div class="costume-avail ${c.available<=3?'low':''}">${c.available<=3?`⚠️ Only ${c.available} left`:`✅ ${c.available} available`}</div>
+      </div>
+      <div class="costume-body">
+        <div class="costume-name">${c.name}</div>
+        <div class="costume-desc">${c.desc}</div>
+        <div class="costume-tags">${c.tags.map(t=>`<span class="c-tag">${t}</span>`).join('')}</div>
+        <div class="costume-footer">
+          <div class="costume-price">
+            <div class="per-day">Rent per day</div>
+            <div class="price-val">₹${c.pricePerDay}</div>
+            <div class="deposit">+ ₹${c.deposit} refundable deposit</div>
+          </div>
+          <button class="btn-rent" onclick="event.stopPropagation();openCostumeModal('${c.id}')">Rent Now →</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function openCostumeModal(id) {
+  selectedCostume = COSTUMES.find(c => c.id === id);
+  rentDays = 1;
+  selectedSize = null;
+  renderCostumeModal();
+  document.getElementById('costumeModal').classList.add('active');
+}
+
+function renderCostumeModal() {
+  const c = selectedCostume;
+  const total = c.pricePerDay * rentDays;
+  const delivery = 0; // free
+  const grand = total + delivery + c.deposit;
+
+  document.getElementById('costumeModalContent').innerHTML = `
+    <button class="modal-close" onclick="closeCostumeModal()">✕</button>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+      <div style="width:70px;height:70px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:40px;flex-shrink:0;background:linear-gradient(135deg,var(--saffron),var(--gold))">${c.emoji}</div>
+      <div>
+        <h2 style="font-family:'Yatra One',cursive;font-size:20px;color:var(--saffron);margin-bottom:2px">${c.name}</h2>
+        <div style="font-size:12px;color:var(--text-muted)">${c.tags.map(t=>`<span class="c-tag">${t}</span>`).join(' ')}</div>
+        <div style="font-size:12px;color:var(--gold);margin-top:4px">${'★'.repeat(Math.floor(c.rating))} ${c.rating} · ${c.reviews} reviews</div>
+      </div>
+    </div>
+
+    <div class="form-group"><label>Select Size</label></div>
+    <div class="size-grid">
+      ${c.sizes.map(s => `<button class="size-btn" onclick="selectSize('${s}',this)">${s}</button>`).join('')}
+    </div>
+
+    <div class="form-group"><label>Number of Days</label></div>
+    <div class="days-selector">
+      <button onclick="changeDays(-1)">−</button>
+      <div class="days-val" id="daysVal">${rentDays}</div>
+      <button onclick="changeDays(1)">+</button>
+      <span style="font-size:13px;color:var(--text-muted)">day${rentDays>1?'s':''} rental</span>
+    </div>
+
+    <div class="form-group"><label>Delivery Date</label>
+      <input type="date" id="deliveryDate" min="${new Date().toISOString().split('T')[0]}" style="width:100%;padding:11px 14px;border:1.5px solid #E5E5E5;border-radius:12px;font-size:14px;font-family:'Hind',sans-serif;outline:none">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group"><label>Full Name *</label><input id="rentName" placeholder="Priya Patel"></div>
+      <div class="form-group"><label>Mobile *</label><input id="rentPhone" type="tel" placeholder="9876543210"></div>
+    </div>
+    <div class="form-group"><label>Delivery Address *</label>
+      <input id="rentAddr" placeholder="Flat no, Street, Area, City">
+    </div>
+
+    <div class="rent-summary" id="rentSummary">
+      <div class="rent-summary-row"><span>Costume Rent (${rentDays} day × ₹${c.pricePerDay})</span><strong>₹${total}</strong></div>
+      <div class="rent-summary-row"><span>🚚 Delivery & Pickup</span><strong style="color:var(--green)">FREE</strong></div>
+      <div class="rent-summary-row"><span>🔒 Refundable Deposit</span><strong>₹${c.deposit}</strong></div>
+      <div class="rent-summary-row"><span>Total Payable</span><strong style="color:var(--saffron);font-size:16px">₹${grand}</strong></div>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);margin-bottom:12px;text-align:center">💡 Deposit ₹${c.deposit} fully refunded when costume returned in good condition</p>
+
+    <button class="btn-pay" onclick="processRentPayment()">🔒 Pay ₹${grand} & Confirm Rental</button>
+    <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:10px">🔐 Powered by Razorpay · Secure Payment</p>
+  `;
+}
+
+function selectSize(size, el) {
+  selectedSize = size;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function changeDays(delta) {
+  rentDays = Math.max(1, Math.min(9, rentDays + delta));
+  document.getElementById('daysVal').textContent = rentDays;
+  updateRentSummary();
+}
+
+function updateRentSummary() {
+  const c = selectedCostume;
+  const total = c.pricePerDay * rentDays;
+  const grand = total + c.deposit;
+  const el = document.getElementById('rentSummary');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="rent-summary-row"><span>Costume Rent (${rentDays} day${rentDays>1?'s':''} × ₹${c.pricePerDay})</span><strong>₹${total}</strong></div>
+    <div class="rent-summary-row"><span>🚚 Delivery & Pickup</span><strong style="color:var(--green)">FREE</strong></div>
+    <div class="rent-summary-row"><span>🔒 Refundable Deposit</span><strong>₹${c.deposit}</strong></div>
+    <div class="rent-summary-row"><span>Total Payable</span><strong style="color:var(--saffron);font-size:16px">₹${grand}</strong></div>`;
+  // update pay button
+  const btn = document.querySelector('#costumeModalContent .btn-pay');
+  if (btn) btn.textContent = `🔒 Pay ₹${grand} & Confirm Rental`;
+}
+
+function processRentPayment() {
+  const name  = document.getElementById('rentName')?.value.trim();
+  const phone = document.getElementById('rentPhone')?.value.trim();
+  const addr  = document.getElementById('rentAddr')?.value.trim();
+  const date  = document.getElementById('deliveryDate')?.value;
+
+  if (!name || !phone || !addr) { showToast('⚠️ Please fill all fields'); return; }
+  if (!selectedSize) { showToast('⚠️ Please select a size first'); return; }
+  if (!date) { showToast('⚠️ Please select delivery date'); return; }
+  if (phone.length < 10) { showToast('⚠️ Enter valid 10-digit mobile number'); return; }
+
+  const c = selectedCostume;
+  const total = c.pricePerDay * rentDays;
+  const grand = total + c.deposit;
+  const bookingId = 'CR' + Date.now().toString().slice(-8);
+
+  // Show success screen
+  document.getElementById('costumeModalContent').innerHTML = `
+    <div class="success-screen">
+      <span class="checkmark">🎉</span>
+      <h3>Costume Booked!</h3>
+      <p>Delivery confirmation sent to ${name.split(' ')[0]}! Our team will contact you soon.</p>
+      <div class="ticket-stub">
+        <div style="text-align:center;margin-bottom:12px">
+          <div style="font-size:52px">${c.emoji}</div>
+          <div class="t-id" style="margin-top:8px">${bookingId}</div>
+        </div>
+        <div class="t-row"><span class="t-label">Costume</span><span class="t-value">${c.name}</span></div>
+        <div class="t-row"><span class="t-label">Size</span><span class="t-value">${selectedSize}</span></div>
+        <div class="t-row"><span class="t-label">Rental Days</span><span class="t-value">${rentDays} day${rentDays>1?'s':''}</span></div>
+        <div class="t-row"><span class="t-label">Delivery Date</span><span class="t-value">${date}</span></div>
+        <div class="t-row"><span class="t-label">Deliver To</span><span class="t-value" style="font-size:11px">${addr}</span></div>
+        <div class="t-row"><span class="t-label">Rent Paid</span><span class="t-value" style="color:var(--golden-light)">₹${total}</span></div>
+        <div class="t-row"><span class="t-label">Deposit</span><span class="t-value" style="color:var(--golden-light)">₹${c.deposit} (refundable)</span></div>
+        <div class="t-row"><span class="t-label">Total Paid</span><span class="t-value" style="color:var(--golden-light)">₹${grand}</span></div>
+        <div class="t-row"><span class="t-label">Status</span><span class="t-value" style="color:#4CAF50">✓ Confirmed</span></div>
+      </div>
+      <button class="btn-fire" style="width:100%;margin-top:4px" onclick="closeCostumeModal()">💃 Awesome! Jai Mataji 🙏</button>
+    </div>`;
+
+  // Save to localStorage
+  const rentals = JSON.parse(localStorage.getItem('garba_rentals') || '[]');
+  rentals.push({ id: bookingId, name, phone, addr, costume: c.name, size: selectedSize, days: rentDays, deliveryDate: date, amount: grand, status: 'confirmed', date: new Date().toLocaleDateString('en-IN') });
+  localStorage.setItem('garba_rentals', JSON.stringify(rentals));
+  showToast('👗 Costume rental confirmed!');
+}
+
+function closeCostumeModal() {
+  document.getElementById('costumeModal').classList.remove('active');
+}
+document.getElementById('costumeModal').addEventListener('click', e => {
+  if (e.target.id === 'costumeModal') closeCostumeModal();
+});
+
+// Init costumes
+renderCostumes();
+
+// ══════════════════════════════════════════════════
+// SOCIAL PROOF TICKER
+// ══════════════════════════════════════════════════
+const PROOF_ITEMS = [
+  {e:'🎉',t:'<strong>Priya S.</strong> ne Ahmedabad mein Gold Pass book kiya'},
+  {e:'💃',t:'<strong>Rahul P.</strong> ne Couple Pass book kiya — Surat'},
+  {e:'👨‍👩‍👧‍👦',t:'<strong>Desai Family</strong> ne 6 passes book kiye — Group Discount mila!'},
+  {e:'🎟',t:'<strong>Sneha M.</strong> ne VIP Pass book kiya — Vadodara'},
+  {e:'🏷️',t:'<strong>Amit K.</strong> ne NAVRATRI coupon use kiya — 15% bachaya!'},
+  {e:'🎰',t:'<strong>Kavya D.</strong> ne Lucky Draw mein Free Pass jeeta!'},
+  {e:'👗',t:'<strong>Riya S.</strong> ne Bridal Chaniya Choli rent kiya'},
+  {e:'⭐',t:'<strong>Mehul R.</strong> ne 5 star review diya — "Best event ever!"'},
+  {e:'🤝',t:'<strong>Modi Group</strong> ne 10 passes book kiye — 15% group discount!'},
+  {e:'📢',t:'<strong>Pooja V.</strong> ke referral se 3 friends ne booking ki!'},
+];
+function initTicker() {
+  const track = document.getElementById('proofTrack');
+  const items = [...PROOF_ITEMS, ...PROOF_ITEMS].map(i =>
+    `<div class="proof-item"><span>${i.e}</span><span>${i.t}</span></div>`).join('');
+  track.innerHTML = items;
+}
+initTicker();
+
+// Urgency counter
+let urgencyTime = 6*3600+24*60+11;
+function updateUrgency() {
+  urgencyTime = Math.max(0, urgencyTime - 1);
+  const h = String(Math.floor(urgencyTime/3600)).padStart(2,'0');
+  const m = String(Math.floor((urgencyTime%3600)/60)).padStart(2,'0');
+  const s = String(urgencyTime%60).padStart(2,'0');
+  const el = document.getElementById('urgencyHours');
+  if(el) el.textContent = `${h}:${m}:${s}`;
+}
+setInterval(updateUrgency, 1000);
+
+// Fake visitor counter
+setInterval(() => {
+  const el = document.getElementById('urgencyCount');
+  if(el) el.textContent = 320 + Math.floor(Math.random()*60);
+}, 5000);
+
+// ══════════════════════════════════════════════════
+// GALLERY
+// ══════════════════════════════════════════════════
+const GALLERY_ITEMS = [
+  {emoji:'💃',label:'Navratri 2024 — Ahmedabad',color:'linear-gradient(135deg,#FF6B00,#C0392B)',wide:true},
+  {emoji:'🪔',label:'Diya Ceremony Opening Night',color:'linear-gradient(135deg,#F0A500,#E67E22)'},
+  {emoji:'👗',label:'Traditional Chaniya Choli',color:'linear-gradient(135deg,#8E44AD,#E91E63)'},
+  {emoji:'🥁',label:'Dhol Nagarchi Perform',color:'linear-gradient(135deg,#1A0A00,#8B0000)',tall:true},
+  {emoji:'🎤',label:'Falguni Pathak Live',color:'linear-gradient(135deg,#2980B9,#8E44AD)'},
+  {emoji:'👨‍👩‍👧‍👦',label:'Family Garba Night',color:'linear-gradient(135deg,#27AE60,#2ECC71)'},
+  {emoji:'✨',label:'VIP Lounge Area',color:'linear-gradient(135deg,#F0A500,#FF6B00)'},
+  {emoji:'🎠',label:'Kids Garba — Super Cute!',color:'linear-gradient(135deg,#E91E63,#FF6B00)'},
+];
+let lbIndex = 0;
+
+function renderGallery() {
+  const stored = JSON.parse(localStorage.getItem('garba_gallery')||'[]');
+  const all = [...GALLERY_ITEMS, ...stored];
+  document.getElementById('galleryGrid').innerHTML = all.map((g,i) => `
+    <div class="gallery-item ${g.wide?'wide':''} ${g.tall?'tall':''}" style="background:${g.color}" onclick="openLightbox(${i})">
+      <div class="gallery-emoji">${g.emoji}</div>
+      <div class="gallery-overlay"><span>🔍</span></div>
+      <div class="gallery-label">${g.label}</div>
+    </div>`).join('');
+}
+
+function openLightbox(i) {
+  lbIndex = i;
+  const stored = JSON.parse(localStorage.getItem('garba_gallery')||'[]');
+  const all = [...GALLERY_ITEMS,...stored];
+  const g = all[i];
+  document.getElementById('lbImg').style.background = g.color;
+  document.getElementById('lbImg').innerHTML = `<span style="font-size:120px">${g.emoji}</span>`;
+  document.getElementById('lbCaption').textContent = g.label;
+  document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+function lbNav(dir) {
+  const stored = JSON.parse(localStorage.getItem('garba_gallery')||'[]');
+  const total = GALLERY_ITEMS.length + stored.length;
+  lbIndex = (lbIndex+dir+total)%total;
+  openLightbox(lbIndex);
+}
+document.getElementById('lightbox').addEventListener('click', e => { if(e.target.id==='lightbox') closeLightbox(); });
+
+function addUserPhoto(input) {
+  if(!input.files[0]) return;
+  const stored = JSON.parse(localStorage.getItem('garba_gallery')||'[]');
+  stored.push({emoji:'📸', label:'Aapki Photo — Navratri 2025', color:'linear-gradient(135deg,#FF6B00,#8B0000)'});
+  localStorage.setItem('garba_gallery', JSON.stringify(stored));
+  renderGallery();
+  showToast('📸 Aapki photo add ho gayi! Shukriya!');
+}
+renderGallery();
+
+// ══════════════════════════════════════════════════
+// REVIEWS
+// ══════════════════════════════════════════════════
+let userRating = 5;
+const BASE_REVIEWS = [
+  {name:'Priya Sharma',  city:'Ahmedabad', rating:5, text:'Ekdum mast event tha! Pass booking super easy thi. QR se instant entry — no queue!',       event:'Navratri Mahotsav 2024', avatar:'P', verified:true},
+  {name:'Rahul Patel',   city:'Surat',     rating:5, text:'Couple pass ke saath bahut enjoy kiya! PDF ticket professional lagti thi.',                  event:'Royal Garba Night 2024',  avatar:'R', verified:true},
+  {name:'Kavya Desai',   city:'Vadodara',  rating:5, text:'NAVRATRI coupon se 15% mila! Family ke saath 4 passes book kiye — 2 minute mein!',          event:'Heritage Garba Utsav',    avatar:'K', verified:true},
+  {name:'Sneha Modi',    city:'Rajkot',    rating:4, text:'VIP lounge ekdum zabardast! Performers bhi top class the. Next year zaroor aaungi!',         event:'VIP Garba Gala 2024',     avatar:'S', verified:true},
+  {name:'Amit Shah',     city:'Gandhinagar',rating:5, text:'Group booking discount se ₹300 bachaye! 8 log saath mein gaye — legendary raat thi!',      event:'Grand Navratri 2024',     avatar:'A', verified:false},
+  {name:'Riya Joshi',    city:'Ahmedabad', rating:5, text:'Costume rent bhi kiya aur pass bhi — ek hi jagah se sab mila. Super convenient!',           event:'Navratri Mahotsav 2024', avatar:'R', verified:true},
+];
+
+function renderReviews() {
+  const stored = JSON.parse(localStorage.getItem('garba_reviews')||'[]');
+  const all = [...stored.reverse(), ...BASE_REVIEWS];
+  document.getElementById('reviewsGrid').innerHTML = all.slice(0,6).map(r => `
+    <div class="review-card">
+      <div class="rc-top">
+        <div class="rc-avatar">${r.avatar}</div>
+        <div>
+          <div class="rc-name">${r.name}</div>
+          <div class="rc-meta">📍 ${r.city} · ${r.date||'Navratri 2024'}</div>
+        </div>
+      </div>
+      <div class="rc-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+      <div class="rc-text">"${r.text}"</div>
+      <div class="rc-event">🎪 ${r.event}</div>
+      ${r.verified?'<div class="rc-verified">✅ Verified Buyer</div>':''}
+    </div>`).join('');
+
+  // Rating bars
+  const counts = [5,4,3,2,1].map(s => all.filter(r=>r.rating===s).length);
+  const mx = Math.max(...counts,1);
+  document.getElementById('ratingBars').innerHTML = [5,4,3,2,1].map((s,i) => `
+    <div class="rb-row">
+      <div class="rb-lbl">${s}★</div>
+      <div class="rb-bar"><div class="rb-fill" style="width:${Math.round((counts[i]/mx)*100)}%"></div></div>
+      <div class="rb-cnt">${counts[i]}</div>
+    </div>`).join('');
+  document.getElementById('totalReviews').textContent = (2847+stored.length)+' reviews';
+}
+
+function setRating(v) {
+  userRating = v;
+  document.querySelectorAll('.star-pick').forEach(s => s.classList.toggle('lit', parseInt(s.dataset.v)<=v));
+}
+setRating(5);
+
+function submitReview() {
+  const name = document.getElementById('rvName')?.value.trim();
+  const city = document.getElementById('rvCity')?.value.trim();
+  const text = document.getElementById('rvText')?.value.trim();
+  if(!name||!text) { showToast('⚠️ Naam aur review likho!'); return; }
+  const reviews = JSON.parse(localStorage.getItem('garba_reviews')||'[]');
+  reviews.push({name, city:city||'Gujarat', rating:userRating, text, event:'GarbaUtsav 2025', avatar:name[0].toUpperCase(), verified:false, date:'Abhi'});
+  localStorage.setItem('garba_reviews', JSON.stringify(reviews));
+  document.getElementById('rvName').value=''; document.getElementById('rvCity').value=''; document.getElementById('rvText').value='';
+  renderReviews();
+  showToast('⭐ Review submit ho gaya! Shukriya!');
+}
+renderReviews();
+
+// ══════════════════════════════════════════════════
+// GROUP BOOKING
+// ══════════════════════════════════════════════════
+const GROUP_TIERS = [
+  {emoji:'👫', label:'Couple',    min:2, max:3,  discount:5,  save:70},
+  {emoji:'👨‍👩‍👧', label:'Small Group', min:4, max:6,  discount:10, save:140},
+  {emoji:'👨‍👩‍👧‍👦', label:'Big Group',  min:7, max:10, discount:15, save:262},
+  {emoji:'🎪', label:'Large Group',min:11,max:50, discount:20, save:700},
+];
+let selectedTier = GROUP_TIERS[1];
+
+function renderGroupTiers() {
+  document.getElementById('groupTiers').innerHTML = GROUP_TIERS.map((t,i) => `
+    <div class="gt-card ${i===1?'active':''}" onclick="selectGroupTier(${i},this)">
+      <span class="gt-emoji">${t.emoji}</span>
+      <div class="gt-label">${t.min}${t.max<50?'–'+t.max:'+'} log</div>
+      <div class="gt-people">${t.label}</div>
+      <div class="gt-discount">${t.discount}% OFF</div>
+      <div class="gt-save">Save upto ₹${t.save}+</div>
+    </div>`).join('');
+}
+
+function selectGroupTier(i, el) {
+  selectedTier = GROUP_TIERS[i];
+  document.querySelectorAll('.gt-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('selectedGroupLabel').textContent = `${selectedTier.min}+ log — ${selectedTier.discount}% OFF`;
+  document.getElementById('groupSaving').textContent = `₹${selectedTier.save}+`;
+}
+
+function openGroupBooking() {
+  selectedEvent = allEvents[0] || getDemoEvents()[0];
+  selectedPass  = DEFAULT_PASSES[1];
+  appliedCoupon = null;
+  renderBookingForm();
+  // Pre-fill qty based on tier
+  setTimeout(()=>{
+    const qs=document.getElementById('qtySelect');
+    if(qs){ qs.value=selectedTier.min; updateSummary(); }
+  },100);
+  document.getElementById('bookingModal').classList.add('active');
+  showToast(`🤝 ${selectedTier.discount}% group discount automatically lagega!`);
+}
+renderGroupTiers();
+
+// ══════════════════════════════════════════════════
+// REFERRAL SYSTEM
+// ══════════════════════════════════════════════════
+function initReferral() {
+  const stored = JSON.parse(localStorage.getItem('garba_referral')||'{"code":"MEET50","invited":0,"booked":0,"earned":0}');
+  document.getElementById('refCode').textContent    = stored.code;
+  document.getElementById('refInvited').textContent = stored.invited;
+  document.getElementById('refBooked').textContent  = stored.booked;
+  document.getElementById('refEarned').textContent  = stored.earned;
+}
+
+function copyRefCode() {
+  const code = document.getElementById('refCode').textContent;
+  navigator.clipboard?.writeText(`GarbaUtsav pe book karo aur mera referral code use karo: ${code} — 10% discount milega! https://garbautsav.in`);
+  showToast('🔗 Referral link copy ho gaya! Dosto ko bhejo!');
+  const stored = JSON.parse(localStorage.getItem('garba_referral')||'{"code":"MEET50","invited":0,"booked":0,"earned":0}');
+  stored.invited++;
+  localStorage.setItem('garba_referral', JSON.stringify(stored));
+  initReferral();
+}
+
+function shareWhatsApp() {
+  const code = document.getElementById('refCode').textContent;
+  const msg  = encodeURIComponent(`🪔 Navratri Garba passes book karo GarbaUtsav pe!\nMera referral code use karo: *${code}*\n10% extra discount milega! 🎉\nhttps://garbautsav.in`);
+  window.open(`https://wa.me/?text=${msg}`, '_blank');
+}
+initReferral();
+
+// ══════════════════════════════════════════════════
+// LUCKY DRAW WHEEL
+// ══════════════════════════════════════════════════
+const WHEEL_PRIZES = [
+  {label:'Free Gold Pass 🎟',  color:'#FF6B00', text:'Aapko FREE Gold Pass mila!'},
+  {label:'20% Discount',       color:'#F0A500', text:'Aapko 20% discount coupon mila!'},
+  {label:'VIP Upgrade 💎',     color:'#8E44AD', text:'Aapka pass VIP mein upgrade!'},
+  {label:'₹100 Cashback',      color:'#27AE60', text:'₹100 cashback aapke account mein!'},
+  {label:'Free Costume 👗',    color:'#C0392B', text:'Ek din FREE costume rental mila!'},
+  {label:'15% Discount',       color:'#2980B9', text:'15% discount coupon mila!'},
+  {label:'₹50 Cashback',       color:'#E67E22', text:'₹50 cashback mila!'},
+  {label:'Try Again 🎁',       color:'#7F8C8D', text:'Aaj kal koi lucky nahi! Kal phir try karo!'},
+];
+let wheelAngle  = 0;
+let wheelSpinning = false;
+let spinsLeft = parseInt(localStorage.getItem('garba_spins_'+new Date().toDateString())||'1');
+
+function drawWheel() {
+  const canvas = document.getElementById('wheelCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx=150, cy=150, r=145;
+  const sliceAngle = (2*Math.PI)/WHEEL_PRIZES.length;
+  WHEEL_PRIZES.forEach((p,i) => {
+    const start = i*sliceAngle + wheelAngle*(Math.PI/180);
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start,start+sliceAngle); ctx.closePath();
+    ctx.fillStyle = p.color; ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.lineWidth=2; ctx.stroke();
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(start+sliceAngle/2);
+    ctx.textAlign='right'; ctx.fillStyle='white'; ctx.font='bold 11px Poppins,sans-serif';
+    ctx.fillText(p.label, r-10, 5); ctx.restore();
+  });
+  // Center circle
+  ctx.beginPath(); ctx.arc(cx,cy,28,0,2*Math.PI);
+  ctx.fillStyle='#1A0A00'; ctx.fill();
+  ctx.strokeStyle='rgba(240,165,0,0.6)'; ctx.lineWidth=3; ctx.stroke();
+  ctx.fillStyle=WHEEL_PRIZES[0].color; ctx.font='bold 13px Poppins'; ctx.textAlign='center';
+  ctx.fillText('SPIN!',cx,cy+5);
+}
+
+function spinWheel() {
+  if(wheelSpinning) return;
+  if(spinsLeft<=0){ showToast('⏰ Aaj ke spins khatam! Kal wapas aao!'); return; }
+  wheelSpinning = true;
+  document.getElementById('spinBtn').disabled = true;
+  const prizeIdx = Math.floor(Math.random()*WHEEL_PRIZES.length);
+  const sliceDeg = 360/WHEEL_PRIZES.length;
+  const targetAngle = 360*5 + (360 - prizeIdx*sliceDeg - sliceDeg/2);
+  const duration = 4000;
+  const start = performance.now();
+  const startAngle = wheelAngle;
+
+  function animate(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed/duration, 1);
+    const ease = 1 - Math.pow(1-progress, 4);
+    wheelAngle = startAngle + targetAngle*ease;
+    drawWheel();
+    if(progress<1) { requestAnimationFrame(animate); return; }
+    wheelSpinning = false;
+    spinsLeft--;
+    localStorage.setItem('garba_spins_'+new Date().toDateString(), spinsLeft);
+    document.getElementById('spinsLeft').textContent = spinsLeft;
+    if(spinsLeft>0) document.getElementById('spinBtn').disabled = false;
+    showPrize(WHEEL_PRIZES[prizeIdx]);
+  }
+  requestAnimationFrame(animate);
+}
+
+function showPrize(prize) {
+  const modal = document.getElementById('luckyModal');
+  const isGood = !prize.label.includes('Try Again');
+  document.getElementById('luckyResult').innerHTML = `
+    <span class="lucky-prize-icon">${isGood?'🎉':'😅'}</span>
+    <h2 style="font-family:'Yatra One',cursive;font-size:26px;color:${prize.color};margin-bottom:8px">${isGood?'Congratulations!':'Oops!'}</h2>
+    <p style="color:rgba(255,255,255,0.7);font-size:15px;margin-bottom:20px">${prize.text}</p>
+    <div style="background:rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-bottom:20px;border:2px dashed rgba(240,165,0,0.3)">
+      <div style="color:var(--golden-light);font-size:22px;font-weight:800">${prize.label}</div>
+      ${isGood?`<div style="color:rgba(255,255,255,0.5);font-size:11px;margin-top:6px">Code: LUCKY${Math.floor(Math.random()*9000+1000)}</div>`:''}
+    </div>
+    ${isGood?`<button class="btn-fire" style="width:100%;margin-bottom:10px" onclick="document.getElementById('luckyModal').classList.remove('active');scrollTo('events')">🎟 Abhi Book Karo!</button>`:''}
+    <button onclick="document.getElementById('luckyModal').classList.remove('active')" style="width:100%;padding:11px;background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif">Close</button>`;
+  modal.classList.add('active');
+}
+
+drawWheel();
+
+// ══════════════════════════════════════════════════
+// LANGUAGE SYSTEM — English / Hindi / Gujarati
+// ══════════════════════════════════════════════════
+const TRANSLATIONS = {
+  en: {
+    nav_tagline:'Premium Navratri Booking', nav_events:'Events', nav_passes:'Passes',
+    nav_costume:'👗 Costume', nav_gallery:'📸 Gallery', nav_lucky:'🎰 Lucky Draw',
+    nav_contact:'Contact', nav_admin:'🔒 Admin', nav_book:'Book Now 🎉',
+    hero_badge:'✦ Navratri 2025 — Limited Passes Available',
+    hero_h1:'Book Your<br>Garba Pass<br>Online',
+    hero_p:"Gujarat's most trusted platform for Navratri Garba events. Instant e-tickets, secure payments, and memories for life!",
+    hero_btn1:'🎟 Explore Events', hero_btn2:'View Passes',
+    stat1:'Passes Sold', stat2:'Events Listed', stat3:'User Rating', stat4:'Cities',
+    urgency_txt:'people are on this website right now! · Navratri passes selling fast!',
+    events_tag:'🪔 Live Events', events_title:'Upcoming Garba Events',
+    events_sub:'Handpicked premium events near you. Book early — sells out fast!',
+    filter_all:'All Cities',
+    passes_tag:'🎟 Pass Categories', passes_title:'Choose Your Pass',
+    passes_sub:'From solo entry to VIP couple packages — pick what\'s perfect for you.',
+    how_tag:'⚡ Simple Process', how_title:'How It Works',
+    how_sub:'Book your Garba pass in 3 easy steps.',
+    step1_title:'Browse Events', step1_p:'Explore verified Navratri events filtered by city, date, and price.',
+    step2_title:'Select & Buy Pass', step2_p:'Choose your pass type and complete secure Razorpay payment.',
+    step3_title:'Get Digital Pass', step3_p:'Instant e-pass with QR code on email + WhatsApp. PDF download too!',
+    step4_title:'Enjoy Garba!', step4_p:'Scan QR at gate and enjoy a magical Navratri night!',
+    gallery_tag:'📸 Memories', gallery_title:'Navratri Vibes Gallery',
+    gallery_sub:'Beautiful memories from past years. Be part of it this year!',
+    gallery_upload:'📤 Upload Your Photo',
+    reviews_tag:'⭐ Live Reviews', reviews_title:'Customer Reviews',
+    group_tag:'🤝 Best Deal', group_title:'Group Booking Discount',
+    group_sub:'Bigger the group — bigger the discount! Come with family and friends, save more!',
+    group_btn:'🤝 Book as Group →',
+    referral_tag:'📢 Invite & Earn', referral_title:'Refer & Earn ₹50!',
+    referral_sub:'Every friend who books with your code — you get ₹50 cashback!',
+    ref_share:'📱 WhatsApp Share', ref_copy:'🔗 Copy Link',
+    ref_step1_title:'Share Your Code', ref_step1_p:'Send your code to friends on WhatsApp',
+    ref_step2_title:'Friend Books', ref_step2_p:'They buy a pass using your code',
+    ref_step3_title:'Earn ₹50!', ref_step3_p:'₹50 cashback in your account per booking',
+    lucky_tag:'🎰 Free Contest', lucky_title:'Spin the Lucky Draw!',
+    lucky_sub:'One chance daily — Win free passes, discounts, and surprise gifts!',
+    spin_btn:'🎰 Spin the Wheel!',
+    costume_tag:'👗 New Feature', costume_title:'Navratri Costume Rental',
+    costume_sub:'Stunning traditional outfits on rent! Chaniya Choli, Kediya, Sherwani — delivered to your door.',
+    footer_copy:'© 2025 GarbaUtsav Events Pvt Ltd. Made with ❤️ in Gujarat',
+    book_now:'Book Now →', sold_out:'Sold Out', starting_from:'Starting from',
+  },
+  hi: {
+    nav_tagline:'प्रीमियम नवरात्रि बुकिंग', nav_events:'इवेंट्स', nav_passes:'पास',
+    nav_costume:'👗 पोशाक किराया', nav_gallery:'📸 गैलरी', nav_lucky:'🎰 लकी ड्रॉ',
+    nav_contact:'संपर्क', nav_admin:'🔒 एडमिन', nav_book:'अभी बुक करें 🎉',
+    hero_badge:'✦ नवरात्रि 2025 — सीमित पास उपलब्ध',
+    hero_h1:'अपना<br>गरबा पास<br>बुक करें',
+    hero_p:'गुजरात का सबसे भरोसेमंद नवरात्रि गरबा इवेंट प्लेटफॉर्म। तुरंत ई-टिकट, सुरक्षित भुगतान और यादगार पल!',
+    hero_btn1:'🎟 इवेंट्स देखें', hero_btn2:'पास देखें',
+    stat1:'पास बिके', stat2:'इवेंट्स', stat3:'यूजर रेटिंग', stat4:'शहर',
+    urgency_txt:'लोग अभी इस वेबसाइट पर हैं! · नवरात्रि पास तेज़ी से बिक रहे हैं!',
+    events_tag:'🪔 लाइव इवेंट्स', events_title:'आगामी गरबा इवेंट्स',
+    events_sub:'आपके पास प्रीमियम इवेंट्स। जल्दी बुक करें — जल्दी बिक जाते हैं!',
+    filter_all:'सभी शहर',
+    passes_tag:'🎟 पास की श्रेणियां', passes_title:'अपना पास चुनें',
+    passes_sub:'एकल प्रवेश से वीआईपी कपल पैकेज तक — आपके लिए सही चुनें।',
+    how_tag:'⚡ आसान प्रक्रिया', how_title:'कैसे काम करता है',
+    how_sub:'3 आसान चरणों में अपना गरबा पास बुक करें।',
+    step1_title:'इवेंट्स खोजें', step1_p:'शहर, तारीख और कीमत के हिसाब से इवेंट देखें।',
+    step2_title:'पास खरीदें', step2_p:'पास चुनें और Razorpay से सुरक्षित भुगतान करें।',
+    step3_title:'डिजिटल पास पाएं', step3_p:'ईमेल + WhatsApp पर QR कोड के साथ तुरंत पास।',
+    step4_title:'गरबा एन्जॉय करें!', step4_p:'गेट पर QR स्कैन करें और जादुई नवरात्रि का मज़ा लें!',
+    gallery_tag:'📸 यादें', gallery_title:'नवरात्रि वाइब्स गैलरी',
+    gallery_sub:'पिछले सालों की खूबसूरत यादें। इस साल आप भी हिस्सा बनें!',
+    gallery_upload:'📤 अपनी फोटो अपलोड करें',
+    reviews_tag:'⭐ लाइव रिव्यूज़', reviews_title:'ग्राहक समीक्षाएं',
+    group_tag:'🤝 बेस्ट डील', group_title:'ग्रुप बुकिंग डिस्काउंट',
+    group_sub:'जितना बड़ा ग्रुप — उतना बड़ा डिस्काउंट! परिवार और दोस्तों के साथ आएं!',
+    group_btn:'🤝 ग्रुप में बुक करें →',
+    referral_tag:'📢 इन्वाइट करें और कमाएं', referral_title:'रेफर करें, ₹50 कमाएं!',
+    referral_sub:'हर दोस्त जो आपके कोड से बुकिंग करे — ₹50 कैशबैक मिलेगा!',
+    ref_share:'📱 WhatsApp शेयर', ref_copy:'🔗 लिंक कॉपी करें',
+    ref_step1_title:'कोड शेयर करें', ref_step1_p:'WhatsApp पर दोस्तों को अपना कोड भेजें',
+    ref_step2_title:'दोस्त बुक करे', ref_step2_p:'वो आपका कोड यूज़ करके पास खरीदे',
+    ref_step3_title:'₹50 पाएं!', ref_step3_p:'हर बुकिंग पर ₹50 कैशबैक आपके खाते में',
+    lucky_tag:'🎰 फ्री कॉन्टेस्ट', lucky_title:'लकी ड्रॉ स्पिन करें!',
+    lucky_sub:'रोज़ एक मौका — फ्री पास, डिस्काउंट और सरप्राइज़ गिफ्ट जीतें!',
+    spin_btn:'🎰 व्हील घुमाएं!',
+    costume_tag:'👗 नई सुविधा', costume_title:'नवरात्रि पोशाक किराया',
+    costume_sub:'किराए पर शानदार पारंपरिक पोशाकें! चनिया चोली, केडिया, शेरवानी — घर पर डिलीवरी।',
+    footer_copy:'© 2025 GarbaUtsav Events Pvt Ltd. गुजरात में बना ❤️ के साथ',
+    book_now:'अभी बुक करें →', sold_out:'बिक गया', starting_from:'शुरुआती कीमत',
+  },
+  gu: {
+    nav_tagline:'પ્રીમિયમ નવરાત્રી બુકિંગ', nav_events:'ઇવેન્ટ્સ', nav_passes:'પાસ',
+    nav_costume:'👗 પોશાક ભાડે', nav_gallery:'📸 ગેલેરી', nav_lucky:'🎰 લકી ડ્રો',
+    nav_contact:'સંપર્ક', nav_admin:'🔒 એડમિન', nav_book:'હવે બુક કરો 🎉',
+    hero_badge:'✦ નવરાત્રી 2025 — મર્યાદિત પાસ ઉપલબ્ધ',
+    hero_h1:'તમારો<br>ગરબા પાસ<br>બુક કરો',
+    hero_p:'ગુજરાતનું સૌથી વિશ્વસનીય નવરાત્રી ગરબા ઇવેન્ટ પ્લેટફોર્મ. તાત્કાલિક ઈ-ટિકિટ, સુરક્ષિત ચૂકવણી અને જીવનભરની યાદો!',
+    hero_btn1:'🎟 ઇવેન્ટ્સ જુઓ', hero_btn2:'પાસ જુઓ',
+    stat1:'પાસ વેચાયા', stat2:'ઇવેન્ટ્સ', stat3:'યુઝર રેટિંગ', stat4:'શહેરો',
+    urgency_txt:'લોકો અત્યારે આ વેબસાઇટ પર છે! · નવરાત્રી પાસ ઝડપથી વેચાઈ રહ્યા છે!',
+    events_tag:'🪔 લાઇવ ઇવેન્ટ્સ', events_title:'આગામી ગરબા ઇવેન્ટ્સ',
+    events_sub:'તમારી નજીક પ્રીમિયમ ઇવેન્ટ્સ. વહેલા બુક કરો — ઝડપથી વેચાઈ જાય છે!',
+    filter_all:'બધા શહેરો',
+    passes_tag:'🎟 પાસ કેટેગરી', passes_title:'તમારો પાસ પસંદ કરો',
+    passes_sub:'સિંગલ એન્ટ્રીથી VIP કપલ પેકેજ સુધી — તમારા માટે સૌથી સારું પસંદ કરો.',
+    how_tag:'⚡ સરળ પ્રક્રિયા', how_title:'કેવી રીતે કામ કરે છે',
+    how_sub:'3 સરળ પગલાંમાં તમારો ગરબા પાસ બુક કરો.',
+    step1_title:'ઇવેન્ટ્સ શોધો', step1_p:'શહેર, તારીખ અને કિંમત પ્રમાણે ઇવેન્ટ જુઓ.',
+    step2_title:'પાસ ખરીદો', step2_p:'પાસ પસંદ કરો અને Razorpay થી સુરક્ષિત ચૂકવણી કરો.',
+    step3_title:'ડિજિટલ પાસ મેળવો', step3_p:'ઈ-મેઇલ + WhatsApp પર QR કોડ સાથે તરત જ પાસ.',
+    step4_title:'ગરબા માણો!', step4_p:'ગેટ પર QR સ્કેન કરો અને જાદુઈ નવરાત્રીની મઝા લો!',
+    gallery_tag:'📸 યાદો', gallery_title:'નવરાત્રી વાઇબ્સ ગેલેરી',
+    gallery_sub:'ગયા વર્ષોની સુંદર યાદો. આ વર્ષ તમે પણ ભાગ બનો!',
+    gallery_upload:'📤 તમારો ફોટો અપલોડ કરો',
+    reviews_tag:'⭐ લાઇવ રિવ્યૂઝ', reviews_title:'ગ્રાહકોના અભિપ્રાય',
+    group_tag:'🤝 બેસ્ટ ડીલ', group_title:'ગ્રૂપ બુકિંગ ડિસ્કાઉન્ટ',
+    group_sub:'જેટલો મોટો ગ્રૂપ — એટલો મોટો ડિસ્કાઉન્ટ! પરિવાર અને મિત્રો સાથે આવો!',
+    group_btn:'🤝 ગ્રૂપ બુકિંગ કરો →',
+    referral_tag:'📢 આમંત્રણ આપો અને કમાઓ', referral_title:'રેફર કરો, ₹50 કમાઓ!',
+    referral_sub:'દરેક મિત્ર જે તમારા કોડ થી બુકિંગ કરે — ₹50 કેશબેક મળશે!',
+    ref_share:'📱 WhatsApp શેર', ref_copy:'🔗 લિંક કૉપિ કરો',
+    ref_step1_title:'કોડ શેર કરો', ref_step1_p:'WhatsApp પર મિત્રોને તમારો કોડ મોકલો',
+    ref_step2_title:'મિત્ર બુક કરે', ref_step2_p:'એ તમારો કોડ વાપરી પાસ ખરીદે',
+    ref_step3_title:'₹50 મેળવો!', ref_step3_p:'દર બુકિંગ પર ₹50 કેશબેક તમારા ખાતામાં',
+    lucky_tag:'🎰 ફ્રી કૉન્ટેસ્ટ', lucky_title:'લકી ડ્રો સ્પિન કરો!',
+    lucky_sub:'રોજ એક તક — ફ્રી પાસ, ડિસ્કાઉન્ટ અને સરપ્રાઇઝ ગિફ્ટ જીતો!',
+    spin_btn:'🎰 વ્હીલ ઘુમાવો!',
+    costume_tag:'👗 નવી સુવિધા', costume_title:'નવરાત્રી પોશાક ભાડે',
+    costume_sub:'ભાડે શાનદાર પરંપરાગત પોશાક! ચણિયા ચોળી, કેડિયો, શેરવાણી — ઘરે ડિલિવરી.',
+    footer_copy:'© 2025 GarbaUtsav Events Pvt Ltd. ❤️ સાથે ગુજરાતમાં બનાવ્યું',
+    book_now:'હવે બુક કરો →', sold_out:'વેચાઈ ગયું', starting_from:'શરૂઆતી કિંમત',
+  }
+};
+
+let currentLang = localStorage.getItem('garba_lang') || 'en';
+
+function setLang(lang, btn) {
+  currentLang = lang;
+  localStorage.setItem('garba_lang', lang);
+  // Update active button
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  // Apply all translations
+  applyTranslations();
+  // Re-render dynamic content in new language
+  renderEvents('all');
+  // Update page font for Gujarati
+  document.body.style.fontFamily = lang === 'gu' ? "'Hind',sans-serif" : "'Hind',sans-serif";
+  showToast(lang==='gu'?'🇮🇳 ભાષા બદલાઈ ગઈ — ગુજરાતી' : lang==='hi'?'🇮🇳 भाषा बदल गई — हिंदी':'🇬🇧 Language changed to English');
+}
+
+function t(key) {
+  return TRANSLATIONS[currentLang]?.[key] || TRANSLATIONS['en']?.[key] || key;
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    const val = t(key);
+    if(val) el.innerHTML = val;
+  });
+  // Urgency bar
+  const ub = document.querySelector('.urgency-bar');
+  if(ub) ub.innerHTML = `🔥 <span id="urgencyCount">347</span> ${t('urgency_txt')} · <span>⏰ <span id="urgencyHours">06:24:11</span></span>`;
+  // Section tags & titles
+  applySection('events_tag','events_title','events_sub','events');
+  applySection('passes_tag','passes_title','passes_sub','passes');
+  applySection('how_tag','how_title','how_sub','how');
+  applySection('gallery_tag','gallery_title','gallery_sub','gallery');
+  applySection('reviews_tag','reviews_title',null,'reviews');
+  applySection('group_tag','group_title','group_sub','group');
+  applySection('referral_tag','referral_title','referral_sub','referral');
+  applySection('lucky_tag','lucky_title','lucky_sub','lucky');
+  applySection('costume_tag','costume_title','costume_sub','costume');
+  // Filter chips
+  const allChip = document.querySelector('.filt-chip');
+  if(allChip) allChip.textContent = t('filter_all');
+  // Spin button
+  const sb = document.getElementById('spinBtn');
+  if(sb && !sb.disabled) sb.textContent = t('spin_btn');
+  // How it works steps
+  const steps = document.querySelectorAll('.step-card');
+  const stepKeys = [['step1_title','step1_p'],['step2_title','step2_p'],['step3_title','step3_p'],['step4_title','step4_p']];
+  steps.forEach((s,i) => {
+    if(stepKeys[i]){
+      const h4 = s.querySelector('h4'); const p = s.querySelector('p');
+      if(h4) h4.textContent = t(stepKeys[i][0]);
+      if(p)  p.textContent  = t(stepKeys[i][1]);
+    }
+  });
+  // Gallery upload btn
+  const gub = document.querySelector('[onclick="document.getElementById(\'galleryUpload\').click()"]');
+  if(gub) gub.textContent = t('gallery_upload');
+  // Group btn
+  const gbtn = document.querySelector('.group-booking-bar .btn-fire');
+  if(gbtn) gbtn.textContent = t('group_btn');
+  // Referral btns
+  const rbBtns = document.querySelectorAll('.referral-box button');
+  if(rbBtns[0]) rbBtns[0].textContent = t('ref_share');
+  if(rbBtns[1]) rbBtns[1].textContent = t('ref_copy');
+  // Referral steps
+  const refSteps = document.querySelectorAll('.ref-step');
+  const refKeys = [['ref_step1_title','ref_step1_p'],['ref_step2_title','ref_step2_p'],['ref_step3_title','ref_step3_p']];
+  refSteps.forEach((s,i) => {
+    if(refKeys[i]){
+      const h4=s.querySelector('h4'); const p=s.querySelector('p');
+      if(h4) h4.textContent=t(refKeys[i][0]);
+      if(p)  p.textContent =t(refKeys[i][1]);
+    }
+  });
+  // Footer
+  const fc = document.querySelector('.footer-bottom p');
+  if(fc) fc.textContent = t('footer_copy');
+}
+
+function applySection(tagKey, titleKey, subKey, sectionId) {
+  const sec = document.getElementById(sectionId);
+  if(!sec) return;
+  const tag   = sec.querySelector('.section-tag');
+  const title = sec.querySelector('.section-title');
+  const sub   = sec.querySelector('.section-sub');
+  if(tag)   tag.textContent   = t(tagKey);
+  if(title) title.innerHTML   = t(titleKey);
+  if(sub && subKey) sub.textContent = t(subKey);
+}
+
+// Apply saved language on load
+setTimeout(() => {
+  if(currentLang !== 'en') {
+    const btn = document.querySelector(`.lang-btn[onclick*="${currentLang}"]`);
+    setLang(currentLang, btn);
+  }
+}, 100);
+function scrollTo(id) { document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); }
+// ══════════════════════════════════════════════════
+// SCROLL TO TOP
+// ══════════════════════════════════════════════════
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTopBtn');
+  if(btn) btn.classList.toggle('visible', window.scrollY > 400);
+});
+
+// ══════════════════════════════════════════════════
+// WHATSAPP HELPER
+// ══════════════════════════════════════════════════
+function openWhatsApp(msg) {
+  const text = msg || 'Namaste! GarbaUtsav mein pass book karna hai. Help chahiye!';
+  window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`, '_blank');
+}
+// Fix floating WA button
+const waBtn = document.getElementById('waFloatBtn');
+if(waBtn) waBtn.addEventListener('click', e => { e.preventDefault(); openWhatsApp(); });
+
+// ══════════════════════════════════════════════════
+// PAGE LOADING SCREEN
+// ══════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  const loader = document.getElementById('pageLoader');
+  if(loader) {
+    setTimeout(() => {
+      loader.style.opacity = '0';
+      setTimeout(() => loader.remove(), 400);
+    }, 800);
+  }
+});
+
+
+function toggleMobileMenu() {
+  const links = document.getElementById('navLinks');
+  const btn   = document.getElementById('hamburgerBtn');
+  links.classList.toggle('open');
+  btn.textContent = links.classList.contains('open') ? '✕' : '☰';
+}
+
+// Active nav link on scroll
+window.addEventListener('scroll', () => {
+  const sections = ['events','passes','costume','gallery','lucky','contact'];
+  const scrollY  = window.scrollY + 100;
+  let active = '';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if(el && el.offsetTop <= scrollY) active = id;
+  });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active-link', a.getAttribute('href') === '#'+active);
+  });
+});
+
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
+</body>
+</html>

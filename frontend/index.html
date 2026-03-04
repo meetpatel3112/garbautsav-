@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="GarbaUtsav — Book premium Navratri Garba passes online. 10+ events across Gujarat. Instant e-ticket. Secure payment.">
+<meta property="og:title" content="GarbaUtsav — Premium Navratri Pass Booking">
+<meta property="og:description" content="Book your Garba pass instantly. 10+ events, 4 pass types, secure Razorpay payment.">
+<title>GarbaUtsav 🪔 — Premium Navratri Pass Booking | Ahmedabad Gujarat</title>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Hind:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+/* ── VARIABLES ───────────────────────────────────────────── */
+:root {
+  --saffron:#FF6B00; --deep-red:#C0392B; --gold:#F0A500;
+  --golden-light:#FFD166; --maroon:#8B0000; --cream:#FFF8EE;
+  --dark:#1A0A00; --text:#2C1810; --text-muted:#6B4226;
+  --card-bg:#FFFDF8; --border:rgba(240,165,0,0.2);
+  --shadow:0 8px 40px rgba(192,57,43,0.12); --radius:18px;
+  --green:#27AE60; --red:#E74C3C;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Hind',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+
+/* ── NAV ─────────────────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;background:rgba(255,248,238,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);z-index:1000;padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:70px}
+.nav-logo{font-family:'Yatra One',cursive;font-size:24px;background:linear-gradient(135deg,var(--saffron),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-logo span{display:block;font-family:'Hind',sans-serif;font-size:11px;color:var(--text-muted);-webkit-text-fill-color:var(--text-muted);margin-top:-4px}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{text-decoration:none;color:var(--text-muted);font-weight:500;font-size:14px;transition:color .2s}
+.nav-links a:hover{color:var(--saffron)}
+.nav-cta{background:linear-gradient(135deg,var(--saffron),var(--deep-red));color:white;border:none;padding:10px 22px;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;box-shadow:0 4px 20px rgba(255,107,0,0.35);transition:all .2s}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,107,0,0.45)}
+.hamburger{display:none;font-size:24px;cursor:pointer;color:var(--saffron);background:none;border:none}
+
+/* ── HERO ────────────────────────────────────────────────── */
+.hero{min-height:100vh;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,107,0,0.1) 0%,transparent 70%),var(--cream);display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 5% 60px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;border:2px dashed rgba(240,165,0,0.18);top:50%;left:50%;transform:translate(-50%,-50%);animation:rotate 30s linear infinite}
+.hero::after{content:'';position:absolute;width:820px;height:820px;border-radius:50%;border:1px dashed rgba(255,107,0,0.09);top:50%;left:50%;transform:translate(-50%,-50%);animation:rotate 50s linear infinite reverse}
+@keyframes rotate{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.hero-diya{font-size:76px;display:block;margin-bottom:18px;animation:float 3s ease-in-out infinite;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,107,0,0.08);border:1px solid rgba(240,165,0,0.4);padding:6px 18px;border-radius:50px;font-size:13px;font-weight:700;color:var(--saffron);margin-bottom:18px;position:relative;z-index:1}
+.hero h1{font-family:'Yatra One',cursive;font-size:clamp(42px,7vw,80px);line-height:1.1;background:linear-gradient(135deg,var(--dark) 0%,var(--maroon) 40%,var(--saffron) 70%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:18px;position:relative;z-index:1}
+.hero p{font-size:clamp(15px,2vw,19px);color:var(--text-muted);max-width:560px;margin:0 auto 32px;line-height:1.7;position:relative;z-index:1}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.btn-fire{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--saffron),var(--deep-red));color:white;border:none;padding:15px 34px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;box-shadow:0 8px 32px rgba(255,107,0,0.4);transition:all .3s}
+.btn-fire:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(255,107,0,0.5)}
+.btn-ghost{display:inline-flex;align-items:center;gap:10px;background:transparent;color:var(--saffron);border:2px solid var(--saffron);padding:13px 32px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;transition:all .3s}
+.btn-ghost:hover{background:rgba(255,107,0,0.07)}
+.hero-stats{display:flex;justify-content:center;gap:48px;margin-top:52px;position:relative;z-index:1;flex-wrap:wrap}
+.hero-stat .num{font-family:'Poppins',sans-serif;font-size:30px;font-weight:800;background:linear-gradient(135deg,var(--saffron),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-stat .lbl{font-size:12px;color:var(--text-muted);font-weight:500;margin-top:2px}
+
+/* ── SECTIONS ────────────────────────────────────────────── */
+section{padding:80px 5%}
+.section-tag{display:inline-flex;align-items:center;gap:6px;color:var(--saffron);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.section-title{font-family:'Yatra One',cursive;font-size:clamp(26px,4vw,42px);color:var(--text);margin-bottom:12px;line-height:1.2}
+.section-sub{font-size:15px;color:var(--text-muted);max-width:540px;line-height:1.7}
+
+/* ── CITY FILTER ─────────────────────────────────────────── */
+.events-section{background:white}
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0 20px}
+.city-chip{padding:8px 18px;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);color:var(--text-muted);transition:all .2s;background:white}
+.city-chip.active{background:var(--primary,var(--saffron));background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;border-color:transparent}
+.search-events{display:flex;align-items:center;gap:10px;background:#FFF8EE;border-radius:50px;padding:10px 18px;border:1.5px solid var(--border);margin-left:auto}
+.search-events input{border:none;background:transparent;outline:none;font-size:13px;font-family:'Hind',sans-serif;color:var(--text);width:180px}
+
+/* ── EVENT CARDS ─────────────────────────────────────────── */
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;margin-top:16px}
+.event-card{background:var(--card-bg);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);transition:transform .3s,box-shadow .3s;cursor:pointer}
+.event-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(192,57,43,0.18)}
+.event-banner{height:170px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.event-banner.saffron{background:linear-gradient(135deg,#FF6B00,#C0392B,#8B0000)}
+.event-banner.gold{background:linear-gradient(135deg,#F0A500,#E67E22,#C0392B)}
+.event-banner.royal{background:linear-gradient(135deg,#6C3483,#A569BD,#E91E63)}
+.banner-emoji{font-size:60px;animation:float 3s ease-in-out infinite}
+.event-badge{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700;color:var(--saffron)}
+.event-badge.sold{color:var(--red)}
+.event-body{padding:18px}
+.event-title{font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
+.event-organizer{font-size:12px;color:var(--text-muted);margin-bottom:12px}
+.event-detail-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);margin-bottom:4px}
+.event-detail-row strong{color:var(--text)}
+.event-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);margin-top:12px}
+.event-price .from{font-size:11px;color:var(--text-muted)}
+.event-price .amount{font-size:20px;font-weight:800;color:var(--saffron)}
+.event-price .per{font-size:11px;color:var(--text-muted)}
+.passes-left{font-size:11px;color:var(--red);font-weight:700;margin-top:3px}
+.btn-book{background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;border:none;padding:10px 20px;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;transition:all .2s}
+.btn-book:hover{transform:scale(1.05)}
+.btn-book:disabled{background:#ccc;cursor:not-allowed;transform:none}
+
+/* skeleton loader */
+.skeleton{background:linear-gradient(90deg,#f0e8d8 25%,#ffe8c8 50%,#f0e8d8 75%);background-size:200%;animation:shimmer 1.5s infinite}
+@keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
+.event-skeleton{height:300px;border-radius:var(--radius)}
+
+/* ── PASSES SECTION ──────────────────────────────────────── */
+.passes-section{background:linear-gradient(135deg,#1A0A00 0%,#3D1C00 100%);color:white;position:relative;overflow:hidden}
+.passes-section .section-title{color:white}
+.passes-section .section-sub{color:rgba(255,255,255,0.65)}
+.passes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px;margin-top:44px}
+.pass-card{border-radius:var(--radius);padding:26px;position:relative;overflow:hidden;transition:transform .3s;cursor:pointer;loading:"lazy"}
+.pass-card:hover{transform:translateY(-6px)}
+.pass-card.silver{background:linear-gradient(145deg,#2C2C2C,#4A4A4A);border:1px solid rgba(192,192,192,.3)}
+.pass-card.gold{background:linear-gradient(145deg,#3D2B00,#6B4A00);border:1px solid rgba(240,165,0,.5)}
+.pass-card.premium{background:linear-gradient(145deg,#1A0033,#4A0066);border:1px solid rgba(180,0,255,.4)}
+.pass-card.couple{background:linear-gradient(145deg,#1A0A00,#4A1500);border:1px solid rgba(255,107,0,.5)}
+.pass-popular-badge{position:absolute;top:-10px;right:18px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;font-size:10px;font-weight:700;padding:4px 12px;border-radius:50px}
+.pass-icon{font-size:38px;margin-bottom:12px;display:block}
+.pass-name{font-family:'Poppins',sans-serif;font-size:19px;font-weight:700;margin-bottom:6px}
+.pass-card.silver .pass-name{color:#E0E0E0}.pass-card.gold .pass-name{color:var(--golden-light)}.pass-card.premium .pass-name{color:#DDB4FF}.pass-card.couple .pass-name{color:#FFB88C}
+.pass-price{font-family:'Poppins',sans-serif;font-size:34px;font-weight:900;margin-bottom:18px}
+.pass-card.silver .pass-price{color:white}.pass-card.gold .pass-price{color:var(--golden-light)}.pass-card.premium .pass-price{color:#DDB4FF}.pass-card.couple .pass-price{color:#FFB88C}
+.pass-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+.pass-features li{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.75)}
+.pass-features li::before{content:'✦';color:var(--gold);font-size:9px;flex-shrink:0}
+.btn-pass{width:100%;padding:12px;border-radius:50px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;transition:all .2s}
+.pass-card.silver .btn-pass{background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3)}
+.pass-card.gold .btn-pass{background:linear-gradient(135deg,var(--gold),var(--saffron));color:white}
+.pass-card.premium .btn-pass{background:linear-gradient(135deg,#8B00FF,#E91E63);color:white}
+.pass-card.couple .btn-pass{background:linear-gradient(135deg,var(--saffron),var(--deep-red));color:white}
+.btn-pass:hover{transform:scale(1.03)}
+
+/* ── HOW IT WORKS ────────────────────────────────────────── */
+.how-section{background:white}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px;margin-top:44px;align-items:start}
+.step-card{text-align:center}
+.step-icon{font-size:32px;display:block;margin-bottom:12px}
+.step-num{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(255,107,0,.1),rgba(240,165,0,.1));border:2px solid rgba(255,107,0,.2);display:flex;align-items:center;justify-content:center;font-family:'Yatra One',cursive;font-size:22px;color:var(--saffron);margin:0 auto 14px}
+.step-card h4{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.step-card p{font-size:13px;color:var(--text-muted);line-height:1.7}
+.step-arrow{display:flex;align-items:center;justify-content:center;font-size:22px;color:rgba(255,107,0,.3)}
+
+/* ── TESTIMONIALS ────────────────────────────────────────── */
+.testimonials-section{background:var(--cream)}
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin-top:44px}
+.testimonial-card{background:white;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.t-stars{color:var(--gold);font-size:17px;margin-bottom:10px}
+.t-text{font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:14px;font-style:italic}
+.t-user{display:flex;align-items:center;gap:10px}
+.t-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--gold));display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:white}
+.t-name{font-weight:700;font-size:13px;color:var(--text)}
+.t-city{font-size:11px;color:var(--text-muted)}
+
+/* ── MODAL ───────────────────────────────────────────────── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal{background:white;border-radius:24px;padding:32px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;position:relative;animation:modalIn .3s ease}
+@keyframes modalIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:none;background:#F5F5F5;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Hind',sans-serif}
+.modal h2{font-family:'Yatra One',cursive;font-size:24px;color:var(--saffron);margin-bottom:4px}
+.modal .subtitle{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.form-group input,.form-group select{width:100%;padding:11px 14px;border:1.5px solid #E5E5E5;border-radius:12px;font-size:14px;font-family:'Hind',sans-serif;color:var(--text);background:#FAFAFA;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus{border-color:var(--saffron);background:white}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pass-summary{background:var(--cream);border-radius:14px;padding:14px;margin:14px 0;border:1px solid var(--border)}
+.pass-summary-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:7px}
+.pass-summary-row:last-child{margin-bottom:0;border-top:1px dashed var(--border);padding-top:8px;font-weight:800;font-size:15px}
+.discount-row{display:flex;justify-content:space-between;padding:7px 0;font-size:13px;color:var(--green);font-weight:700;border-top:1px dashed rgba(39,174,96,.3);animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+/* coupon */
+.coupon-box{display:flex;gap:8px;align-items:stretch;margin-bottom:14px}
+.coupon-input-wrap{flex:1;position:relative}
+.coupon-input-wrap input{width:100%;padding:11px 14px 11px 38px;border:1.5px dashed rgba(240,165,0,.5);border-radius:12px;font-size:14px;font-family:'Hind',sans-serif;color:var(--text);background:rgba(255,248,238,.6);outline:none;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
+.coupon-input-wrap input:focus{border-color:var(--saffron);background:white;border-style:solid}
+.coupon-input-wrap input.success{border-color:var(--green);border-style:solid;background:rgba(39,174,96,.04)}
+.coupon-input-wrap input.error{border-color:var(--red);border-style:solid}
+.coupon-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:16px}
+.btn-apply-coupon{padding:11px 18px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:white;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;white-space:nowrap;transition:all .2s;box-shadow:0 3px 12px rgba(255,107,0,.3)}
+.btn-apply-coupon:disabled{background:#ccc;box-shadow:none;cursor:not-allowed}
+.coupon-msg{font-size:12px;font-weight:600;padding:0 2px;margin-top:-8px;margin-bottom:10px;min-height:16px}
+.coupon-msg.success{color:var(--green)}.coupon-msg.error{color:var(--red)}
+.coupon-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.coupon-tag{display:inline-flex;align-items:center;gap:4px;background:rgba(255,107,0,.07);border:1px dashed rgba(255,107,0,.35);color:var(--saffron);font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;cursor:pointer;transition:all .2s;letter-spacing:.04em}
+.coupon-tag:hover{background:rgba(255,107,0,.14)}
+
+.btn-pay{width:100%;padding:15px;background:linear-gradient(135deg,var(--saffron),var(--deep-red));color:white;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;box-shadow:0 6px 28px rgba(255,107,0,.35);transition:all .3s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-pay:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,107,0,.45)}
+.btn-pay:disabled{background:#ccc;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* success */
+.success-screen{text-align:center;padding:10px 0}
+.checkmark{font-size:70px;margin-bottom:14px;display:block;animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.2)}100%{transform:scale(1)}}
+.success-screen h3{font-family:'Yatra One',cursive;font-size:24px;color:var(--saffron);margin-bottom:8px}
+.success-screen p{color:var(--text-muted);font-size:14px;margin-bottom:20px}
+.ticket-stub{background:linear-gradient(135deg,#1A0A00,#3D1C00);border-radius:16px;padding:18px;border:2px dashed rgba(240,165,0,.4);text-align:left;margin-bottom:20px}
+.t-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px}
+.t-label{color:rgba(255,255,255,.5)}.t-value{color:white;font-weight:600}
+.t-id{color:var(--golden-light);font-family:'Poppins',sans-serif;font-weight:800;font-size:15px}
+.qr-placeholder{width:80px;height:80px;background:white;border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;padding:6px}
+.qr-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;width:100%;height:100%}
+.btn-download{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:rgba(255,255,255,.1);color:white;border:1px solid rgba(255,255,255,.2);border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Hind',sans-serif;margin-bottom:10px;transition:all .2s}
+.btn-download:hover{background:rgba(255,255,255,.18)}
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+footer{background:var(--dark);color:white;padding:56px 5% 28px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;margin-bottom:36px}
+.footer-brand .logo{font-family:'Yatra One',cursive;font-size:26px;color:var(--gold)}
+.footer-brand p{font-size:13px;color:rgba(255,255,255,.45);margin-top:10px;line-height:1.7}
+.footer-col h4{font-size:12px;font-weight:700;color:white;margin-bottom:14px;text-transform:uppercase;letter-spacing:.09em}
+.footer-col a{display:block;font-size:13px;color:rgba(255,255,255,.45);text-decoration:none;margin-bottom:7px;transition:color .2s}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.footer-bottom p{font-size:12px;color:rgba(255,255,255,.35)}
+
+/* ── TOAST ───────────────────────────────────────────────── */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--dark);color:white;padding:13px 18px;border-radius:14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.3);z-index:9999;transform:translateY(100px);opacity:0;transition:all .4s;border-left:4px solid var(--saffron);max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){
+  .nav-links{display:none}.hamburger{display:block}
+  .footer-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}
+  .events-grid{grid-template-columns:1fr}.passes-grid{grid-template-columns:1fr}
+  .search-events{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🪔 GarbaUtsav<span>Premium Navratri Pass Booking</span></div>
+  <div class="nav-links">
+    <a href="#events">Events</a>
+    <a href="#passes">Passes</a>
+    <a href="#how">How It Works</a>
+    <a href="#contact">Contact</a>
+    <a href="admin.html" target="_blank" style="color:var(--saffron);font-weight:700;">🔒 Organizer Login</a>
+  </div>
+  <button class="nav-cta" onclick="scrollTo('events')">Book Now 🎉</button>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div>
+    <span class="hero-diya">🪔</span>
+    <div class="hero-badge">✦ Navratri 2025 — Limited Passes Available</div>
+    <h1>Book Your<br>Garba Pass<br>Online</h1>
+    <p>Celebrate Navratri in style. Premium garba events across Gujarat with easy online booking, instant e-ticket, and secure Razorpay payment.</p>
+    <div class="hero-btns">
+      <button class="btn-fire" onclick="scrollTo('events')">🎟 Explore Events</button>
+      <button class="btn-ghost" onclick="scrollTo('passes')">View Pass Types</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num" id="stat-passes">50,000+</div><div class="lbl">Passes Sold</div></div>
+      <div class="hero-stat"><div class="num" id="stat-events">10+</div><div class="lbl">Events Listed</div></div>
+      <div class="hero-stat"><div class="num">4.9 ★</div><div class="lbl">User Rating</div></div>
+      <div class="hero-stat"><div class="num">8+</div><div class="lbl">Cities Covered</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section class="events-section" id="events">
+  <div class="section-tag">🪔 Live Events</div>
+  <h2 class="section-title">Upcoming Garba Events</h2>
+  <p class="section-sub">Handpicked premium Navratri events near you. Book early — passes sell out fast!</p>
+  <div class="filter-bar" id="cityFilter"></div>
+  <div class="events-grid" id="eventsGrid">
+    <!-- skeleton loaders -->
+    <div class="event-skeleton skeleton"></div>
+    <div class="event-skeleton skeleton"></div>
+    <div class="event-skeleton skeleton"></div>
+  </div>
+</section>
+
+<!-- PASSES -->
+<section class="passes-section" id="passes">
+  <div class="section-tag" style="color:var(--golden-light)">🎟 Pass Categories</div>
+  <h2 class="section-title">Choose Your Pass</h2>
+  <p class="section-sub">From solo entry to premium VIP couple packages.</p>
+  <div class="passes-grid" id="passesGrid">
+    <div class="event-skeleton skeleton" style="height:360px;border-radius:18px"></div>
+    <div class="event-skeleton skeleton" style="height:360px;border-radius:18px"></div>
+    <div class="event-skeleton skeleton" style="height:360px;border-radius:18px"></div>
+    <div class="event-skeleton skeleton" style="height:360px;border-radius:18px"></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div style="text-align:center;max-width:560px;margin:0 auto">
+    <div class="section-tag">⚡ Simple Process</div>
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">Book your Garba pass in 3 simple steps.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card"><span class="step-icon">🔍</span><div class="step-num">01</div><h4>Browse Events</h4><p>Explore verified Navratri events filtered by city, date, and price.</p></div>
+    <div class="step-arrow">→</div>
+    <div class="step-card"><span class="step-icon">🎟</span><div class="step-num">02</div><h4>Select & Pay</h4><p>Choose your pass, apply coupon, and pay securely via Razorpay.</p></div>
+    <div class="step-arrow">→</div>
+    <div class="step-card"><span class="step-icon">📱</span><div class="step-num">03</div><h4>Get E-Ticket</h4><p>Instant PDF ticket + QR code via email and WhatsApp. Show & enter!</p></div>
+    <div class="step-arrow">→</div>
+    <div class="step-card"><span class="step-icon">💃</span><div class="step-num">04</div><h4>Enjoy Garba!</h4><p>Scan QR at gate and enjoy a magical Navratri night.</p></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div style="text-align:center;max-width:560px;margin:0 auto">
+    <div class="section-tag">❤️ Happy Dancers</div>
+    <h2 class="section-title">What People Say</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card"><div class="t-stars">★★★★★</div><p class="t-text">"Super easy to book! Got my QR pass instantly. Entry was so smooth."</p><div class="t-user"><div class="t-avatar">P</div><div><div class="t-name">Priya Sharma</div><div class="t-city">Ahmedabad, Gujarat</div></div></div></div>
+    <div class="testimonial-card"><div class="t-stars">★★★★★</div><p class="t-text">"Couple pass totally worth it! PDF ticket on WhatsApp was amazing."</p><div class="t-user"><div class="t-avatar">R</div><div><div class="t-name">Rahul & Neha Patel</div><div class="t-city">Surat, Gujarat</div></div></div></div>
+    <div class="testimonial-card"><div class="t-stars">★★★★★</div><p class="t-text">"Best Navratri booking platform! Used GARBA10 coupon and saved ₹50!"</p><div class="t-user"><div class="t-avatar">K</div><div><div class="t-name">Kavya Desai</div><div class="t-city">Vadodara, Gujarat</div></div></div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div class="footer-brand"><div class="logo">🪔 GarbaUtsav</div><p>India's most trusted platform for Navratri Garba pass booking. GarbaUtsav Events Pvt Ltd, Ahmedabad, Gujarat.</p></div>
+    <div class="footer-col"><h4>Quick Links</h4><a href="#events">Browse Events</a><a href="#passes">Pass Types</a><a href="admin.html">Organizer Login</a><a href="#how">How It Works</a></div>
+    <div class="footer-col"><h4>Support</h4><a href="#">FAQ</a><a href="#">Refund Policy</a><a href="#">Contact Us</a><a href="https://wa.me/919876543210" target="_blank">WhatsApp Support</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="#">Terms of Use</a><a href="#">Privacy Policy</a><a href="#">Cookie Policy</a></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 GarbaUtsav Events Pvt Ltd, Ahmedabad | All rights reserved</p>
+    <p>🔒 Secure Payments by Razorpay | ✉️ hello@garbautsav.in</p>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// CONFIG — Apna backend URL yahan daalo after deployment
+// ============================================================
+const API = "http://localhost:3000/api";   // production mein: "https://your-backend.onrender.com/api"
+
+// ============================================================
+// STATE
+// ============================================================
+let allEvents  = [];
+let allPasses  = [];
+let selEvent   = null;
+let selPass    = null;
+let appliedCoupon = null;
+let currentCity   = "all";
+let currentPdfB64 = null;
+
+// ============================================================
+// UTILS
+// ============================================================
+const $ = id => document.getElementById(id);
+function scrollTo(id) { document.getElementById(id)?.scrollIntoView({ behavior:"smooth" }); }
+function showToast(msg, dur=3500) {
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), dur);
+}
+function toggleMenu() {
+  const nl = document.querySelector(".nav-links");
+  nl.style.display = nl.style.display === "flex" ? "none" : "flex";
+}
+
+// ============================================================
+// LOAD EVENTS FROM BACKEND
+// ============================================================
+async function loadEvents() {
+  try {
+    const res  = await fetch(`${API}/events`);
+    const data = await res.json();
+    allEvents  = data.events || [];
+    renderCityFilter();
+    renderEvents();
+  } catch (e) {
+    console.warn("Backend offline — using demo data");
+    allEvents = getDemoEvents();
+    renderCityFilter();
+    renderEvents();
+  }
+}
+
+async function loadPasses() {
+  try {
+    const res  = await fetch(`${API}/passes`);
+    const data = await res.json();
+    allPasses  = data.passes || [];
+    renderPasses();
+  } catch (e) {
+    allPasses = getDemoPasses();
+    renderPasses();
+  }
+}
+
+// ============================================================
+// DEMO DATA (fallback when backend is offline)
+// ============================================================
+function getDemoEvents() {
+  return [
+    { id:"e1", name:"Navratri Mahotsav 2025",     organizerId:"org1", location:"GMDC Grounds, Ahmedabad",      city:"Ahmedabad",  date:"2–11 Oct 2025", time:"8:00 PM – 1:00 AM",  totalPasses:500, soldPasses:180, basePrice:299, theme:"saffron", emoji:"💃", featured:true,  active:true },
+    { id:"e2", name:"Royal Garba Night",           organizerId:"org2", location:"Sports Complex, Surat",        city:"Surat",      date:"3–12 Oct 2025", time:"7:30 PM – 12:30 AM", totalPasses:400, soldPasses:110, basePrice:349, theme:"gold",    emoji:"🪔", featured:false, active:true },
+    { id:"e3", name:"Heritage Garba Utsav",        organizerId:"org3", location:"Sayaji Park, Vadodara",        city:"Vadodara",   date:"2–11 Oct 2025", time:"8:00 PM – 1:30 AM",  totalPasses:600, soldPasses:200, basePrice:199, theme:"royal",   emoji:"🎶", featured:false, active:true },
+    { id:"e4", name:"Grand Navratri Celebration",  organizerId:"org1", location:"Race Course Ground, Rajkot",   city:"Rajkot",     date:"4–13 Oct 2025", time:"8:30 PM – 1:00 AM",  totalPasses:500, soldPasses:90,  basePrice:249, theme:"saffron", emoji:"🌟", featured:false, active:true },
+    { id:"e5", name:"Falguni Pathak Nite 2025",    organizerId:"org2", location:"Sector 7 Ground, Gandhinagar", city:"Gandhinagar",date:"5–14 Oct 2025", time:"9:00 PM – 2:00 AM",  totalPasses:800, soldPasses:310, basePrice:399, theme:"gold",    emoji:"🎤", featured:true,  active:true },
+    { id:"e6", name:"Dandiya Dhamaka Night",       organizerId:"org3", location:"Town Hall Ground, Anand",      city:"Anand",      date:"2–11 Oct 2025", time:"8:00 PM – 1:00 AM",  totalPasses:350, soldPasses:60,  basePrice:149, theme:"royal",   emoji:"🎀", featured:false, active:true },
+    { id:"e7", name:"VIP Garba Gala 2025",         organizerId:"org1", location:"Taj Convention, Surat",        city:"Surat",      date:"3–12 Oct 2025", time:"8:00 PM – 2:00 AM",  totalPasses:200, soldPasses:45,  basePrice:599, theme:"saffron", emoji:"👑", featured:false, active:true },
+    { id:"e8", name:"Family Navratri Mela",        organizerId:"org2", location:"Exhibition Ground, Mehsana",   city:"Mehsana",    date:"2–11 Oct 2025", time:"7:00 PM – 12:00 AM", totalPasses:700, soldPasses:220, basePrice:179, theme:"gold",    emoji:"🎠", featured:false, active:true },
+    { id:"e9", name:"EDM Navratri Beats",          organizerId:"org3", location:"ITC Narmada Lawns, Ahmedabad", city:"Ahmedabad",  date:"6–15 Oct 2025", time:"9:00 PM – 3:00 AM",  totalPasses:300, soldPasses:120, basePrice:499, theme:"royal",   emoji:"🎧", featured:false, active:true },
+    { id:"e10",name:"Garba Under The Stars 2025",  organizerId:"org1", location:"Riverfront, Ahmedabad",        city:"Ahmedabad",  date:"2–11 Oct 2025", time:"8:30 PM – 1:30 AM",  totalPasses:450, soldPasses:180, basePrice:329, theme:"saffron", emoji:"⭐", featured:false, active:true },
+  ];
+}
+function getDemoPasses() {
+  return [
+    { id:"silver",  name:"Silver Entry", icon:"🎫", basePrice:199, color:"silver",  features:["Single entry","All 9 nights","Basic seating","Parking","Digital QR pass"] },
+    { id:"gold",    name:"Gold Pass",    icon:"🏅", basePrice:349, color:"gold",    popular:true, features:["Single entry","All 9 nights","Premium seating","Snacks","VIP Parking","Digital QR"] },
+    { id:"premium", name:"Premium VIP",  icon:"💎", basePrice:599, color:"premium", features:["Single entry","All 9 nights","VIP Lounge","Full Dinner","Dedicated Parking","Gift Hamper","Physical+Digital Pass"] },
+    { id:"couple",  name:"Couple Pass",  icon:"💑", basePrice:649, color:"couple",  features:["2 persons entry","All 9 nights","Couple seating","Welcome drinks","Photo session","Parking","Digital QR"] },
+  ];
+}
+
+// ============================================================
+// RENDER CITY FILTER
+// ============================================================
+function renderCityFilter() {
+  const cities = ["all", ...new Set(allEvents.map(e => e.city))];
+  $("cityFilter").innerHTML = cities.map(c => `
+    <div class="city-chip ${c===currentCity?'active':''}" onclick="filterCity('${c}')">
+      ${c === "all" ? "🌍 All Cities" : "📍 " + c}
+    </div>`).join("") +
+    `<div class="search-events">🔍 <input type="text" placeholder="Search events..." oninput="searchEvents(this.value)"></div>`;
+}
+function filterCity(city) {
+  currentCity = city;
+  renderCityFilter();
+  renderEvents();
+}
+function searchEvents(q) {
+  const filtered = allEvents.filter(e =>
+    e.name.toLowerCase().includes(q.toLowerCase()) ||
+    e.city.toLowerCase().includes(q.toLowerCase()) ||
+    e.location.toLowerCase().includes(q.toLowerCase())
+  );
+  renderEventCards(filtered);
+}
+
+// ============================================================
+// RENDER EVENTS
+// ============================================================
+function renderEvents() {
+  const filtered = currentCity === "all" ? allEvents : allEvents.filter(e => e.city === currentCity);
+  renderEventCards(filtered);
+}
+function renderEventCards(list) {
+  if (!list.length) {
+    $("eventsGrid").innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted)"><div style="font-size:48px;margin-bottom:12px">🔍</div><h3>No events found</h3></div>`;
+    return;
+  }
+  $("eventsGrid").innerHTML = list.map(e => {
+    const left   = e.totalPasses - e.soldPasses;
+    const soldOut = left <= 0;
+    return `
+    <div class="event-card" onclick="${!soldOut ? `openBooking('${e.id}')` : ''}">
+      <div class="event-banner ${e.theme}">
+        <div class="banner-emoji">${e.emoji}</div>
+        <div class="event-badge ${soldOut?'sold':''}">${soldOut ? '🔴 Sold Out' : e.featured ? '⭐ Featured' : '🟢 Available'}</div>
+      </div>
+      <div class="event-body">
+        <div class="event-title">${e.name}</div>
+        <div class="event-organizer">📍 ${e.city}</div>
+        <div class="event-detail-row">🏟 <strong>${e.location}</strong></div>
+        <div class="event-detail-row">📅 <strong>${e.date}</strong></div>
+        <div class="event-detail-row">⏰ <strong>${e.time}</strong></div>
+        <div class="event-detail-row">🎟 <strong>${e.totalPasses} total</strong> &nbsp;•&nbsp; ${left} remaining</div>
+        <div class="event-footer">
+          <div class="event-price">
+            <div class="from">Starting from</div>
+            <div class="amount">₹${e.basePrice}</div>
+            <div class="per">per person</div>
+            ${left > 0 && left < 60 ? `<div class="passes-left">⚠️ Only ${left} left!</div>` : ""}
+          </div>
+          <button class="btn-book" ${soldOut?"disabled":""} onclick="event.stopPropagation();${!soldOut?`openBooking('${e.id}')`:''}">${soldOut?"Sold Out":"Book Now →"}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// ============================================================
+// RENDER PASSES
+// ============================================================
+function renderPasses() {
+  $("passesGrid").innerHTML = allPasses.map(p => `
+    <div class="pass-card ${p.color}" onclick="openPassBooking('${p.id}')">
+      ${p.popular ? '<div class="pass-popular-badge">🔥 Most Popular</div>' : ""}
+      <span class="pass-icon">${p.icon}</span>
+      <div class="pass-name">${p.name}</div>
+      <div class="pass-price">₹${p.basePrice}<span style="font-size:15px;opacity:.6">/person</span></div>
+      <ul class="pass-features">${p.features.map(f=>`<li>${f}</li>`).join("")}</ul>
+      <button class="btn-pass">Select ${p.name} →</button>
+    </div>`).join("");
+}
+
+// ============================================================
+// OPEN BOOKING MODAL
+// ============================================================
+function openBooking(eventId) {
+  selEvent = allEvents.find(e => e.id === eventId);
+  selPass  = allPasses.find(p => p.id === "gold") || allPasses[0];
+  appliedCoupon = null;
+  renderBookingForm();
+  $("bookingModal").classList.add("active");
+}
+function openPassBooking(passId) {
+  selEvent = allEvents[0];
+  selPass  = allPasses.find(p => p.id === passId) || allPasses[0];
+  appliedCoupon = null;
+  renderBookingForm();
+  $("bookingModal").classList.add("active");
+}
+function closeModal() { $("bookingModal").classList.remove("active"); }
+$("bookingModal").addEventListener("click", e => { if(e.target === $("bookingModal")) closeModal(); });
+
+// ============================================================
+// BOOKING FORM
+// ============================================================
+function renderBookingForm() {
+  const qty  = 1;
+  const sub  = (selPass?.basePrice || 0) * qty;
+  const conv = Math.round(sub * 0.02);
+
+  $("modalContent").innerHTML = `
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>🎟 Book Your Pass</h2>
+    <p class="subtitle">${selEvent?.name || ""} • ${selEvent?.date || ""}</p>
+
+    <div class="form-group">
+      <label>Select Event</label>
+      <select id="eventSel" onchange="updateEvent(this.value)">
+        ${allEvents.filter(e=>e.soldPasses<e.totalPasses).map(e=>`<option value="${e.id}" ${e.id===selEvent?.id?"selected":""}>${e.emoji} ${e.name} — ${e.city}</option>`).join("")}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Select Pass Type</label>
+      <select id="passSel" onchange="updatePass(this.value)">
+        ${allPasses.map(p=>`<option value="${p.id}" ${p.id===selPass?.id?"selected":""}>${p.icon} ${p.name} — ₹${p.basePrice}</option>`).join("")}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Number of Passes</label>
+      <select id="qtySel" onchange="updateSummary()">
+        ${[1,2,3,4].map(n=>`<option value="${n}">${n} Pass${n>1?"es":""}</option>`).join("")}
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Full Name *</label><input type="text" id="bName" placeholder="Rahul Patel"></div>
+      <div class="form-group"><label>Mobile *</label><input type="tel" id="bPhone" placeholder="9876543210" maxlength="10"></div>
+    </div>
+    <div class="form-group"><label>Email Address *</label><input type="email" id="bEmail" placeholder="rahul@example.com"></div>
+
+    <!-- COUPON -->
+    <div class="form-group"><label>🏷️ Have a Coupon?</label></div>
+    <div class="coupon-tags">
+      <div class="coupon-tag" onclick="fillCoupon('GARBA10')">🎟 GARBA10</div>
+      <div class="coupon-tag" onclick="fillCoupon('NAVRATRI')">🪔 NAVRATRI</div>
+      <div class="coupon-tag" onclick="fillCoupon('WELCOME50')">🎁 WELCOME50</div>
+      <div class="coupon-tag" onclick="fillCoupon('COUPLE99')">💑 COUPLE99</div>
+    </div>
+    <div class="coupon-box">
+      <div class="coupon-input-wrap">
+        <span class="coupon-icon">🏷️</span>
+        <input type="text" id="couponInput" placeholder="ENTER CODE" oninput="this.value=this.value.toUpperCase()">
+      </div>
+      <button class="btn-apply-coupon" id="applyBtn" onclick="applyCoupon()">Apply</button>
+    </div>
+    <div class="coupon-msg" id="couponMsg"></div>
+
+    <!-- SUMMARY -->
+    <div class="pass-summary" id="passSummary">
+      <div class="pass-summary-row"><span>Pass Type</span><strong>${selPass?.icon} ${selPass?.name}</strong></div>
+      <div class="pass-summary-row"><span>Price × 1</span><strong>₹${sub}</strong></div>
+      <div class="pass-summary-row"><span>Convenience Fee (2%)</span><strong>₹${conv}</strong></div>
+      <div class="pass-summary-row"><span>Total Payable</span><strong style="color:var(--saffron)">₹${sub+conv}</strong></div>
+    </div>
+
+    <button class="btn-pay" id="payBtn" onclick="processPayment()">🔒 Pay Securely via Razorpay</button>
+    <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:10px">🔐 Powered by Razorpay • UPI • Cards • Netbanking • Wallets</p>
+  `;
+}
+
+function updateEvent(id) { selEvent = allEvents.find(e=>e.id===id); }
+function updatePass(id)  { selPass  = allPasses.find(p=>p.id===id); appliedCoupon=null; updateSummary(); }
+function calcDiscount(sub) {
+  if(!appliedCoupon) return 0;
+  // try local demo coupons first
+  const local = { GARBA10:{type:"percent",value:10}, NAVRATRI:{type:"percent",value:15}, WELCOME50:{type:"flat",value:50}, COUPLE99:{type:"flat",value:99}, VIP20:{type:"percent",value:20}, FIRSTBUY:{type:"flat",value:30} };
+  const c = local[appliedCoupon];
+  if(!c) return 0;
+  return c.type==="percent" ? Math.round(sub*c.value/100) : Math.min(c.value, sub);
+}
+function updateSummary() {
+  const qty  = parseInt($("qtySel")?.value||1);
+  const sub  = (selPass?.basePrice||0)*qty;
+  const dis  = calcDiscount(sub);
+  const after= sub-dis;
+  const conv = Math.round(after*0.02);
+  const tot  = after+conv;
+  const el   = $("passSummary"); if(!el) return;
+  const disRow = dis>0 ? `<div class="discount-row"><span>🏷️ Coupon (${appliedCoupon})</span><strong>− ₹${dis}</strong></div>` : "";
+  el.innerHTML = `
+    <div class="pass-summary-row"><span>Pass</span><strong>${selPass?.icon} ${selPass?.name}</strong></div>
+    <div class="pass-summary-row"><span>Price × ${qty}</span><strong>₹${sub}</strong></div>
+    ${disRow}
+    <div class="pass-summary-row"><span>Convenience Fee (2%)</span><strong>₹${conv}</strong></div>
+    <div class="pass-summary-row"><span>Total Payable</span><strong style="color:var(--saffron);font-size:16px">₹${tot}</strong></div>`;
+}
+
+function fillCoupon(code) {
+  const inp = $("couponInput"); if(inp){inp.value=code;inp.classList.remove("success","error");}
+  const msg=$("couponMsg"); if(msg){msg.textContent="";msg.className="coupon-msg";}
+}
+
+async function applyCoupon() {
+  const inp = $("couponInput"); const msg = $("couponMsg"); const btn = $("applyBtn");
+  const code = inp?.value.trim().toUpperCase();
+  if(!code){msg.textContent="⚠️ Please enter a coupon code";msg.className="coupon-msg error";return;}
+  if(appliedCoupon===code){msg.textContent="✓ Already applied!";msg.className="coupon-msg success";return;}
+
+  btn.textContent="Checking..."; btn.disabled=true;
+  try {
+    // Try backend first
+    const res  = await fetch(`${API}/coupons/validate`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({code, eventId:selEvent?.id}) });
+    const data = await res.json();
+    if(data.valid) {
+      appliedCoupon=code; inp.classList.add("success"); msg.className="coupon-msg success";
+      msg.textContent=`✅ "${code}" applied! ${data.coupon.label}`;
+      btn.textContent="✓ Applied"; btn.style.background="#27AE60";
+      updateSummary(); showToast(`🎉 Coupon applied!`);
+    } else {
+      appliedCoupon=null; inp.classList.add("error"); msg.className="coupon-msg error";
+      msg.textContent="❌ "+data.message; btn.textContent="Apply"; btn.disabled=false;
+    }
+  } catch {
+    // offline fallback
+    const local={GARBA10:1,NAVRATRI:1,WELCOME50:1,COUPLE99:1,VIP20:1,FIRSTBUY:1};
+    if(local[code]){
+      appliedCoupon=code; inp.classList.add("success"); msg.className="coupon-msg success";
+      msg.textContent=`✅ "${code}" applied!`;
+      btn.textContent="✓ Applied"; btn.style.background="#27AE60";
+      updateSummary(); showToast("🎉 Coupon applied!");
+    } else {
+      appliedCoupon=null; inp.classList.add("error"); msg.className="coupon-msg error";
+      msg.textContent="❌ Invalid coupon code."; btn.textContent="Apply"; btn.disabled=false;
+    }
+  }
+}
+
+// ============================================================
+// PAYMENT FLOW
+// ============================================================
+async function processPayment() {
+  const name  = $("bName")?.value.trim();
+  const phone = $("bPhone")?.value.trim();
+  const email = $("bEmail")?.value.trim();
+  if(!name||!phone||!email){showToast("⚠️ Please fill all required fields");return;}
+  if(phone.length<10){showToast("⚠️ Enter valid 10-digit mobile");return;}
+  if(!/\S+@\S+\.\S+/.test(email)){showToast("⚠️ Enter valid email");return;}
+
+  const qty    = parseInt($("qtySel")?.value||1);
+  const sub    = (selPass?.basePrice||0)*qty;
+  const dis    = calcDiscount(sub);
+  const after  = sub-dis;
+  const conv   = Math.round(after*0.02);
+  const amount = after+conv;
+
+  const payBtn = $("payBtn");
+  payBtn.disabled=true; payBtn.textContent="⏳ Opening Payment...";
+
+  try {
+    // 1. Create order via backend
+    const orderRes = await fetch(`${API}/payment/create-order`, {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ amount, eventId:selEvent?.id, passId:selPass?.id, qty, customerName:name, customerEmail:email, customerPhone:phone, couponCode:appliedCoupon })
+    });
+    const orderData = await orderRes.json();
+
+    if(!orderData.success) throw new Error(orderData.error||"Order creation failed");
+
+    // 2. Open Razorpay
+    const rzp = new Razorpay({
+      key:         orderData.keyId,
+      amount:      orderData.amount,
+      currency:    "INR",
+      order_id:    orderData.orderId,
+      name:        "GarbaUtsav 🪔",
+      description: `${selPass?.icon} ${selPass?.name} × ${qty} — ${selEvent?.name}`,
+      prefill:     { name, email, contact: phone },
+      theme:       { color:"#FF6B00" },
+      handler: async function(response) {
+        // 3. Verify payment + get ticket
+        payBtn.textContent="⏳ Confirming booking...";
+        const verRes = await fetch(`${API}/payment/verify`, {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({
+            ...response,
+            eventId:selEvent?.id, passId:selPass?.id, passName:selPass?.name,
+            qty, amount, discount:dis, coupon:appliedCoupon,
+            customerName:name, customerEmail:email, customerPhone:phone
+          })
+        });
+        const verData = await verRes.json();
+        if(verData.success){
+          currentPdfB64 = verData.pdfBase64;
+          selEvent.soldPasses += qty; renderEvents();
+          appliedCoupon = null;
+          showSuccessScreen(name, verData.ticketId, amount, qty, dis);
+        } else {
+          showToast("❌ Booking confirm nahi hua. Support se contact karo.");
+          payBtn.disabled=false; payBtn.textContent="🔒 Pay Securely via Razorpay";
+        }
+      }
+    });
+    rzp.on("payment.failed", function(r){
+      showToast("❌ Payment failed: "+r.error.description);
+      payBtn.disabled=false; payBtn.textContent="🔒 Pay Securely via Razorpay";
+    });
+    rzp.open();
+    payBtn.disabled=false; payBtn.textContent="🔒 Pay Securely via Razorpay";
+
+  } catch (err) {
+    console.warn("Backend offline — demo mode:", err.message);
+    // DEMO MODE (when backend is not running)
+    const ticketId = "GU"+Date.now().toString(36).toUpperCase();
+    showSuccessScreen(name, ticketId, amount, qty, dis);
+    payBtn.disabled=false; payBtn.textContent="🔒 Pay Securely via Razorpay";
+  }
+}
+
+// ============================================================
+// SUCCESS SCREEN
+// ============================================================
+function showSuccessScreen(name, ticketId, amount, qty, discount) {
+  const qrCells = Array.from({length:49},(_,i)=>{
+    const c=[0,1,2,3,4,5,6,7,13,14,20,21,28,35,42,43,44,45,46,47,48];
+    return `<div style="background:${(c.includes(i)||Math.random()>.5)?'#1A0A00':'transparent'};border-radius:1px"></div>`;
+  }).join("");
+  const disRow = discount>0 ? `<div class="t-row"><span class="t-label">You Saved 🏷️</span><span class="t-value" style="color:#4CAF50">₹${discount}</span></div>` : "";
+
+  $("modalContent").innerHTML = `
+    <div class="success-screen">
+      <span class="checkmark">🎉</span>
+      <h3>Booking Confirmed!</h3>
+      <p>PDF ticket + QR code sent to <strong>${name.split(" ")[0]}</strong>'s email & WhatsApp!</p>
+      <div class="ticket-stub">
+        <div style="text-align:center;margin-bottom:14px">
+          <div class="qr-placeholder"><div class="qr-grid">${qrCells}</div></div>
+          <div class="t-id">🎟 ${ticketId}</div>
+        </div>
+        <div class="t-row"><span class="t-label">Event</span><span class="t-value">${selEvent?.name}</span></div>
+        <div class="t-row"><span class="t-label">Pass</span><span class="t-value">${selPass?.icon} ${selPass?.name} × ${qty}</span></div>
+        <div class="t-row"><span class="t-label">Date</span><span class="t-value">${selEvent?.date}</span></div>
+        ${disRow}
+        <div class="t-row"><span class="t-label">Amount Paid</span><span class="t-value" style="color:var(--golden-light)">₹${amount}</span></div>
+        <div class="t-row"><span class="t-label">Status</span><span class="t-value" style="color:#4CAF50">✓ Confirmed</span></div>
+      </div>
+      ${currentPdfB64 ? `<button class="btn-download" onclick="downloadPDF('${ticketId}')">📥 Download PDF Ticket</button>` : ""}
+      <button class="btn-fire" style="width:100%" onclick="closeModal()">🕺 Awesome! Let's Dance</button>
+    </div>`;
+}
+
+function downloadPDF(ticketId) {
+  if(!currentPdfB64) return;
+  const a = document.createElement("a");
+  a.href = "data:application/pdf;base64," + currentPdfB64;
+  a.download = `GarbaUtsav-${ticketId}.pdf`;
+  a.click();
+  showToast("📥 PDF ticket downloaded!");
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadEvents();
+loadPasses();
+</script>
+</body>
+</html>

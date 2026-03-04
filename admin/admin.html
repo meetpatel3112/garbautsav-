@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GarbaUtsav — Organizer Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--p:#FF6B00;--pd:#C0392B;--gold:#F0A500;--dark:#0F0A00;--sbg:#1A0E00;--bg:#F5F0E8;--card:#fff;--text:#1A0E00;--muted:#6B4A20;--border:rgba(240,165,0,0.15);--green:#27AE60;--red:#E74C3C;--blue:#2980B9;--purple:#8E44AD;--r:16px;--sh:0 4px 24px rgba(0,0,0,.08);--sw:260px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(255,107,0,.3);border-radius:2px}
+
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;background:linear-gradient(145deg,#1A0A00 0%,#3D1C00 50%,#1A0A00 100%);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{background:rgba(255,255,255,.05);border:1px solid rgba(240,165,0,.2);border-radius:24px;padding:44px;width:380px;text-align:center;backdrop-filter:blur(20px)}
+.login-logo{font-family:'Yatra One',cursive;font-size:30px;color:var(--gold);margin-bottom:4px}
+.login-sub{font-size:12px;color:rgba(255,255,255,.45);margin-bottom:28px}
+.login-box h2{font-size:18px;color:white;margin-bottom:22px}
+.lf{margin-bottom:14px;text-align:left}
+.lf label{display:block;font-size:11px;font-weight:600;color:rgba(255,255,255,.55);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.lf input{width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(240,165,0,.2);border-radius:12px;color:white;font-size:14px;font-family:'Poppins',sans-serif;outline:none;transition:border-color .2s}
+.lf input:focus{border-color:var(--gold)}
+.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,var(--p),var(--pd));color:white;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;margin-top:8px;box-shadow:0 6px 24px rgba(255,107,0,.4);transition:all .3s}
+.btn-login:hover{transform:translateY(-2px)}
+.login-err{font-size:12px;color:#FF6B6B;margin-top:10px;min-height:18px}
+.login-hint{font-size:11px;color:rgba(255,255,255,.25);margin-top:14px}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);flex-shrink:0;background:var(--sbg);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto}
+.sb-header{padding:22px 18px 14px;border-bottom:1px solid rgba(240,165,0,.1)}
+.sb-logo{font-family:'Yatra One',cursive;font-size:20px;color:var(--gold)}
+.sb-logo span{display:block;font-size:10px;color:rgba(255,255,255,.35);font-family:'Poppins',sans-serif;font-weight:400;margin-top:2px}
+.sb-user{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(240,165,0,.1);margin-bottom:6px}
+.sb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--gold));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;flex-shrink:0}
+.sb-name{font-size:13px;font-weight:600;color:white}
+.sb-role{font-size:10px;color:rgba(255,255,255,.4)}
+.nav-sec{padding:0 10px;margin-bottom:6px}
+.nav-sec-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.22);text-transform:uppercase;letter-spacing:.12em;padding:6px 8px}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;color:rgba(255,255,255,.52);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;font-family:'Poppins',sans-serif}
+.ni:hover{background:rgba(255,107,0,.1);color:rgba(255,255,255,.88)}
+.ni.active{background:rgba(255,107,0,.16);color:var(--gold);border-left:3px solid var(--gold)}
+.ni .ico{font-size:16px;flex-shrink:0}
+.ni .badge{margin-left:auto;background:var(--p);color:white;font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px}
+.sb-footer{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(240,165,0,.1)}
+.logout-btn{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.35);font-size:13px;cursor:pointer;padding:9px 10px;border-radius:10px;transition:all .2s;border:none;background:none;font-family:'Poppins',sans-serif;width:100%}
+.logout-btn:hover{color:var(--red);background:rgba(231,76,60,.1)}
+
+/* MAIN */
+.main{margin-left:var(--sw);flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:white;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.tb-title{font-size:18px;font-weight:700;color:var(--text)}
+.tb-sub{font-size:12px;font-weight:400;color:var(--muted);display:block;margin-top:1px}
+.tb-right{display:flex;align-items:center;gap:14px}
+.tb-date{font-size:12px;color:var(--muted)}
+.content{padding:24px 28px;flex:1}
+
+/* PAGES */
+.page{display:none}.page.active{display:block}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;margin-bottom:24px}
+.kpi{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:var(--sh);border:1px solid var(--border);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.kpi.rev::before{background:linear-gradient(90deg,var(--p),var(--gold))}
+.kpi.tkt::before{background:linear-gradient(90deg,var(--blue),#56CCF2)}
+.kpi.evt::before{background:linear-gradient(90deg,var(--purple),#BB8FCE)}
+.kpi.prf::before{background:linear-gradient(90deg,var(--green),#A9DFBF)}
+.kpi-lbl{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.kpi-val{font-size:26px;font-weight:800;color:var(--text);margin-bottom:4px}
+.kpi-chg{font-size:11px;font-weight:600}
+.kpi-chg.up{color:var(--green)}.kpi-chg.dn{color:var(--red)}
+.kpi-ico{position:absolute;top:16px;right:16px;font-size:28px;opacity:.12}
+
+/* CHARTS ROW */
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:24px}
+.chart-card{background:var(--card);border-radius:var(--r);padding:22px;box-shadow:var(--sh);border:1px solid var(--border)}
+.chart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.chart-ttl{font-size:15px;font-weight:700;color:var(--text)}
+.legend{display:flex;gap:14px}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.leg-dot{width:9px;height:9px;border-radius:50%}
+.bar-chart{display:flex;align-items:flex-end;gap:7px;height:170px}
+.bar-grp{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bars{display:flex;gap:3px;align-items:flex-end;height:140px;width:100%}
+.bar{flex:1;border-radius:5px 5px 0 0;min-height:3px;cursor:pointer;position:relative;transition:opacity .2s}
+.bar:hover{opacity:.8}
+.bar:hover::after{content:attr(data-v);position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:9px;padding:2px 5px;border-radius:3px;white-space:nowrap}
+.bar.rev{background:linear-gradient(180deg,var(--p),var(--pd))}
+.bar.exp{background:linear-gradient(180deg,#BDC3C7,#95A5A6)}
+.bar-lbl{font-size:9px;color:var(--muted);font-weight:500}
+
+/* TABLE */
+.tbl-wrap{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);border:1px solid var(--border);overflow:hidden}
+.tbl-toolbar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.tbl-search{display:flex;align-items:center;gap:7px;background:var(--bg);border-radius:50px;padding:8px 14px;border:1px solid var(--border)}
+.tbl-search input{border:none;background:transparent;outline:none;font-size:12px;color:var(--text);font-family:'Poppins',sans-serif;width:180px}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{padding:5px 12px;border-radius:50px;border:1.5px solid var(--border);font-size:11px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s}
+.chip.active{border-color:var(--p);color:var(--p);background:rgba(255,107,0,.05)}
+table{width:100%;border-collapse:collapse}
+thead{background:#FDF6ED}
+th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+td{padding:12px 14px;font-size:12px;color:var(--text);border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FDFAF4}
+.sb{padding:3px 10px;border-radius:50px;font-size:10px;font-weight:700}
+.sb-ok{background:rgba(39,174,96,.1);color:var(--green)}
+.sb-pend{background:rgba(240,165,0,.1);color:var(--gold)}
+.sb-cancel{background:rgba(231,76,60,.1);color:var(--red)}
+.pb{padding:3px 8px;border-radius:5px;font-size:10px;font-weight:700}
+.pb-s{background:#f0f0f0;color:#666}
+.pb-g{background:rgba(240,165,0,.1);color:var(--gold)}
+.pb-p{background:rgba(142,68,173,.1);color:var(--purple)}
+.pb-c{background:rgba(255,107,0,.1);color:var(--p)}
+
+/* SECTION HEADER */
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.sec-ttl{font-size:16px;font-weight:700;color:var(--text)}
+
+/* BUTTONS */
+.btn-add{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--p),var(--pd));color:white;border:none;border-radius:50px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;box-shadow:0 4px 16px rgba(255,107,0,.3);transition:all .2s}
+.btn-add:hover{transform:translateY(-2px)}
+.btn-sm{padding:6px 10px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:all .2s;border:1px solid}
+.btn-edit{background:rgba(41,128,185,.1);color:var(--blue);border-color:rgba(41,128,185,.2)}
+.btn-del{background:rgba(231,76,60,.1);color:var(--red);border-color:rgba(231,76,60,.2)}
+.btn-view{background:rgba(255,107,0,.1);color:var(--p);border-color:rgba(255,107,0,.2)}
+
+/* EVENTS ADMIN */
+.events-grid-admin{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.eac{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:var(--sh);border:1px solid var(--border)}
+.eac-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.eac-title{font-size:14px;font-weight:700;color:var(--text)}
+.eac-city{font-size:11px;color:var(--muted);margin-top:2px}
+.eac-status{font-size:10px;font-weight:700;padding:3px 9px;border-radius:50px}
+.eac-status.live{background:rgba(39,174,96,.1);color:var(--green)}
+.eac-status.upcoming{background:rgba(240,165,0,.1);color:var(--gold)}
+.eac-status.ended{background:rgba(231,76,60,.1);color:var(--red)}
+.eac-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.eas{text-align:center;background:var(--bg);border-radius:8px;padding:8px 4px}
+.eas .val{font-size:17px;font-weight:800;color:var(--text)}
+.eas .lbl{font-size:9px;color:var(--muted)}
+.prog-wrap{margin-bottom:12px}
+.prog-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px}
+.prog-bar{background:#F0E8D8;height:7px;border-radius:50px}
+.prog-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--p),var(--gold))}
+.eac-actions{display:flex;gap:7px}
+
+/* P&L */
+.pnl-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+.pnl-card{background:var(--card);border-radius:var(--r);padding:22px;box-shadow:var(--sh);border:1px solid var(--border)}
+.pnl-card h3{font-size:14px;font-weight:700;margin-bottom:14px}
+.pnl-card.inc h3{color:var(--green)}.pnl-card.exp h3{color:var(--red)}
+.pnl-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px}
+.pnl-row:last-child{border-bottom:none;font-weight:700;font-size:14px;padding-top:12px}
+.pnl-row.ir span:last-child{color:var(--green);font-weight:600}
+.pnl-row.er span:last-child{color:var(--red);font-weight:600}
+.profit-banner{background:linear-gradient(135deg,#1A0A00,#3D1C00);border-radius:var(--r);padding:22px;margin-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.pf-main .lbl{font-size:12px;color:rgba(255,255,255,.45)}
+.pf-main .amt{font-size:34px;font-weight:900;color:var(--gold)}
+.pf-main .pct{font-size:13px;color:var(--green);font-weight:600}
+.pf-meta{display:flex;gap:28px}
+.pf-item{text-align:center}
+.pf-item .val{font-size:18px;font-weight:800;color:white}
+.pf-item .lbl{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+
+/* ACCESS TOGGLES */
+.toggle{width:42px;height:22px;border-radius:11px;cursor:pointer;position:relative;transition:background .3s;flex-shrink:0}
+.toggle.on{background:var(--green)}.toggle.off{background:#CCC}
+.toggle::after{content:'';position:absolute;top:2px;width:18px;height:18px;border-radius:50%;background:white;transition:left .3s}
+.toggle.on::after{left:22px}.toggle.off::after{left:2px}
+
+/* MODAL */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:16px}
+.mo.active{display:flex}
+.mo-box{background:white;border-radius:22px;padding:32px;width:100%;max-width:540px;max-height:88vh;overflow-y:auto;position:relative;animation:mi .3s ease}
+@keyframes mi{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.mo-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:none;background:#F5F5F5;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mo-box h2{font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px}
+.mo-sub{font-size:12px;color:var(--muted);margin-bottom:22px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.fg input,.fg select,.fg textarea{width:100%;padding:10px 12px;border:1.5px solid #E5E5E5;border-radius:10px;font-size:13px;font-family:'Poppins',sans-serif;color:var(--text);background:#FAFAFA;outline:none;transition:border-color .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--p);background:white}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* TOAST */
+.toast{position:fixed;top:76px;right:22px;background:var(--text);color:white;padding:11px 18px;border-radius:11px;font-size:12px;font-weight:600;z-index:9999;transform:translateX(130%);opacity:0;transition:all .4s;border-left:4px solid var(--p)}
+.toast.show{transform:translateX(0);opacity:1}
+
+/* RESPONSIVE */
+@media(max-width:900px){.charts-row{grid-template-columns:1fr}.pnl-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">🪔 GarbaUtsav</div>
+    <div class="login-sub">Organizer Admin Panel</div>
+    <h2>Sign In to Dashboard</h2>
+    <div class="lf"><label>Email</label><input type="email" id="lEmail" placeholder="admin@garbautsav.in" value="admin@garbautsav.in"></div>
+    <div class="lf"><label>Password</label><input type="password" id="lPass" placeholder="••••••••" value="Admin@2025"></div>
+    <button class="btn-login" onclick="doLogin()">Sign In to Dashboard →</button>
+    <div class="login-err" id="loginErr"></div>
+    <p class="login-hint">Demo: admin@garbautsav.in / Admin@2025</p>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">🪔 GarbaUtsav<span>Admin Dashboard</span></div>
+  </div>
+  <div class="sb-user">
+    <div class="sb-avatar" id="sbAvatar">A</div>
+    <div><div class="sb-name" id="sbName">Admin</div><div class="sb-role" id="sbRole">Super Admin</div></div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-sec-lbl">Overview</div>
+    <button class="ni active" onclick="showPage('dashboard',this)"><span class="ico">📊</span> Dashboard</button>
+    <button class="ni" onclick="showPage('sales',this)"><span class="ico">🎟</span> Sales & Transactions<span class="badge" id="saleBadge">—</span></button>
+    <button class="ni" onclick="showPage('pnl',this)"><span class="ico">💰</span> Profit & Loss</button>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-sec-lbl">Manage</div>
+    <button class="ni" onclick="showPage('events',this)"><span class="ico">🎪</span> Events</button>
+    <button class="ni" onclick="showPage('passes',this)"><span class="ico">🏅</span> Pass Types</button>
+    <button class="ni" onclick="showPage('coupons',this)"><span class="ico">🏷️</span> Coupons</button>
+    <button class="ni" id="orgNav" onclick="showPage('organizers',this)"><span class="ico">👥</span> Organizers</button>
+    <button class="ni" onclick="showPage('access',this)"><span class="ico">🔐</span> User Access</button>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-sec-lbl">Reports</div>
+    <button class="ni" onclick="showPage('analytics',this)"><span class="ico">📈</span> Analytics</button>
+    <button class="ni" onclick="showPage('checkin',this)"><span class="ico">✅</span> Check-In Gate</button>
+  </div>
+  <div class="sb-footer">
+    <a href="index.html" target="_blank" class="ni" style="text-decoration:none;margin-bottom:8px"><span class="ico">🌐</span> View Main Site</a>
+    <button class="logout-btn" onclick="doLogout()"><span>🚪</span> Logout</button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="tb-title" id="pgTitle">Overview Dashboard</div>
+      <span class="tb-sub" id="pgSub">Welcome back! Here's what's happening today.</span>
+    </div>
+    <div class="tb-right">
+      <span class="tb-date" id="tbDate"></span>
+      <span style="font-size:22px;cursor:pointer">🔔</span>
+      <div class="sb-avatar" id="tbAvatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="kpi-grid" id="kpiGrid"></div>
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-hdr">
+            <div class="chart-ttl">Revenue vs Expenses</div>
+            <div class="legend"><div class="leg-item"><div class="leg-dot" style="background:var(--p)"></div>Revenue</div><div class="leg-item"><div class="leg-dot" style="background:#BDC3C7"></div>Expense</div></div>
+          </div>
+          <div class="bar-chart" id="barChart"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-ttl" style="margin-bottom:18px">Sales by Pass Type</div>
+          <svg id="donutSvg" viewBox="0 0 100 100" style="width:130px;height:130px;display:block;margin:0 auto;transform:rotate(-90deg)"></svg>
+          <div id="donutLabels" style="margin-top:14px;display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+      </div>
+      <div class="sec-hdr"><div class="sec-ttl">Recent Transactions</div><button class="btn-add" onclick="showPage('sales',document.querySelector('.ni:nth-child(2)'))">View All →</button></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Ticket ID</th><th>Customer</th><th>Event</th><th>Pass</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentBody"></tbody></table></div>
+    </div>
+
+    <!-- SALES -->
+    <div class="page" id="page-sales">
+      <div class="tbl-wrap">
+        <div class="tbl-toolbar">
+          <div class="tbl-search">🔍 <input type="text" placeholder="Search ticket, name, event..." id="srchInp" oninput="renderSales()"></div>
+          <div class="chips">
+            <div class="chip active" onclick="setChip('all',this)">All</div>
+            <div class="chip" onclick="setChip('confirmed',this)">Confirmed</div>
+            <div class="chip" onclick="setChip('pending',this)">Pending</div>
+            <div class="chip" onclick="setChip('cancelled',this)">Cancelled</div>
+          </div>
+          <button class="btn-add" onclick="exportCSV()">📥 Export CSV</button>
+        </div>
+        <table><thead><tr><th>Ticket ID</th><th>Customer</th><th>Phone</th><th>Event</th><th>Pass</th><th>Qty</th><th>Coupon</th><th>Amount</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody id="salesBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- P&L -->
+    <div class="page" id="page-pnl">
+      <div class="sec-hdr"><div class="sec-ttl">Profit & Loss — Navratri 2025</div>
+        <select style="padding:7px 12px;border-radius:10px;border:1.5px solid var(--border);font-family:'Poppins',sans-serif;font-size:12px;color:var(--text);background:white;outline:none;cursor:pointer"><option>Navratri 2025</option><option>Navratri 2024</option></select>
+      </div>
+      <div class="pnl-grid">
+        <div class="pnl-card inc"><h3>📥 Income / Revenue</h3>
+          <div class="pnl-row ir" id="pnl-silver"></div>
+          <div class="pnl-row ir" id="pnl-gold"></div>
+          <div class="pnl-row ir" id="pnl-premium"></div>
+          <div class="pnl-row ir" id="pnl-couple"></div>
+          <div class="pnl-row ir"><span>Convenience Fees (2%)</span><span id="pnl-conv">—</span></div>
+          <div class="pnl-row ir"><span>Sponsorship Income</span><span>₹25,000</span></div>
+          <div class="pnl-row"><span>Total Revenue</span><strong id="pnl-total-rev" style="color:var(--green);font-size:15px">—</strong></div>
+        </div>
+        <div class="pnl-card exp"><h3>📤 Expenses / Costs</h3>
+          <div class="pnl-row er"><span>Venue Rental (10 nights)</span><span>₹80,000</span></div>
+          <div class="pnl-row er"><span>Music & DJ</span><span>₹50,000</span></div>
+          <div class="pnl-row er"><span>Lighting & Decoration</span><span>₹35,000</span></div>
+          <div class="pnl-row er"><span>Security Staff</span><span>₹20,000</span></div>
+          <div class="pnl-row er"><span>Catering / Snacks</span><span>₹28,000</span></div>
+          <div class="pnl-row er"><span>Marketing & Ads</span><span>₹15,000</span></div>
+          <div class="pnl-row er"><span>Razorpay Fees (2%)</span><span id="pnl-rzp-fee">—</span></div>
+          <div class="pnl-row er"><span>Miscellaneous</span><span>₹8,000</span></div>
+          <div class="pnl-row"><span>Total Expenses</span><strong id="pnl-total-exp" style="color:var(--red);font-size:15px">—</strong></div>
+        </div>
+      </div>
+      <div class="profit-banner">
+        <div class="pf-main"><div class="lbl">NET PROFIT</div><div class="amt" id="pnl-net">—</div><div class="pct" id="pnl-margin">—</div></div>
+        <div class="pf-meta">
+          <div class="pf-item"><div class="val" id="pnl-tickets">—</div><div class="lbl">Passes Sold</div></div>
+          <div class="pf-item"><div class="val" id="pnl-rev2">—</div><div class="lbl">Gross Revenue</div></div>
+          <div class="pf-item"><div class="val" id="pnl-exp2">—</div><div class="lbl">Total Expenses</div></div>
+          <div class="pf-item"><div class="val" id="pnl-occ">—</div><div class="lbl">Occupancy</div></div>
+        </div>
+      </div>
+      <div class="sec-hdr" style="margin-top:24px"><div class="sec-ttl">Per-Event Breakdown</div></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Event</th><th>City</th><th>Passes Sold</th><th>Revenue</th><th>Est. Expense</th><th>Net Profit</th><th>Margin</th></tr></thead><tbody id="pnlBody"></tbody></table></div>
+    </div>
+
+    <!-- EVENTS -->
+    <div class="page" id="page-events">
+      <div class="sec-hdr"><div class="sec-ttl">All Events</div><button class="btn-add" onclick="openAddEvent()">+ Add New Event</button></div>
+      <div class="events-grid-admin" id="eventsAdminGrid"></div>
+    </div>
+
+    <!-- PASSES -->
+    <div class="page" id="page-passes">
+      <div class="sec-hdr"><div class="sec-ttl">Pass Type Management</div><button class="btn-add" onclick="openAddPass()">+ Add Pass Type</button></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Pass Name</th><th>Base Price</th><th>Features</th><th>Total Sold</th><th>Revenue</th><th>Status</th><th>Action</th></tr></thead><tbody id="passBody"></tbody></table></div>
+    </div>
+
+    <!-- COUPONS -->
+    <div class="page" id="page-coupons">
+      <div class="sec-hdr"><div class="sec-ttl">Coupon Management</div><button class="btn-add" onclick="openAddCoupon()">+ Add Coupon</button></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Used</th><th>Max Uses</th><th>Expiry</th><th>Status</th><th>Action</th></tr></thead><tbody id="couponBody"></tbody></table></div>
+    </div>
+
+    <!-- ORGANIZERS (super admin only) -->
+    <div class="page" id="page-organizers">
+      <div class="sec-hdr"><div class="sec-ttl">Organizer Management</div><button class="btn-add" onclick="openAddOrg()">+ Add Organizer</button></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>City</th><th>Events</th><th>Revenue</th><th>Status</th><th>Action</th></tr></thead><tbody id="orgBody"></tbody></table></div>
+    </div>
+
+    <!-- ACCESS CONTROL -->
+    <div class="page" id="page-access">
+      <div class="sec-hdr"><div class="sec-ttl">User Access Control</div><button class="btn-add">+ Add User</button></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Can Sell</th><th>Can Refund</th><th>Can Export</th><th>Can Add Event</th><th>Status</th></tr></thead><tbody id="accessBody"></tbody></table></div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="page" id="page-analytics">
+      <div class="kpi-grid">
+        <div class="kpi rev"><div class="kpi-ico">💰</div><div class="kpi-lbl">Total Revenue</div><div class="kpi-val" id="an-rev">—</div><div class="kpi-chg up">▲ 28% vs last year</div></div>
+        <div class="kpi tkt"><div class="kpi-ico">🎟</div><div class="kpi-lbl">Total Tickets</div><div class="kpi-val" id="an-tkt">—</div><div class="kpi-chg up">▲ 15% increase</div></div>
+        <div class="kpi prf"><div class="kpi-ico">📈</div><div class="kpi-lbl">Avg Ticket Value</div><div class="kpi-val" id="an-avg">—</div><div class="kpi-chg up">▲ 11% increase</div></div>
+        <div class="kpi evt"><div class="kpi-ico">🏅</div><div class="kpi-lbl">Conversion Rate</div><div class="kpi-val">68.4%</div><div class="kpi-chg up">▲ 5% increase</div></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-ttl" style="margin-bottom:18px">Day-wise Ticket Sales (Navratri 9 Days)</div>
+        <div class="bar-chart" id="dayChart"></div>
+      </div>
+    </div>
+
+    <!-- CHECK-IN -->
+    <div class="page" id="page-checkin">
+      <div class="sec-hdr">
+        <div class="sec-ttl">Check-In Gate Manager</div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="font-size:12px;color:var(--green);font-weight:600">🟢 Gate Live</span><button class="btn-add" onclick="scanQR()">📷 Scan / Verify QR</button></div>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi prf"><div class="kpi-ico">✅</div><div class="kpi-lbl">Checked In</div><div class="kpi-val" id="ci-done">—</div></div>
+        <div class="kpi tkt"><div class="kpi-ico">⏳</div><div class="kpi-lbl">Awaiting</div><div class="kpi-val" id="ci-wait">—</div></div>
+        <div class="kpi evt"><div class="kpi-ico">🚫</div><div class="kpi-lbl">Denied</div><div class="kpi-val">3</div></div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-toolbar"><div class="tbl-search">🔍 <input type="text" placeholder="Search ticket or name..." oninput="filterCheckin(this.value)"></div></div>
+        <table><thead><tr><th>Ticket ID</th><th>Name</th><th>Pass Type</th><th>Event</th><th>Check-In Time</th><th>Status</th></tr></thead><tbody id="checkinBody"></tbody></table>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ADD EVENT MODAL -->
+<div class="mo" id="addEventMo">
+  <div class="mo-box">
+    <button class="mo-close" onclick="closeMo('addEventMo')">✕</button>
+    <h2>🎪 Add New Event</h2><p class="mo-sub">Event will be visible on main site immediately after saving.</p>
+    <div class="fg"><label>Event Name *</label><input type="text" id="ne-name" placeholder="Navratri Mahotsav 2026"></div>
+    <div class="fg"><label>Organizer</label><select id="ne-org"><option value="org1">Shree Ram Cultural Club</option><option value="org2">Patel Cultural Society</option><option value="org3">Vadodara Navratri Samiti</option></select></div>
+    <div class="fr"><div class="fg"><label>City *</label><input type="text" id="ne-city" placeholder="Ahmedabad"></div><div class="fg"><label>Venue *</label><input type="text" id="ne-venue" placeholder="GMDC Grounds"></div></div>
+    <div class="fr"><div class="fg"><label>Start Date</label><input type="date" id="ne-sdate"></div><div class="fg"><label>End Date</label><input type="date" id="ne-edate"></div></div>
+    <div class="fr"><div class="fg"><label>Event Time</label><input type="text" id="ne-time" placeholder="8:00 PM – 1:00 AM"></div><div class="fg"><label>Base Price (₹) *</label><input type="number" id="ne-price" placeholder="299"></div></div>
+    <div class="fr"><div class="fg"><label>Total Passes</label><input type="number" id="ne-passes" placeholder="500"></div><div class="fg"><label>Theme</label><select id="ne-theme"><option value="saffron">🟠 Saffron</option><option value="gold">🟡 Gold</option><option value="royal">🟣 Royal</option></select></div></div>
+    <div class="fr"><div class="fg"><label>Emoji</label><input type="text" id="ne-emoji" placeholder="💃" maxlength="2"></div><div class="fg"><label>Featured</label><select id="ne-featured"><option value="0">No</option><option value="1">Yes</option></select></div></div>
+    <div class="fg"><label>Description</label><textarea id="ne-desc" rows="2" placeholder="Brief event description..."></textarea></div>
+    <button class="btn-add" style="width:100%;justify-content:center;padding:13px;font-size:14px" onclick="saveEvent()">✓ Publish Event</button>
+  </div>
+</div>
+
+<!-- ADD COUPON MODAL -->
+<div class="mo" id="addCouponMo">
+  <div class="mo-box">
+    <button class="mo-close" onclick="closeMo('addCouponMo')">✕</button>
+    <h2>🏷️ Add Coupon Code</h2><p class="mo-sub">Create discount coupon for your events.</p>
+    <div class="fr"><div class="fg"><label>Coupon Code *</label><input type="text" id="nc-code" placeholder="GARBA20" style="text-transform:uppercase"></div><div class="fg"><label>Type</label><select id="nc-type"><option value="percent">Percent (%)</option><option value="flat">Flat (₹)</option></select></div></div>
+    <div class="fr"><div class="fg"><label>Value *</label><input type="number" id="nc-val" placeholder="10"></div><div class="fg"><label>Max Uses</label><input type="number" id="nc-max" placeholder="200"></div></div>
+    <div class="fg"><label>Expiry Date</label><input type="date" id="nc-exp"></div>
+    <button class="btn-add" style="width:100%;justify-content:center;padding:13px" onclick="saveCoupon()">✓ Create Coupon</button>
+  </div>
+</div>
+
+<!-- ADD ORGANIZER MODAL -->
+<div class="mo" id="addOrgMo">
+  <div class="mo-box">
+    <button class="mo-close" onclick="closeMo('addOrgMo')">✕</button>
+    <h2>👥 Add Organizer</h2><p class="mo-sub">New organizer will get their own login and event management access.</p>
+    <div class="fr"><div class="fg"><label>Full Name *</label><input type="text" id="no-name" placeholder="Mehul Raval"></div><div class="fg"><label>Organization</label><input type="text" id="no-org" placeholder="Shree Cultural Club"></div></div>
+    <div class="fg"><label>Email *</label><input type="email" id="no-email" placeholder="organizer@gmail.com"></div>
+    <div class="fr"><div class="fg"><label>Phone *</label><input type="tel" id="no-phone" placeholder="9876543210"></div><div class="fg"><label>City</label><input type="text" id="no-city" placeholder="Ahmedabad"></div></div>
+    <div class="fg"><label>Password *</label><input type="password" id="no-pass" placeholder="Strong password"></div>
+    <button class="btn-add" style="width:100%;justify-content:center;padding:13px" onclick="saveOrg()">✓ Create Organizer Account</button>
+  </div>
+</div>
+
+<!-- QR VERIFY MODAL -->
+<div class="mo" id="qrMo">
+  <div class="mo-box" style="max-width:400px;text-align:center">
+    <button class="mo-close" onclick="closeMo('qrMo')">✕</button>
+    <h2>📷 Verify Ticket</h2><p class="mo-sub">Enter ticket ID to verify gate entry</p>
+    <div class="fg"><label>Ticket ID</label><input type="text" id="qrInput" placeholder="GU12345678" style="text-align:center;font-size:16px;font-weight:700;letter-spacing:.1em"></div>
+    <button class="btn-add" style="width:100%;justify-content:center;padding:13px;margin-top:8px" onclick="verifyTicket()">✓ Verify & Allow Entry</button>
+    <div id="qrResult" style="margin-top:16px;font-size:14px;font-weight:600;min-height:22px"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="adminToast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────
+const API = "http://localhost:3000/api";
+
+// ── STATE ─────────────────────────────────────────────────
+let currentUser   = null;
+let allSales      = [];
+let allEvents     = [];
+let allCoupons    = [];
+let salesFilter   = "all";
+let stats         = {};
+
+// ── DEMO DATA ─────────────────────────────────────────────
+const demoSales = [
+  {id:"GU20251A",name:"Priya Sharma",phone:"9876543210",email:"priya@gmail.com",event:"Navratri Mahotsav 2025",passName:"Gold Pass",qty:1,coupon:"GARBA10",discount:35,amount:319,paymentId:"pay_Demo001",date:"01/10/2025",time:"9:42 AM",status:"confirmed",checkedIn:true},
+  {id:"GU20251B",name:"Rahul Patel",phone:"9898989898",email:"rahul@gmail.com",event:"Royal Garba Night",passName:"Couple Pass",qty:1,coupon:"COUPLE99",discount:99,amount:565,paymentId:"pay_Demo002",date:"01/10/2025",time:"10:15 AM",status:"confirmed",checkedIn:true},
+  {id:"GU20251C",name:"Sneha Modi",phone:"9712345678",email:"sneha@gmail.com",event:"VIP Garba Gala",passName:"Premium VIP",qty:1,coupon:"—",discount:0,amount:611,paymentId:"pay_Demo003",date:"02/10/2025",time:"11:30 AM",status:"confirmed",checkedIn:false},
+  {id:"GU20251D",name:"Amit Shah",phone:"9924567890",email:"amit@gmail.com",event:"Heritage Garba Utsav",passName:"Silver Entry",qty:2,coupon:"FIRSTBUY",discount:30,amount:376,paymentId:"pay_Demo004",date:"02/10/2025",time:"12:00 PM",status:"pending",checkedIn:false},
+  {id:"GU20251E",name:"Kavya Desai",phone:"9845678901",email:"kavya@gmail.com",event:"Falguni Pathak Nite",passName:"Gold Pass",qty:1,coupon:"NAVRATRI",discount:60,amount:299,paymentId:"pay_Demo005",date:"03/10/2025",time:"2:30 PM",status:"confirmed",checkedIn:true},
+  {id:"GU20251F",name:"Ravi Kumar",phone:"9723456789",email:"ravi@gmail.com",event:"Dandiya Dhamaka",passName:"Silver Entry",qty:3,coupon:"—",discount:0,amount:459,paymentId:"pay_Demo006",date:"03/10/2025",time:"3:00 PM",status:"cancelled",checkedIn:false},
+  {id:"GU20251G",name:"Pooja Joshi",phone:"9811234567",email:"pooja@gmail.com",event:"Navratri Mahotsav 2025",passName:"Premium VIP",qty:1,coupon:"VIP20",discount:120,amount:493,paymentId:"pay_Demo007",date:"04/10/2025",time:"4:45 PM",status:"confirmed",checkedIn:false},
+  {id:"GU20251H",name:"Vikram Patel",phone:"9988776655",email:"vikram@gmail.com",event:"Family Navratri Mela",passName:"Couple Pass",qty:1,coupon:"—",discount:0,amount:662,paymentId:"pay_Demo008",date:"04/10/2025",time:"6:00 PM",status:"confirmed",checkedIn:true},
+];
+const demoOrgs = [
+  {id:"org1",name:"Mehul Raval",org:"Shree Ram Cultural Club",email:"shreeramclub@gmail.com",phone:"+919898001001",city:"Ahmedabad",events:4,revenue:142500,active:true},
+  {id:"org2",name:"Dipak Patel",org:"Patel Cultural Society",email:"patelcs@gmail.com",phone:"+919898002002",city:"Surat",events:3,revenue:104700,active:true},
+  {id:"org3",name:"Sonal Mehta",org:"Vadodara Navratri Samiti",email:"vnsamiti@gmail.com",phone:"+919898003003",city:"Vadodara",events:3,revenue:81900,active:false},
+];
+const demoCoupons = [
+  {id:"GARBA10",code:"GARBA10",type:"percent",value:10,usedCount:48,maxUses:500,expiryDate:"2025-10-31",active:true},
+  {id:"NAVRATRI",code:"NAVRATRI",type:"percent",value:15,usedCount:32,maxUses:300,expiryDate:"2025-10-31",active:true},
+  {id:"WELCOME50",code:"WELCOME50",type:"flat",value:50,usedCount:67,maxUses:200,expiryDate:"2025-10-31",active:true},
+  {id:"COUPLE99",code:"COUPLE99",type:"flat",value:99,usedCount:24,maxUses:150,expiryDate:"2025-10-31",active:true},
+  {id:"VIP20",code:"VIP20",type:"percent",value:20,usedCount:11,maxUses:100,expiryDate:"2025-10-31",active:true},
+  {id:"FIRSTBUY",code:"FIRSTBUY",type:"flat",value:30,usedCount:89,maxUses:1000,expiryDate:"2025-12-31",active:true},
+];
+
+// ── LOGIN ─────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById("lEmail").value.trim();
+  const pass  = document.getElementById("lPass").value;
+  document.getElementById("loginErr").textContent = "";
+  try {
+    const res  = await fetch(`${API}/auth/login`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password:pass})});
+    const data = await res.json();
+    if(data.success){ currentUser=data.organizer; finishLogin(); }
+    else document.getElementById("loginErr").textContent = "❌ "+data.error;
+  } catch {
+    // offline demo
+    const admins = {"admin@garbautsav.in":"Admin@2025","shreeramclub@gmail.com":"Ram@2025","patelcs@gmail.com":"Patel@2025"};
+    if(admins[email]===pass){
+      currentUser = { name: email==="admin@garbautsav.in"?"GarbaUtsav Admin":"Organizer", email, role: email==="admin@garbautsav.in"?"superadmin":"organizer" };
+      finishLogin();
+    } else { document.getElementById("loginErr").textContent = "❌ Invalid credentials"; }
+  }
+}
+function finishLogin(){
+  document.getElementById("loginScreen").style.display="none";
+  document.getElementById("sbName").textContent = currentUser.name;
+  document.getElementById("sbRole").textContent = currentUser.role==="superadmin"?"Super Admin":"Organizer";
+  document.getElementById("sbAvatar").textContent = currentUser.name[0].toUpperCase();
+  document.getElementById("tbAvatar").textContent = currentUser.name[0].toUpperCase();
+  document.getElementById("tbDate").textContent = new Date().toLocaleDateString("en-IN",{weekday:"short",year:"numeric",month:"long",day:"numeric"});
+  if(currentUser.role!=="superadmin") document.getElementById("orgNav").style.display="none";
+  loadDashboardData();
+}
+function doLogout(){ document.getElementById("loginScreen").style.display="flex"; }
+
+// ── LOAD DATA ─────────────────────────────────────────────
+async function loadDashboardData(){
+  try {
+    const stored = JSON.parse(localStorage.getItem("gu_sales")||"[]");
+    allSales  = [...demoSales, ...stored];
+    allCoupons= [...demoCoupons, ...JSON.parse(localStorage.getItem("gu_coupons")||"[]")];
+    const storedEvents = JSON.parse(localStorage.getItem("gu_events")||"[]");
+    allEvents = storedEvents.length ? storedEvents : getDemoEvents();
+  } catch { allSales=demoSales; allCoupons=demoCoupons; }
+
+  calcStats();
+  renderKPI();
+  renderBarChart();
+  renderDonut();
+  renderRecent();
+  renderSales();
+  renderPnL();
+  renderEventsAdmin();
+  renderPasses();
+  renderCoupons();
+  renderOrgs();
+  renderAccess();
+  renderAnalytics();
+  renderCheckin();
+}
+
+function getDemoEvents(){
+  return [
+    {id:"e1",name:"Navratri Mahotsav 2025",city:"Ahmedabad",date:"2–11 Oct 2025",totalPasses:500,soldPasses:180,basePrice:299,revenue:53820,theme:"saffron",emoji:"💃",featured:true,active:true,status:"live"},
+    {id:"e2",name:"Royal Garba Night",city:"Surat",date:"3–12 Oct 2025",totalPasses:400,soldPasses:110,basePrice:349,revenue:38390,theme:"gold",emoji:"🪔",featured:false,active:true,status:"live"},
+    {id:"e3",name:"Heritage Garba Utsav",city:"Vadodara",date:"2–11 Oct 2025",totalPasses:600,soldPasses:200,basePrice:199,revenue:39800,theme:"royal",emoji:"🎶",featured:false,active:true,status:"upcoming"},
+    {id:"e4",name:"Falguni Pathak Nite",city:"Gandhinagar",date:"5–14 Oct 2025",totalPasses:800,soldPasses:310,basePrice:399,revenue:123690,theme:"gold",emoji:"🎤",featured:true,active:true,status:"live"},
+    {id:"e5",name:"VIP Garba Gala 2025",city:"Surat",date:"3–12 Oct 2025",totalPasses:200,soldPasses:45,basePrice:599,revenue:26955,theme:"saffron",emoji:"👑",featured:false,active:true,status:"upcoming"},
+    {id:"e6",name:"Family Navratri Mela",city:"Mehsana",date:"2–11 Oct 2025",totalPasses:700,soldPasses:220,basePrice:179,revenue:39380,theme:"gold",emoji:"🎠",featured:false,active:true,status:"live"},
+  ];
+}
+
+function calcStats(){
+  const sales = allSales;
+  stats.revenue  = sales.filter(s=>s.status!=="cancelled").reduce((a,b)=>a+(b.amount||0),0);
+  stats.tickets  = sales.filter(s=>s.status!=="cancelled").reduce((a,b)=>a+(b.qty||1),0);
+  stats.discount = sales.reduce((a,b)=>a+(b.discount||0),0);
+  stats.events   = allEvents.length;
+  stats.bookings = sales.length;
+  stats.confirmed= sales.filter(s=>s.status==="confirmed").length;
+  stats.avgTicket= stats.tickets ? Math.round(stats.revenue/stats.tickets) : 0;
+}
+
+// ── KPI ───────────────────────────────────────────────────
+function renderKPI(){
+  const exp = 255419;
+  const profit = stats.revenue - exp;
+  document.getElementById("kpiGrid").innerHTML = `
+    <div class="kpi rev"><div class="kpi-ico">💰</div><div class="kpi-lbl">Total Revenue</div><div class="kpi-val">₹${stats.revenue.toLocaleString("en-IN")}</div><div class="kpi-chg up">▲ 28% vs last year</div></div>
+    <div class="kpi tkt"><div class="kpi-ico">🎟</div><div class="kpi-lbl">Passes Sold</div><div class="kpi-val">${stats.tickets}</div><div class="kpi-chg up">▲ 15% increase</div></div>
+    <div class="kpi evt"><div class="kpi-ico">🎪</div><div class="kpi-lbl">Active Events</div><div class="kpi-val">${stats.events}</div><div class="kpi-chg up">▲ Growing</div></div>
+    <div class="kpi prf"><div class="kpi-ico">📈</div><div class="kpi-lbl">Net Profit</div><div class="kpi-val">₹${Math.max(0,profit).toLocaleString("en-IN")}</div><div class="kpi-chg up">▲ ${stats.revenue?Math.round((profit/stats.revenue)*100):0}% margin</div></div>`;
+}
+
+// ── BAR CHART ─────────────────────────────────────────────
+function renderBarChart(){
+  const data=[{m:"Jul",r:0,e:8000},{m:"Aug",r:12000,e:15000},{m:"Sep",r:45000,e:38000},{m:"Oct",r:stats.revenue||288383,e:180000},{m:"Nov",r:43000,e:14419},{m:"Dec",r:0,e:0}];
+  const mx=Math.max(...data.map(d=>d.r));
+  document.getElementById("barChart").innerHTML=data.map(d=>`
+    <div class="bar-grp">
+      <div class="bars">
+        <div class="bar rev" data-v="₹${d.r.toLocaleString()}" style="height:${mx?Math.max((d.r/mx)*136,d.r?3:0):0}px"></div>
+        <div class="bar exp" data-v="₹${d.e.toLocaleString()}" style="height:${mx?Math.max((d.e/mx)*136,d.e?3:0):0}px"></div>
+      </div>
+      <div class="bar-lbl">${d.m}</div>
+    </div>`).join("");
+}
+
+// ── DONUT ─────────────────────────────────────────────────
+function renderDonut(){
+  const data=[{l:"Silver",p:29,c:"#7F8C8D"},{l:"Gold",p:38,c:"#F0A500"},{l:"Premium",p:18,c:"#8E44AD"},{l:"Couple",p:15,c:"#FF6B00"}];
+  let off=0; const r=35,cx=50,cy=50,ci=2*Math.PI*r;
+  document.getElementById("donutSvg").innerHTML=`<circle cx="50" cy="50" r="35" fill="none" stroke="#F0E8D8" stroke-width="16"/>` +
+    data.map(d=>{const dash=(d.p/100)*ci;const p=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.c}" stroke-width="16" stroke-dasharray="${dash} ${ci-dash}" stroke-dashoffset="-${off}"/>`;off+=dash;return p;}).join("");
+  document.getElementById("donutLabels").innerHTML=data.map(d=>`
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:7px"><div style="width:9px;height:9px;border-radius:50%;background:${d.c};flex-shrink:0"></div><span style="font-size:11px;color:var(--muted)">${d.l}</span></div>
+      <span style="font-size:12px;font-weight:700;color:var(--text)">${d.p}%</span>
+    </div>`).join("");
+}
+
+// ── RECENT SALES ──────────────────────────────────────────
+function renderRecent(){
+  const body=document.getElementById("recentBody");
+  body.innerHTML=allSales.slice(0,6).map(s=>salesRow(s,true)).join("");
+}
+
+// ── SALES TABLE ───────────────────────────────────────────
+function renderSales(){
+  const q=(document.getElementById("srchInp")?.value||"").toLowerCase();
+  const filtered=allSales.filter(s=>{
+    const mf=salesFilter==="all"||s.status===salesFilter;
+    const ms=!q||s.name?.toLowerCase().includes(q)||s.id?.toLowerCase().includes(q)||s.event?.toLowerCase().includes(q);
+    return mf&&ms;
+  });
+  document.getElementById("salesBody").innerHTML=filtered.map(s=>salesRow(s,false)).join("")||
+    '<tr><td colspan="11" style="text-align:center;padding:28px;color:var(--muted)">No records found</td></tr>';
+  document.getElementById("saleBadge").textContent=filtered.length;
+}
+function salesRow(s,slim){
+  const pb=s.passName?.toLowerCase().includes("gold")?"pb-g":s.passName?.toLowerCase().includes("silver")?"pb-s":s.passName?.toLowerCase().includes("premium")?"pb-p":"pb-c";
+  if(slim) return `<tr><td><code style="font-size:10px;background:#F5F5F5;padding:2px 6px;border-radius:4px">${s.id}</code></td><td><strong>${s.name}</strong></td><td style="font-size:11px;color:var(--muted)">${(s.event||"").substring(0,22)}…</td><td><span class="pb ${pb}">${s.passName}</span></td><td><strong>₹${s.amount}</strong></td><td><span class="sb ${s.status==="confirmed"?"sb-ok":s.status==="pending"?"sb-pend":"sb-cancel"}">${s.status==="confirmed"?"✓":s.status==="pending"?"⏳":"✕"} ${s.status}</span></td><td style="font-size:11px;color:var(--muted)">${s.date}</td></tr>`;
+  return `<tr>
+    <td><code style="font-size:10px;background:#F5F5F5;padding:2px 6px;border-radius:4px">${s.id}</code></td>
+    <td><strong>${s.name}</strong></td><td style="font-size:11px">${s.phone||"—"}</td>
+    <td style="font-size:11px;color:var(--muted)">${(s.event||"").substring(0,20)}…</td>
+    <td><span class="pb ${pb}">${s.passName}</span></td>
+    <td>${s.qty}</td><td style="font-size:11px">${s.coupon&&s.coupon!=="—"?`🏷️ ${s.coupon}`:"—"}</td>
+    <td><strong>₹${s.amount}</strong>${s.discount>0?`<br><span style="font-size:10px;color:var(--green)">-₹${s.discount}</span>`:""}</td>
+    <td><span class="sb ${s.status==="confirmed"?"sb-ok":s.status==="pending"?"sb-pend":"sb-cancel"}">${s.status==="confirmed"?"✓ Confirmed":s.status==="pending"?"⏳ Pending":"✕ Cancelled"}</span></td>
+    <td style="font-size:11px;color:var(--muted)">${s.date}</td>
+    <td><button class="btn-sm btn-edit" onclick="changeStatus('${s.id}','confirmed')">✓</button> <button class="btn-sm btn-del" onclick="changeStatus('${s.id}','cancelled')">✕</button></td>
+  </tr>`;
+}
+function setChip(f,el){ salesFilter=f; document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active")); el.classList.add("active"); renderSales(); }
+function changeStatus(id,status){
+  const idx=allSales.findIndex(s=>s.id===id);
+  if(idx>=0){allSales[idx].status=status;const stored=allSales.filter(s=>!demoSales.find(d=>d.id===s.id));localStorage.setItem("gu_sales",JSON.stringify(stored));}
+  renderSales(); renderRecent(); calcStats(); renderKPI(); toast(status==="confirmed"?"✓ Booking confirmed!":"✕ Booking cancelled");
+}
+function exportCSV(){
+  const csv=["Ticket ID,Name,Phone,Email,Event,Pass,Qty,Coupon,Discount,Amount,Payment ID,Status,Date",...allSales.map(s=>`${s.id},${s.name},${s.phone||""},${s.email||""},${s.event},${s.passName},${s.qty},${s.coupon||""},${s.discount||0},${s.amount},${s.paymentId||""},${s.status},${s.date}`)].join("\n");
+  const a=document.createElement("a");a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(csv);a.download="GarbaUtsav_Sales.csv";a.click();
+  toast("📥 CSV exported!");
+}
+
+// ── P&L ───────────────────────────────────────────────────
+function renderPnL(){
+  const passSales={silver:0,gold:0,premium:0,couple:0};
+  allSales.filter(s=>s.status!=="cancelled").forEach(s=>{
+    const k=s.passName?.toLowerCase().includes("gold")?"gold":s.passName?.toLowerCase().includes("silver")?"silver":s.passName?.toLowerCase().includes("premium")?"premium":"couple";
+    passSales[k]+=(s.amount||0);
+  });
+  const rev=stats.revenue+25000;
+  const fixedExp=80000+50000+35000+20000+28000+15000+8000;
+  const rzpFee=Math.round(stats.revenue*0.02);
+  const totalExp=fixedExp+rzpFee;
+  const profit=rev-totalExp;
+  const margin=rev?Math.round((profit/rev)*100):0;
+
+  document.getElementById("pnl-silver").innerHTML=`<span>Silver Pass Sales</span><span>₹${passSales.silver.toLocaleString()}</span>`;
+  document.getElementById("pnl-gold").innerHTML=`<span>Gold Pass Sales</span><span>₹${passSales.gold.toLocaleString()}</span>`;
+  document.getElementById("pnl-premium").innerHTML=`<span>Premium Pass Sales</span><span>₹${passSales.premium.toLocaleString()}</span>`;
+  document.getElementById("pnl-couple").innerHTML=`<span>Couple Pass Sales</span><span>₹${passSales.couple.toLocaleString()}</span>`;
+  document.getElementById("pnl-conv").textContent=`₹${Math.round(stats.revenue*.02).toLocaleString()}`;
+  document.getElementById("pnl-rzp-fee").textContent=`₹${rzpFee.toLocaleString()}`;
+  document.getElementById("pnl-total-rev").textContent=`₹${rev.toLocaleString()}`;
+  document.getElementById("pnl-total-exp").textContent=`₹${totalExp.toLocaleString()}`;
+  document.getElementById("pnl-net").textContent=`₹${profit.toLocaleString()}`;
+  document.getElementById("pnl-margin").textContent=`▲ ${margin}% Profit Margin`;
+  document.getElementById("pnl-tickets").textContent=stats.tickets;
+  document.getElementById("pnl-rev2").textContent=`₹${rev.toLocaleString()}`;
+  document.getElementById("pnl-exp2").textContent=`₹${totalExp.toLocaleString()}`;
+  const totalCap=allEvents.reduce((a,e)=>a+e.totalPasses,0);
+  const totalSold=allEvents.reduce((a,e)=>a+e.soldPasses,0);
+  document.getElementById("pnl-occ").textContent=totalCap?Math.round((totalSold/totalCap)*100)+"%":"—";
+
+  document.getElementById("pnlBody").innerHTML=allEvents.map(e=>{
+    const er=e.revenue||0; const ee=Math.round(er*.6); const ep=er-ee;
+    const em=er?Math.round((ep/er)*100):0;
+    return `<tr><td><strong>${e.emoji} ${e.name}</strong></td><td>${e.city}</td><td>${e.soldPasses}</td><td>₹${er.toLocaleString()}</td><td>₹${ee.toLocaleString()}</td><td style="color:var(--green);font-weight:700">₹${ep.toLocaleString()}</td><td style="color:var(--green)">${em}%</td></tr>`;
+  }).join("");
+}
+
+// ── EVENTS ADMIN ──────────────────────────────────────────
+function renderEventsAdmin(){
+  document.getElementById("eventsAdminGrid").innerHTML=allEvents.map(e=>{
+    const pct=Math.round((e.soldPasses/e.totalPasses)*100)||0;
+    return `<div class="eac">
+      <div class="eac-hdr">
+        <div><div class="eac-title">${e.emoji} ${e.name}</div><div class="eac-city">📍 ${e.city} • ${e.date}</div></div>
+        <span class="eac-status ${e.status||'upcoming'}">${e.status==="live"?"🟢 Live":e.status==="ended"?"🔴 Ended":"🟡 Upcoming"}</span>
+      </div>
+      <div class="eac-stats">
+        <div class="eas"><div class="val">${e.totalPasses}</div><div class="lbl">Total</div></div>
+        <div class="eas"><div class="val">${e.soldPasses}</div><div class="lbl">Sold</div></div>
+        <div class="eas"><div class="val">₹${((e.revenue||0)/1000).toFixed(0)}K</div><div class="lbl">Revenue</div></div>
+      </div>
+      <div class="prog-wrap"><div class="prog-lbl"><span>Occupancy</span><span>${pct}%</span></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div>
+      <div class="eac-actions"><button class="btn-sm btn-edit">✏️ Edit</button><button class="btn-sm btn-view">📊 Sales</button><button class="btn-sm btn-del" onclick="deleteEvent('${e.id}')">🗑 Delete</button></div>
+    </div>`;
+  }).join("");
+}
+function openAddEvent(){ document.getElementById("addEventMo").classList.add("active"); }
+function deleteEvent(id){ allEvents=allEvents.filter(e=>e.id!==id); localStorage.setItem("gu_events",JSON.stringify(allEvents)); renderEventsAdmin(); toast("🗑 Event deleted"); }
+async function saveEvent(){
+  const name=document.getElementById("ne-name").value;
+  const city=document.getElementById("ne-city").value;
+  const price=parseInt(document.getElementById("ne-price").value)||299;
+  const passes=parseInt(document.getElementById("ne-passes").value)||300;
+  const sd=document.getElementById("ne-sdate").value;
+  const ed=document.getElementById("ne-edate").value;
+  if(!name||!city){toast("⚠️ Name and city required!"); return;}
+  const ev={id:"e"+Date.now(),name,city,date:`${sd||"Oct"} – ${ed||"Oct"} 2025`,time:document.getElementById("ne-time").value||"8:00 PM – 1:00 AM",totalPasses:passes,soldPasses:0,basePrice:price,revenue:0,theme:document.getElementById("ne-theme").value,emoji:document.getElementById("ne-emoji").value||"💃",featured:document.getElementById("ne-featured").value==="1",active:true,status:"upcoming"};
+  try{await fetch(`${API}/events`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(ev)});}catch{}
+  allEvents.push(ev); localStorage.setItem("gu_events",JSON.stringify(allEvents));
+  closeMo("addEventMo"); renderEventsAdmin(); toast("🎪 Event published!");
+}
+
+// ── PASSES ────────────────────────────────────────────────
+function renderPasses(){
+  const passData=[
+    {name:"Silver Entry",icon:"🎫",price:199,sold:487,color:"pb-s",features:"Single entry, all nights, basic seating"},
+    {name:"Gold Pass",icon:"🏅",price:349,sold:312,color:"pb-g",features:"Premium seating, snacks, VIP parking"},
+    {name:"Premium VIP",icon:"💎",price:599,sold:145,color:"pb-p",features:"VIP lounge, dinner, gift hamper"},
+    {name:"Couple Pass",icon:"💑",price:649,sold:98,color:"pb-c",features:"2 persons, couple seating, photo session"},
+  ];
+  document.getElementById("passBody").innerHTML=passData.map(p=>`<tr><td><span class="pb ${p.color}">${p.icon} ${p.name}</span></td><td><strong>₹${p.price}</strong></td><td style="font-size:11px;color:var(--muted)">${p.features}</td><td>${p.sold}</td><td style="color:var(--green)">₹${(p.price*p.sold).toLocaleString()}</td><td><span class="sb sb-ok">Active</span></td><td><button class="btn-sm btn-edit">✏️ Edit</button></td></tr>`).join("");
+}
+
+// ── COUPONS ───────────────────────────────────────────────
+function renderCoupons(){
+  document.getElementById("couponBody").innerHTML=allCoupons.map(c=>`<tr>
+    <td><strong style="letter-spacing:.06em">${c.code}</strong></td>
+    <td>${c.type==="percent"?"Percent %":"Flat ₹"}</td>
+    <td><strong>${c.type==="percent"?c.value+"%":"₹"+c.value}</strong></td>
+    <td>${c.usedCount}</td><td>${c.maxUses}</td>
+    <td style="font-size:11px">${c.expiryDate}</td>
+    <td><span class="sb ${c.active?"sb-ok":"sb-cancel"}">${c.active?"Active":"Inactive"}</span></td>
+    <td><button class="btn-sm btn-del" onclick="deleteCoupon('${c.id}')">🗑</button></td>
+  </tr>`).join("");
+}
+function openAddCoupon(){ document.getElementById("nc-exp").value=new Date(new Date().getTime()+90*24*60*60*1000).toISOString().split("T")[0]; document.getElementById("addCouponMo").classList.add("active"); }
+async function saveCoupon(){
+  const code=document.getElementById("nc-code").value.toUpperCase();
+  const type=document.getElementById("nc-type").value;
+  const val=parseInt(document.getElementById("nc-val").value);
+  const max=parseInt(document.getElementById("nc-max").value)||200;
+  const exp=document.getElementById("nc-exp").value;
+  if(!code||!val){toast("⚠️ Code and value required!"); return;}
+  const coupon={id:code,code,type,value:val,maxUses:max,usedCount:0,expiryDate:exp,active:true};
+  try{await fetch(`${API}/coupons`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(coupon)});}catch{}
+  allCoupons.push(coupon);
+  const stored=allCoupons.filter(c=>!demoCoupons.find(d=>d.id===c.id));
+  localStorage.setItem("gu_coupons",JSON.stringify(stored));
+  closeMo("addCouponMo"); renderCoupons(); toast("🏷️ Coupon created!");
+}
+function deleteCoupon(id){ allCoupons=allCoupons.filter(c=>c.id!==id); renderCoupons(); toast("🗑 Coupon deleted"); }
+
+// ── ORGANIZERS ────────────────────────────────────────────
+function renderOrgs(){
+  document.getElementById("orgBody").innerHTML=demoOrgs.map(o=>`<tr>
+    <td><strong>${o.name}</strong><br><span style="font-size:10px;color:var(--muted)">${o.org}</span></td>
+    <td style="font-size:12px">${o.email}</td><td style="font-size:12px">${o.phone}</td><td>${o.city}</td>
+    <td>${o.events}</td><td style="color:var(--green)">₹${o.revenue.toLocaleString()}</td>
+    <td><span class="sb ${o.active?"sb-ok":"sb-cancel"}">${o.active?"Active":"Inactive"}</span></td>
+    <td><button class="btn-sm btn-edit">✏️</button></td>
+  </tr>`).join("");
+}
+function openAddOrg(){ document.getElementById("addOrgMo").classList.add("active"); }
+async function saveOrg(){
+  const name=document.getElementById("no-name").value;
+  const email=document.getElementById("no-email").value;
+  const phone=document.getElementById("no-phone").value;
+  const pass=document.getElementById("no-pass").value;
+  if(!name||!email||!pass){toast("⚠️ Fill all required fields!"); return;}
+  try{
+    await fetch(`${API}/auth/register-organizer`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,email,password:pass,phone,city:document.getElementById("no-city").value,adminSecret:"GarbaUtsav@SuperAdmin#2025"})});
+  }catch{}
+  closeMo("addOrgMo"); toast("👥 Organizer account created! They can now login.");
+}
+
+// ── ACCESS ────────────────────────────────────────────────
+function renderAccess(){
+  const users=[{name:"GarbaUtsav Admin",email:"admin@garbautsav.in",role:"Super Admin",sell:true,refund:true,export:true,addEvent:true},{name:"Mehul Raval",email:"shreeramclub@gmail.com",role:"Organizer",sell:true,refund:false,export:true,addEvent:true},{name:"Gate Staff 1",email:"gate1@garbautsav.in",role:"Gate Staff",sell:false,refund:false,export:false,addEvent:false}];
+  document.getElementById("accessBody").innerHTML=users.map(u=>`<tr>
+    <td><strong>${u.name}</strong></td><td style="font-size:11px">${u.email}</td>
+    <td><span class="sb sb-ok">${u.role}</span></td>
+    ${["sell","refund","export","addEvent"].map(k=>`<td><div class="toggle ${u[k]?"on":"off"}" onclick="this.classList.toggle('on');this.classList.toggle('off')"></div></td>`).join("")}
+    <td><span class="sb sb-ok">Active</span></td>
+  </tr>`).join("");
+}
+
+// ── ANALYTICS ─────────────────────────────────────────────
+function renderAnalytics(){
+  document.getElementById("an-rev").textContent="₹"+stats.revenue.toLocaleString("en-IN");
+  document.getElementById("an-tkt").textContent=stats.tickets;
+  document.getElementById("an-avg").textContent="₹"+(stats.avgTicket||0);
+  const days=[142,198,167,221,189,243,209,276,312];
+  const mx=Math.max(...days);
+  document.getElementById("dayChart").innerHTML=days.map((v,i)=>`<div class="bar-grp"><div class="bars" style="height:140px"><div class="bar rev" data-v="${v} tickets" style="height:${(v/mx)*136}px;flex:1"></div></div><div class="bar-lbl">Day ${i+1}</div></div>`).join("");
+}
+
+// ── CHECKIN ───────────────────────────────────────────────
+function renderCheckin(){
+  const done=allSales.filter(s=>s.checkedIn).length;
+  const wait=allSales.filter(s=>!s.checkedIn&&s.status==="confirmed").length;
+  document.getElementById("ci-done").textContent=done;
+  document.getElementById("ci-wait").textContent=wait;
+  renderCheckinTable(allSales);
+}
+function renderCheckinTable(list){
+  document.getElementById("checkinBody").innerHTML=list.slice(0,15).map(s=>{
+    const pb=s.passName?.toLowerCase().includes("gold")?"pb-g":s.passName?.toLowerCase().includes("silver")?"pb-s":s.passName?.toLowerCase().includes("premium")?"pb-p":"pb-c";
+    return `<tr><td><code style="font-size:10px;background:#f5f5f5;padding:2px 6px;border-radius:3px">${s.id}</code></td><td><strong>${s.name}</strong></td><td><span class="pb ${pb}">${s.passName}</span></td><td style="font-size:11px;color:var(--muted)">${(s.event||"").substring(0,20)}</td><td style="font-size:11px">${s.checkedIn?s.time:"—"}</td><td><span class="sb ${s.checkedIn?"sb-ok":s.status==="cancelled"?"sb-cancel":"sb-pend"}">${s.checkedIn?"✓ Entered":s.status==="cancelled"?"✕ Cancelled":"⏳ Pending"}</span></td></tr>`;
+  }).join("");
+}
+function filterCheckin(q){
+  const list=allSales.filter(s=>!q||(s.id+s.name+s.passName).toLowerCase().includes(q.toLowerCase()));
+  renderCheckinTable(list);
+}
+
+// ── QR VERIFY ────────────────────────────────────────────
+function scanQR(){ document.getElementById("qrMo").classList.add("active"); document.getElementById("qrResult").textContent=""; document.getElementById("qrInput").value=""; }
+async function verifyTicket(){
+  const tid=document.getElementById("qrInput").value.trim();
+  const res=document.getElementById("qrResult");
+  if(!tid){res.style.color="var(--red)";res.textContent="⚠️ Enter a ticket ID";return;}
+  try{
+    const r=await fetch(`${API}/bookings/verify`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({ticketId:tid})});
+    const d=await r.json();
+    if(d.valid){res.style.color="var(--green)";res.textContent="✅ "+d.message;}
+    else{res.style.color="var(--red)";res.textContent="❌ "+d.message;}
+  }catch{
+    const s=allSales.find(s=>s.id===tid);
+    if(!s){res.style.color="var(--red)";res.textContent="❌ Ticket not found!";return;}
+    if(s.checkedIn){res.style.color="orange";res.textContent="⚠️ Already checked in!";return;}
+    s.checkedIn=true; res.style.color="var(--green)"; res.textContent=`✅ Entry allowed! ${s.name} — ${s.passName}`;
+    renderCheckin();
+  }
+}
+
+// ── MODALS ────────────────────────────────────────────────
+function closeMo(id){ document.getElementById(id)?.classList.remove("active"); }
+document.querySelectorAll(".mo").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("active");}));
+
+// ── PAGE NAV ──────────────────────────────────────────────
+const titles={dashboard:"Overview Dashboard",sales:"Sales & Transactions",pnl:"Profit & Loss",events:"Event Management",passes:"Pass Types",coupons:"Coupon Management",organizers:"Organizer Management",access:"User Access Control",analytics:"Analytics & Reports",checkin:"Check-In Gate Manager"};
+const subs={dashboard:"Welcome back! Here's what's happening today.",sales:"All ticket purchases & bookings.",pnl:"Full financial overview — income, expenses, net profit.",events:"Create, edit and manage your Garba events.",passes:"Configure pass types and pricing.",coupons:"Create and manage discount coupon codes.",organizers:"Manage organizer accounts and access.",access:"Control who can do what in the admin panel.",analytics:"Deep dive into your event performance metrics.",checkin:"Real-time gate entry management."};
+function showPage(pg,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".ni").forEach(n=>n.classList.remove("active"));
+  document.getElementById("page-"+pg)?.classList.add("active");
+  el?.classList.add("active");
+  document.getElementById("pgTitle").textContent=titles[pg]||pg;
+  document.getElementById("pgSub").textContent=subs[pg]||"";
+}
+
+// ── TOAST ─────────────────────────────────────────────────
+function toast(msg){ const t=document.getElementById("adminToast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000); }
+</script>
+</body>
+</html>
