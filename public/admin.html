@@ -212,10 +212,9 @@ tr:hover td{background:#FDFAF4}
     <!-- Login Form -->
     <div id="loginForm">
       <div class="lfield"><label>Email</label><input id="lEmail" type="email" placeholder="admin@garbautsav.com" value="admin@garbautsav.com"></div>
-      <div class="lfield"><label>Password</label><input id="lPass" type="password" placeholder="••••••••" value="admin123"></div>
+      <div class="lfield"><label>Password</label><input id="lPass" type="password" placeholder="••••••••"></div>
       <button class="btn-login" onclick="doLogin()">Sign In →</button>
       <div class="login-err" id="loginErr"></div>
-      <p class="login-hint">Demo: admin@garbautsav.com / admin123</p>
     </div>
     <!-- Register Form -->
     <div id="registerForm" style="display:none">
@@ -410,7 +409,7 @@ tr:hover td{background:#FDFAF4}
 <!-- TOAST -->
 <div class="toast" id="adminToast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ══════════════════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════════════════
@@ -450,22 +449,33 @@ function switchTab(tab, el) {
 async function doLogin() {
   const email = document.getElementById('lEmail').value.trim();
   const pass  = document.getElementById('lPass').value;
-  document.getElementById('loginErr').textContent = '';
+  const err   = document.getElementById('loginErr');
+  err.textContent = '';
 
-  // Demo mode fallback
-  if (email === 'admin@garbautsav.com' || !fbAuth) {
-    currentUser = { name:'Mehul Raval', email, role:'superadmin', uid:'demo123', city:'Ahmedabad' };
-    onLoginSuccess();
-    return;
-  }
+  if (!email || !pass) { err.textContent = '❌ Email aur password daalo!'; return; }
+
   try {
-    const cred = await fbAuth.signInWithEmailAndPassword(email, pass);
-    const r    = await fetch(`${API}/auth/verify`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ token: await cred.user.getIdToken() }) });
-    const d    = await r.json();
-    currentUser = { name: d.profile?.name||email.split('@')[0], email, role: d.role||'organizer', uid: d.uid, city: d.profile?.city||'' };
+    // Verify via backend — ADMIN_SECRET_KEY se match karega
+    const r = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+    const d = await r.json();
+
+    if (!r.ok || !d.success) {
+      err.textContent = '❌ Galat email ya password!';
+      return;
+    }
+
+    // Save session
+    sessionStorage.setItem('adminToken', d.token);
+    sessionStorage.setItem('adminUser', JSON.stringify(d.user));
+    currentUser = d.user;
     onLoginSuccess();
+
   } catch(e) {
-    document.getElementById('loginErr').textContent = '❌ ' + (e.message||'Login failed');
+    err.textContent = '❌ Server se connect nahi ho pa raha. Thodi der baad try karo.';
   }
 }
 
@@ -889,11 +899,4 @@ function getDemoAdminEvents() {
 function openAddPassModal() { toast('💡 Pass types are configured per-event. Edit an event to customize pass prices.'); }
 
 // ── Helpers ────────────────────────────────────────
-function fmtNum(n){ return Number(n).toLocaleString('en-IN'); }
-function toast(msg){
-  const t=document.getElementById('adminToast'); t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3200);
-}
-</script>
-</body>
-</html>
+function fmtNum(n){ return
