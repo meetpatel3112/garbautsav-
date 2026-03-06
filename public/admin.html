@@ -2,901 +2,1088 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GarbaUtsav Admin Panel</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GarbaUtsav — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--p:#FF6B00;--pd:#C0392B;--gold:#F0A500;--dark:#0F0A00;--sb:#1A0E00;--bg:#F5F0E8;--card:#FFFFFF;--text:#1A0E00;--muted:#6B4A20;--border:rgba(240,165,0,0.15);--green:#27AE60;--red:#E74C3C;--blue:#2980B9;--purple:#8E44AD;--r:14px;--sh:0 4px 20px rgba(0,0,0,0.07);--sw:260px}
+:root{--p:#E31E24;--p2:#B71C1C;--g:#F5A623;--bg:#F0F2F7;--sb:#0F0F1A;--card:#fff;--tx:#1A1A2E;--mu:#6B7280;--bd:#E5E7EB;--gr:#10B981;--rd:#EF4444;--bl:#3B82F6;--pu:#8B5CF6;--r:12px;--sw:240px}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:rgba(255,107,0,0.3);border-radius:3px}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--tx);display:flex;min-height:100vh}
+button{cursor:pointer;font-family:'Poppins',sans-serif}
+input,select,textarea{font-family:'Poppins',sans-serif}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(227,30,36,.3);border-radius:2px}
 
-/* ── LOGIN ── */
-#loginScreen{position:fixed;inset:0;background:linear-gradient(145deg,#1A0A00,#3D1C00,#1A0A00);display:flex;align-items:center;justify-content:center;z-index:9999}
-.login-box{background:rgba(255,255,255,0.05);border:1px solid rgba(240,165,0,0.2);border-radius:22px;padding:44px;width:370px;text-align:center;backdrop-filter:blur(20px)}
-.login-logo{font-size:30px;color:var(--gold);margin-bottom:4px;font-weight:800}
-.login-sub{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:28px}
-.login-tab{display:flex;gap:0;margin-bottom:24px;background:rgba(255,255,255,0.05);border-radius:50px;padding:4px}
-.ltab{flex:1;padding:8px;border-radius:50px;border:none;background:transparent;color:rgba(255,255,255,0.5);font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:all 0.2s}
-.ltab.active{background:linear-gradient(135deg,var(--p),var(--pd));color:white}
-.lfield{margin-bottom:14px;text-align:left}
-.lfield label{display:block;font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
-.lfield input,.lfield select{width:100%;padding:11px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(240,165,0,0.2);border-radius:10px;color:white;font-size:13px;font-family:'Poppins',sans-serif;outline:none;transition:border-color 0.2s}
-.lfield input:focus,.lfield select:focus{border-color:var(--gold)}
-.lfield select option{background:#2C1810;color:white}
-.btn-login{width:100%;padding:13px;background:linear-gradient(135deg,var(--p),var(--pd));color:white;border:none;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;margin-top:6px;box-shadow:0 5px 20px rgba(255,107,0,0.35);transition:all 0.3s}
-.btn-login:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,107,0,0.45)}
-.login-err{color:#ff7675;font-size:12px;margin-top:10px;min-height:16px}
-.login-hint{font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px}
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;background:linear-gradient(145deg,#0F0F1A,#1A1A2E);display:flex;align-items:center;justify-content:center;z-index:9999}
+.lbox{background:rgba(255,255,255,.05);border:1px solid rgba(245,166,35,.2);border-radius:20px;padding:40px;width:360px;text-align:center;backdrop-filter:blur(20px)}
+.llogo{font-size:36px;margin-bottom:4px}
+.ltitle{font-size:22px;font-weight:800;color:#fff;margin-bottom:2px}
+.lsub{font-size:12px;color:rgba(255,255,255,.35);margin-bottom:28px}
+.lf{margin-bottom:12px;text-align:left}
+.lf label{display:block;font-size:10px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.lf input{width:100%;padding:11px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(245,166,35,.2);border-radius:10px;color:#fff;font-size:13px;outline:none;font-family:'Poppins',sans-serif}
+.lf input:focus{border-color:var(--g)}
+.lbtn{width:100%;padding:13px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:700;margin-top:6px;box-shadow:0 4px 18px rgba(227,30,36,.35);transition:all .2s}
+.lbtn:hover{transform:translateY(-1px)}
+.lerr{color:#ff7675;font-size:12px;margin-top:8px;min-height:16px}
+.lhint{font-size:11px;color:rgba(255,255,255,.2);margin-top:12px}
+.lhint strong{color:rgba(255,255,255,.4)}
 
-/* ── SIDEBAR ── */
-.sidebar{width:var(--sw);flex-shrink:0;background:var(--sb);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto}
-.sb-header{padding:22px 18px 14px;border-bottom:1px solid rgba(240,165,0,0.1)}
-.sb-logo{font-size:20px;color:var(--gold);font-weight:800}
-.sb-logo span{display:block;font-size:10px;color:rgba(255,255,255,0.35);font-weight:400;margin-top:1px}
-.sb-user{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(240,165,0,0.08);margin-bottom:6px}
-.sb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--gold));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;flex-shrink:0}
-.sb-uname{font-size:12px;font-weight:600;color:white}
-.sb-urole{font-size:10px;color:rgba(255,255,255,0.35)}
-.sb-role-badge{font-size:10px;padding:2px 8px;border-radius:50px;font-weight:700;margin-top:2px;display:inline-block}
-.role-super{background:rgba(255,107,0,0.2);color:var(--gold)}
-.role-org{background:rgba(41,128,185,0.2);color:#74B9FF}
-.nav-sec{padding:0 10px;margin-bottom:6px}
-.nav-sec-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:.12em;padding:7px 8px 4px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;color:rgba(255,255,255,0.5);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;margin-bottom:2px}
-.nav-item:hover{background:rgba(255,107,0,0.1);color:rgba(255,255,255,0.85)}
-.nav-item.active{background:rgba(255,107,0,0.16);color:var(--gold);border-left:3px solid var(--gold)}
-.nav-item .ni{font-size:17px;flex-shrink:0}
-.nav-item .badge{margin-left:auto;background:var(--p);color:white;font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px}
-.sb-footer{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(240,165,0,0.08)}
-.logout-btn{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.35);font-size:13px;cursor:pointer;padding:8px 10px;border-radius:9px;transition:all 0.2s}
-.logout-btn:hover{color:var(--red);background:rgba(231,76,60,0.1)}
+/* SIDEBAR */
+.sb{width:var(--sw);flex-shrink:0;background:var(--sb);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto}
+.sb-hd{padding:20px 16px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo{font-size:18px;font-weight:800;color:var(--g)}
+.sb-logo span{display:block;font-size:10px;color:rgba(255,255,255,.3);font-weight:400;margin-top:1px}
+.sb-user{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:6px}
+.av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--g));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;flex-shrink:0}
+.sb-uname{font-size:12px;font-weight:600;color:#fff}
+.sb-role{font-size:10px;color:rgba(255,255,255,.3)}
+.ns{padding:0 8px;margin-bottom:4px}
+.ns-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.18);text-transform:uppercase;letter-spacing:.12em;padding:6px 8px 3px}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;color:rgba(255,255,255,.45);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;margin-bottom:1px}
+.ni:hover{background:rgba(227,30,36,.1);color:rgba(255,255,255,.85)}
+.ni.on{background:rgba(227,30,36,.16);color:var(--g);border-left:3px solid var(--g)}
+.ni-ico{font-size:16px;flex-shrink:0}
+.ni-badge{margin-left:auto;background:var(--p);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:50px}
+.sb-ft{margin-top:auto;padding:12px 16px;border-top:1px solid rgba(255,255,255,.06)}
+.logout{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.3);font-size:12px;cursor:pointer;padding:8px;border-radius:8px;transition:all .2s}
+.logout:hover{color:#ff6b6b;background:rgba(231,76,60,.1)}
 
-/* ── MAIN ── */
+/* MAIN */
 .main{margin-left:var(--sw);flex:1;min-height:100vh;display:flex;flex-direction:column}
-.topbar{background:white;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,0.04)}
-.tb-title{font-size:18px;font-weight:700;color:var(--text)}
-.tb-title span{font-size:12px;font-weight:400;color:var(--muted);display:block}
-.tb-right{display:flex;align-items:center;gap:14px}
-.tb-date{font-size:12px;color:var(--muted)}
-.notif-btn{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--border);background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;position:relative}
-.notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--red);border-radius:50%}
-.content{padding:24px 28px;flex:1}
-.page{display:none}.page.active{display:block}
+.topbar{background:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:50;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+.tb-title{font-size:17px;font-weight:700}
+.tb-title span{font-size:11px;font-weight:400;color:var(--mu);display:block;margin-top:1px}
+.tb-right{display:flex;align-items:center;gap:12px}
+.tb-date{font-size:11px;color:var(--mu)}
+.notif{width:36px;height:36px;border-radius:9px;border:1px solid var(--bd);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;position:relative}
+.ndot{position:absolute;top:6px;right:6px;width:6px;height:6px;background:var(--rd);border-radius:50%}
+.content{padding:22px 24px;flex:1}
+.page{display:none}.page.on{display:block}
 
-/* ── KPI ── */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;margin-bottom:24px}
-.kpi{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:var(--sh);border:1px solid var(--border);position:relative;overflow:hidden}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
-.kpi.rev::before{background:linear-gradient(90deg,var(--p),var(--gold))}
-.kpi.tkt::before{background:linear-gradient(90deg,var(--blue),#74B9FF)}
-.kpi.evt::before{background:linear-gradient(90deg,var(--purple),#A29BFE)}
-.kpi.prf::before{background:linear-gradient(90deg,var(--green),#55EFC4)}
-.kpi-ico{position:absolute;top:16px;right:16px;font-size:28px;opacity:0.12}
-.kpi-lbl{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
-.kpi-val{font-size:26px;font-weight:800;color:var(--text);margin-bottom:5px}
-.kpi-chg{font-size:11px;font-weight:600}.kpi-chg.up{color:var(--green)}.kpi-chg.dn{color:var(--red)}
+/* KPI */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:22px}
+.kpi{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.06);border:1px solid var(--bd);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.rev::before{background:linear-gradient(90deg,var(--p),var(--g))}
+.kpi.tkt::before{background:linear-gradient(90deg,var(--bl),#60A5FA)}
+.kpi.evt::before{background:linear-gradient(90deg,var(--pu),#A78BFA)}
+.kpi.prf::before{background:linear-gradient(90deg,var(--gr),#34D399)}
+.kico{position:absolute;top:14px;right:14px;font-size:26px;opacity:.1}
+.klbl{font-size:10px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.kval{font-size:24px;font-weight:800;color:var(--tx);margin-bottom:4px}
+.kchg{font-size:10px;font-weight:600}.kchg.up{color:var(--gr)}.kchg.dn{color:var(--rd)}
 
-/* ── CARDS ── */
-.card{background:var(--card);border-radius:var(--r);padding:22px;box-shadow:var(--sh);border:1px solid var(--border)}
-.card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:18px}
-.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:24px}
+/* CARD */
+.card{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06);border:1px solid var(--bd)}
+.card-title{font-size:14px;font-weight:700;margin-bottom:16px}
 
-/* ── BAR CHART ── */
-.bar-chart{display:flex;align-items:flex-end;gap:6px;height:170px;padding-top:8px}
-.bar-grp{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
-.bars{display:flex;gap:3px;align-items:flex-end;height:140px;width:100%}
-.bar{flex:1;border-radius:5px 5px 0 0;min-height:3px;cursor:pointer;position:relative;transition:opacity 0.2s}
-.bar:hover{opacity:0.85}.bar:hover::after{content:attr(data-v);position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:9px;padding:2px 5px;border-radius:4px;white-space:nowrap}
-.bar.rv{background:linear-gradient(180deg,var(--p),var(--pd))}
-.bar.ex{background:linear-gradient(180deg,#BDC3C7,#95A5A6)}
-.bar-lbl{font-size:9px;color:var(--muted);font-weight:500;margin-top:3px}
-.ch-legend{display:flex;gap:14px;margin-bottom:14px}
-.ch-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
-.leg-dot{width:9px;height:9px;border-radius:50%}
-
-/* ── DONUT ── */
-.donut-wrap{display:flex;flex-direction:column;align-items:center}
-.donut-svg{width:130px;height:130px;transform:rotate(-90deg)}
-.donut-items{display:flex;flex-direction:column;gap:8px;margin-top:14px;width:100%}
-.d-item{display:flex;align-items:center;justify-content:space-between}
-.d-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.d-lbl{font-size:11px;color:var(--muted);flex:1;margin-left:7px}
-.d-pct{font-size:12px;font-weight:700;color:var(--text)}
-
-/* ── TABLE ── */
-.tbl-wrap{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);border:1px solid var(--border);overflow:hidden}
-.tbl-toolbar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
-.tbl-search{display:flex;align-items:center;gap:7px;background:var(--bg);border-radius:50px;padding:7px 14px;border:1px solid var(--border)}
-.tbl-search input{border:none;background:transparent;outline:none;font-size:12px;color:var(--text);font-family:'Poppins',sans-serif;width:180px}
-.flt-chips{display:flex;gap:7px;flex-wrap:wrap}
-.fc{padding:5px 13px;border-radius:50px;border:1.5px solid var(--border);font-size:11px;font-weight:600;cursor:pointer;color:var(--muted);transition:all 0.2s;font-family:'Poppins',sans-serif}
-.fc:hover,.fc.active{border-color:var(--p);color:var(--p);background:rgba(255,107,0,0.05)}
+/* TABLE */
+.tbl-wrap{background:var(--card);border-radius:var(--r);box-shadow:0 2px 10px rgba(0,0,0,.06);border:1px solid var(--bd);overflow:hidden}
+.tbl-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--bd);flex-wrap:wrap;gap:10px}
+.srch{display:flex;align-items:center;gap:6px;background:var(--bg);border-radius:50px;padding:6px 14px;border:1px solid var(--bd)}
+.srch input{border:none;background:transparent;outline:none;font-size:12px;color:var(--tx);font-family:'Poppins',sans-serif;width:170px}
+.fchips{display:flex;gap:6px;flex-wrap:wrap}
+.fc{padding:5px 12px;border-radius:50px;border:1px solid var(--bd);font-size:11px;font-weight:600;cursor:pointer;color:var(--mu);transition:all .2s;font-family:'Poppins',sans-serif;background:#fff}
+.fc:hover,.fc.on{border-color:var(--p);color:var(--p);background:rgba(227,30,36,.05)}
 table{width:100%;border-collapse:collapse}
-thead{background:#FDF6ED}
-th{padding:11px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
-td{padding:12px 14px;font-size:12px;color:var(--text);border-bottom:1px solid var(--border)}
+thead{background:#F9FAFB}
+th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+td{padding:11px 14px;font-size:12px;color:var(--tx);border-bottom:1px solid var(--bd)}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:#FDFAF4}
-.sts{padding:3px 10px;border-radius:50px;font-size:10px;font-weight:700}
-.sts-ok{background:rgba(39,174,96,0.1);color:var(--green)}
-.sts-pend{background:rgba(240,165,0,0.1);color:var(--gold)}
-.sts-cancel{background:rgba(231,76,60,0.1);color:var(--red)}
-.pass-tag{padding:3px 9px;border-radius:6px;font-size:10px;font-weight:700}
-.pt-s{background:#f0f0f0;color:#666}.pt-g{background:rgba(240,165,0,0.12);color:var(--gold)}.pt-p{background:rgba(142,68,173,0.12);color:var(--purple)}.pt-c{background:rgba(255,107,0,0.12);color:var(--p)}
+tr:hover td{background:#FAFAFA}
+.sts{padding:2px 9px;border-radius:50px;font-size:10px;font-weight:700}
+.s-ok{background:#D1FAE5;color:#065F46}
+.s-pend{background:#FEF3C7;color:#92400E}
+.s-can{background:#FEE2E2;color:#991B1B}
+.ptag{padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700}
+.pt-s{background:#F3F4F6;color:#374151}
+.pt-g{background:#FEF3C7;color:#92400E}
+.pt-p{background:#EDE9FE;color:#5B21B6}
+.pt-c{background:#FEE2E2;color:#991B1B}
+
+/* SECTION HEADER */
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
-.sec-ttl{font-size:16px;font-weight:700;color:var(--text)}
+.sec-ttl{font-size:16px;font-weight:700}
+.btn-add{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:none;padding:8px 18px;border-radius:50px;font-size:12px;font-weight:700;transition:all .2s;box-shadow:0 2px 10px rgba(227,30,36,.25)}
+.btn-add:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(227,30,36,.35)}
+.btn-sm{padding:5px 10px;border-radius:7px;font-size:11px;font-weight:600;border:none;cursor:pointer;font-family:'Poppins',sans-serif;transition:all .2s}
+.btn-ok{background:#D1FAE5;color:#065F46}.btn-ok:hover{background:#A7F3D0}
+.btn-del{background:#FEE2E2;color:#991B1B}.btn-del:hover{background:#FECACA}
+.btn-ed{background:#DBEAFE;color:#1E40AF}.btn-ed:hover{background:#BFDBFE}
 
-/* ── BUTTONS ── */
-.btn-add{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--p),var(--pd));color:white;border:none;border-radius:50px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;box-shadow:0 3px 14px rgba(255,107,0,0.28);transition:all 0.2s}
-.btn-add:hover{transform:translateY(-1px)}
-.btn-sm{padding:5px 10px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:all 0.2s;border:1px solid transparent}
-.bse{background:rgba(41,128,185,0.1);color:var(--blue);border-color:rgba(41,128,185,0.2)}.bsv{background:rgba(255,107,0,0.1);color:var(--p);border-color:rgba(255,107,0,0.2)}.bsd{background:rgba(231,76,60,0.1);color:var(--red);border-color:rgba(231,76,60,0.2)}
+/* EVENT GRID */
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.ev-card{background:var(--card);border-radius:var(--r);padding:16px;border:1px solid var(--bd);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.ev-ch{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.ev-em{font-size:32px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(227,30,36,.1),rgba(245,166,35,.08));border-radius:10px;flex-shrink:0}
+.ev-name{font-size:14px;font-weight:700;margin-bottom:2px}
+.ev-meta{font-size:11px;color:var(--mu);line-height:1.5}
+.ev-bar-w{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.ev-bar{flex:1;height:5px;background:#F3F4F6;border-radius:3px;overflow:hidden}
+.ev-bar-f{height:100%;background:linear-gradient(90deg,var(--p),var(--g));border-radius:3px}
+.ev-btns{display:flex;gap:7px;flex-wrap:wrap}
 
-/* ── EVENTS ADMIN ── */
-.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
-.ev-card{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:var(--sh);border:1px solid var(--border)}
-.ev-card-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
-.ev-name{font-size:14px;font-weight:700;color:var(--text)}
-.ev-loc{font-size:11px;color:var(--muted);margin-top:2px}
-.ev-sts{font-size:10px;font-weight:700;padding:3px 10px;border-radius:50px}
-.es-live{background:rgba(39,174,96,0.1);color:var(--green)}.es-up{background:rgba(240,165,0,0.1);color:var(--gold)}.es-end{background:rgba(231,76,60,0.1);color:var(--red)}
-.ev-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.ev-stat{text-align:center;background:var(--bg);border-radius:9px;padding:9px 5px}
-.ev-stat .v{font-size:16px;font-weight:800;color:var(--text)}
-.ev-stat .l{font-size:9px;color:var(--muted);font-weight:500}
-.prog-bar{background:#F0E8D8;height:7px;border-radius:50px;margin-bottom:12px}
-.prog-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--p),var(--gold));transition:width 0.5s}
-.ev-actions{display:flex;gap:7px}
-
-/* ── P&L ── */
-.pnl-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
-.pnl-card{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:var(--sh);border:1px solid var(--border)}
-.pnl-card h3{font-size:14px;font-weight:700;margin-bottom:14px}
-.pnl-card.inc h3{color:var(--green)}.pnl-card.exp h3{color:var(--red)}
-.pnl-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
-.pnl-row:last-child{border:none;font-weight:700;font-size:14px;padding-top:12px}
-.pnl-row.ir span:last-child{color:var(--green);font-weight:600}
-.pnl-row.er span:last-child{color:var(--red);font-weight:600}
-.profit-box{background:linear-gradient(135deg,#1A0A00,#3D1C00);border-radius:var(--r);padding:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-top:18px}
-.profit-box .net-lbl{font-size:12px;color:rgba(255,255,255,0.45)}
-.profit-box .net-val{font-size:32px;font-weight:900;color:var(--gold)}
-.profit-box .net-pct{font-size:13px;color:var(--green);font-weight:600}
-.profit-meta{display:flex;gap:28px;flex-wrap:wrap}
-.pm-item .v{font-size:18px;font-weight:800;color:white}
-.pm-item .l{font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px}
-
-/* ── ACCESS CONTROL ── */
-.toggle{width:42px;height:22px;border-radius:11px;cursor:pointer;position:relative;transition:background 0.3s;flex-shrink:0}
-.toggle.on{background:var(--green)}.toggle.off{background:#CCC}
-.toggle::after{content:'';position:absolute;top:2px;width:18px;height:18px;border-radius:50%;background:white;transition:left 0.3s}
-.toggle.on::after{left:22px}.toggle.off::after{left:2px}
-
-/* ── ADD EVENT MODAL ── */
-.modal2-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;padding:20px}
-.modal2-overlay.active{display:flex}
-.modal2{background:white;border-radius:22px;padding:32px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;position:relative;animation:mIn 0.3s ease}
-@keyframes mIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}
-.m2-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:none;background:#f5f5f5;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.fgrp{margin-bottom:14px}
-.fgrp label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
-.fgrp input,.fgrp select,.fgrp textarea{width:100%;padding:11px 12px;border:1.5px solid #E5E5E5;border-radius:10px;font-size:13px;font-family:'Poppins',sans-serif;color:var(--text);background:#FAFAFA;outline:none;transition:border-color 0.2s}
-.fgrp input:focus,.fgrp select:focus,.fgrp textarea:focus{border-color:var(--p);background:white}
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:500;padding:16px;overflow-y:auto}
+.mo.open{display:flex}
+.mo-box{background:#fff;border-radius:18px;padding:28px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;position:relative}
+.mo-cl{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:var(--bg);border:1px solid var(--bd);color:var(--mu);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.mo h2{font-size:18px;font-weight:800;margin-bottom:3px}
+.mo p{font-size:12px;color:var(--mu);margin-bottom:20px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:11px;font-weight:600;color:var(--mu);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.fg input,.fg select,.fg textarea{width:100%;padding:11px 14px;background:#fff;border:1.5px solid var(--bd);border-radius:10px;color:var(--tx);font-size:13px;outline:none;transition:border-color .2s;font-family:'Poppins',sans-serif}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--p)}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mo-save{width:100%;padding:13px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:700;margin-top:6px;transition:all .2s}
+.mo-save:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(227,30,36,.3)}
 
-/* ── TOAST ── */
-.toast{position:fixed;top:70px;right:22px;background:var(--text);color:white;padding:11px 18px;border-radius:11px;font-size:12px;font-weight:600;z-index:9999;transform:translateX(120%);opacity:0;transition:all 0.4s;border-left:3px solid var(--p)}
-.toast.show{transform:translateX(0);opacity:1}
+/* P&L */
+.pnl-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.pnl-card{background:var(--card);border-radius:var(--r);padding:20px;border:1px solid var(--bd)}
+.pnl-card h3{font-size:14px;font-weight:700;margin-bottom:14px}
+.pr{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid var(--bd)}
+.pr:last-child{border:none;font-weight:700}
+.ir{color:#065F46}.er{color:#991B1B}
+.profit-box{background:linear-gradient(135deg,var(--p),var(--p2));border-radius:var(--r);padding:22px;color:#fff;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.pm-item{text-align:center}
+.pm-item .v{font-size:20px;font-weight:800}
+.pm-item .l{font-size:10px;opacity:.7}
 
-/* ── LOADING ── */
-.spinner{width:32px;height:32px;border:3px solid rgba(255,107,0,0.2);border-top:3px solid var(--p);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto}
-@keyframes spin{to{transform:rotate(360deg)}}
+/* TOGGLE */
+.tog{width:38px;height:20px;border-radius:10px;background:#E5E7EB;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.tog::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.tog.on{background:var(--gr)}.tog.on::after{left:20px}
 
-@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0}.charts-row{grid-template-columns:1fr}.pnl-grid{grid-template-columns:1fr}}
+/* CHECKIN */
+.ci-scan{text-align:center;padding:30px;border:2px dashed var(--bd);border-radius:var(--r);margin-bottom:20px;cursor:pointer;transition:all .2s}
+.ci-scan:hover{border-color:var(--p);background:rgba(227,30,36,.03)}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--tx);color:#fff;padding:9px 20px;border-radius:50px;font-size:12px;font-weight:600;opacity:0;transition:all .3s;z-index:999;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* RESPONSIVE */
+/* ══════════════════════════════════════════
+   📱 ADMIN PANEL — Mobile First
+   ══════════════════════════════════════════ */
+
+*{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button,a,[onclick]{min-height:40px}
+input,select,textarea{font-size:16px!important} /* Prevent iOS zoom */
+
+/* ── Tablet + Small Desktop (≤900px) ── */
+@media(max-width:900px){
+  /* Sidebar — hide on mobile, show via toggle */
+  .sb{position:fixed;left:-260px;top:0;height:100vh;z-index:1000;transition:left .3s ease;box-shadow:4px 0 20px rgba(0,0,0,.4)}
+  .sb.open{left:0}
+  .main{margin-left:0;padding:12px}
+  .top-bar{padding:12px 16px}
+
+  /* Grids */
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .pnl-grid,.ev-grid,.charts-row{grid-template-columns:1fr}
+  .pass-grid,.costume-grid{grid-template-columns:1fr}
+
+  /* Tables — horizontal scroll */
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{min-width:600px}
+
+  /* Modals */
+  .modal-box{width:96%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .modal-form{grid-template-columns:1fr}
+}
+
+/* ── Mobile phones (≤600px) ── */
+@media(max-width:600px){
+  /* Top bar */
+  .top-bar{padding:10px 14px;gap:8px}
+  .top-bar h2{font-size:16px}
+
+  /* KPI cards — 2 per row */
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .kpi{padding:14px 12px}
+  .kpi .val{font-size:20px}
+  .kpi .lbl{font-size:11px}
+
+  /* Content padding */
+  .main{padding:10px}
+  .page{padding:0}
+  .section-header{flex-direction:column;align-items:flex-start;gap:10px}
+  .section-header button{width:100%;justify-content:center}
+
+  /* Search + filter */
+  .search-row{flex-direction:column;gap:10px}
+  .search-row input,.search-row select{width:100%}
+
+  /* Filter chips — horizontal scroll */
+  .filter-chips{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;padding-bottom:6px}
+  .filter-chips::-webkit-scrollbar{display:none}
+  .chip{flex-shrink:0;white-space:nowrap}
+
+  /* Tables */
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px}
+  table{min-width:550px;font-size:13px}
+  th,td{padding:10px 12px;white-space:nowrap}
+
+  /* Action buttons in table */
+  .action-btns{flex-wrap:nowrap;gap:4px}
+  .action-btns button{padding:5px 8px;font-size:12px;min-height:32px}
+
+  /* Event/Pass/Costume cards */
+  .ev-card,.pass-admin-card,.cs-card{padding:14px}
+  .ev-card-actions{flex-wrap:wrap;gap:8px}
+  .ev-card-actions button{flex:1;min-width:80px;font-size:12px;padding:7px 10px}
+
+  /* Chart containers */
+  .chart-container{height:200px}
+
+  /* Modals — bottom sheet style */
+  .modal{align-items:flex-end;padding:0}
+  .modal-box{width:100%;border-radius:20px 20px 0 0;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .modal-form{grid-template-columns:1fr}
+  .modal-title{font-size:17px}
+  .modal-footer{flex-direction:column;gap:10px}
+  .modal-footer button{width:100%;min-height:46px}
+
+  /* Form inside modal */
+  .form-group input,.form-group select,.form-group textarea{min-height:44px;padding:10px 12px;font-size:15px}
+
+  /* Login screen */
+  .login-box{padding:28px 20px;margin:20px;width:auto}
+  .login-box h1{font-size:22px}
+  .login-input{min-height:46px;font-size:15px}
+  .login-btn{min-height:50px;font-size:16px}
+
+  /* Checkin page */
+  .scan-box{padding:20px 16px}
+  .scan-input{font-size:16px;min-height:46px}
+  .ci-result{padding:16px}
+
+  /* Revenue chart bars */
+  .bar-chart{overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
+
+/* ── iPhone notch/home bar safe area ── */
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  .top-bar{padding-top:max(10px,env(safe-area-inset-top))}
+  .sb{padding-top:env(safe-area-inset-top)}
+  .modal-box{padding-bottom:max(20px,env(safe-area-inset-bottom))}
+}
+
+/* ── Mobile hamburger button ── */
+.mob-menu-btn{
+  display:none;background:none;border:none;color:white;
+  font-size:22px;cursor:pointer;padding:8px;min-height:40px;
+  align-items:center;justify-content:center
+}
+@media(max-width:900px){
+  .mob-menu-btn{display:flex}
+  /* Overlay when sidebar open */
+  .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999}
+  .sb-overlay.show{display:block}
+}
+
+@media(max-width:900px){
+  #menuBtn{display:flex!important}
+  #sidebar{left:-260px;transition:left .25s ease}
+}
 </style>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GarbaUtsav Admin">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 </head>
 <body>
 
-<!-- ── LOGIN ── -->
+<!-- LOGIN -->
 <div id="loginScreen">
-  <div class="login-box">
-    <div class="login-logo">🪔 GarbaUtsav</div>
-    <div class="login-sub">Organizer Admin Panel</div>
-    <div class="login-tab">
-      <button class="ltab active" onclick="switchTab('login',this)">Sign In</button>
-      <button class="ltab" onclick="switchTab('register',this)">Register</button>
-    </div>
-    <!-- Login Form -->
-    <div id="loginForm">
-      <div class="lfield"><label>Email</label><input id="lEmail" type="email" placeholder="admin@garbautsav.com" value="admin@garbautsav.com"></div>
-      <div class="lfield"><label>Password</label><input id="lPass" type="password" placeholder="••••••••"></div>
-      <button class="btn-login" onclick="doLogin()">Sign In →</button>
-      <div class="login-err" id="loginErr"></div>
-    </div>
-    <!-- Register Form -->
-    <div id="registerForm" style="display:none">
-      <div class="lfield"><label>Full Name</label><input id="rName" placeholder="Mehul Raval"></div>
-      <div class="lfield"><label>Email</label><input id="rEmail" type="email" placeholder="organizer@email.com"></div>
-      <div class="lfield"><label>Phone</label><input id="rPhone" type="tel" placeholder="9876543210"></div>
-      <div class="lfield"><label>City</label>
-        <select id="rCity"><option>Ahmedabad</option><option>Surat</option><option>Vadodara</option><option>Rajkot</option><option>Gandhinagar</option><option>Other</option></select>
-      </div>
-      <div class="lfield"><label>Password</label><input id="rPass" type="password" placeholder="Min 6 characters"></div>
-      <div class="lfield"><label>Organizer Invite Code</label><input id="rCode" placeholder="Get code from GarbaUtsav admin"></div>
-      <button class="btn-login" onclick="doRegister()">Register as Organizer →</button>
-      <div class="login-err" id="regErr"></div>
-    </div>
+  <div class="lbox">
+    <div class="llogo">🪔</div>
+    <div class="ltitle">GarbaUtsav Admin</div>
+    <div class="lsub">Organizer Dashboard · Secure Login</div>
+    <div class="lf"><label>Email</label><input id="lEmail" type="email" value="admin@garbautsav.com"></div>
+    <div class="lf"><label>Password</label><input id="lPass" type="password" value="admin123"></div>
+    <button class="lbtn" onclick="doLogin()">Sign In →</button>
+    <div class="lerr" id="lerr"></div>
+    <div class="lhint">Demo: <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6706030a0e0927000615050612131406114904080a">[email&#160;protected]</a></strong> / <strong>admin123</strong></div>
   </div>
 </div>
 
-<!-- ── SIDEBAR ── -->
-<div class="sidebar" id="sidebar">
-  <div class="sb-header">
-    <div class="sb-logo">🪔 GarbaUtsav <span>Admin Dashboard</span></div>
+<!-- SIDEBAR -->
+<div class="sb" id="sb">
+  <div class="sb-hd">
+    <div class="sb-logo">🪔 GarbaUtsav<span>Admin Dashboard</span></div>
   </div>
   <div class="sb-user">
-    <div class="sb-avatar" id="sbAvatar">M</div>
-    <div>
-      <div class="sb-uname" id="sbName">Loading...</div>
-      <div class="sb-urole"><span class="sb-role-badge role-super" id="sbRoleBadge">Organizer</span></div>
-    </div>
+    <div class="av" id="sbAv">A</div>
+    <div><div class="sb-uname" id="sbName">Loading...</div><div class="sb-role">Super Admin</div></div>
   </div>
-  <div class="nav-sec">
-    <div class="nav-sec-lbl">Main</div>
-    <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="ni">📊</span> Dashboard</div>
-    <div class="nav-item" onclick="showPage('sales',this)"><span class="ni">🎟</span> Sales <span class="badge" id="salesBadge">—</span></div>
-    <div class="nav-item" onclick="showPage('pnl',this)"><span class="ni">💰</span> Profit & Loss</div>
+  <div class="ns">
+    <div class="ns-lbl">Main</div>
+    <div class="ni on" onclick="goPage('dashboard',this)"><span class="ni-ico">📊</span> Dashboard</div>
+    <div class="ni" onclick="goPage('sales',this)"><span class="ni-ico">🎟</span> Sales <span class="ni-badge" id="salesBadge">0</span></div>
+    <div class="ni" onclick="goPage('pnl',this)"><span class="ni-ico">💰</span> Profit &amp; Loss</div>
   </div>
-  <div class="nav-sec">
-    <div class="nav-sec-lbl">Manage</div>
-    <div class="nav-item" onclick="showPage('events',this)"><span class="ni">🎪</span> Events</div>
-    <div class="nav-item" onclick="showPage('passes',this)"><span class="ni">🏅</span> Pass Types</div>
-    <div class="nav-item superadmin-only" onclick="showPage('access',this)" style="display:none"><span class="ni">🔐</span> User Access</div>
+  <div class="ns">
+    <div class="ns-lbl">Manage</div>
+    <div class="ni" onclick="goPage('events',this)"><span class="ni-ico">🎪</span> Events</div>
+    <div class="ni" onclick="goPage('passes',this)"><span class="ni-ico">🏅</span> Pass Types</div>
+    <div class="ni" onclick="goPage('costumes',this)"><span class="ni-ico">👗</span> Costumes</div>
   </div>
-  <div class="nav-sec">
-    <div class="nav-sec-lbl">Operations</div>
-    <div class="nav-item" onclick="showPage('analytics',this)"><span class="ni">📈</span> Analytics</div>
-    <div class="nav-item" onclick="showPage('checkin',this)"><span class="ni">✅</span> Check-In Gate</div>
+  <div class="ns">
+    <div class="ns-lbl">Operations</div>
+    <div class="ni" onclick="goPage('analytics',this)"><span class="ni-ico">📈</span> Analytics</div>
+    <div class="ni" onclick="goPage('checkin',this)"><span class="ni-ico">✅</span> Check-In Gate</div>
   </div>
-  <div class="sb-footer">
-    <a href="/" style="text-decoration:none"><div class="nav-item"><span class="ni">🌐</span> View Main Site</div></a>
-    <div class="logout-btn" onclick="doLogout()"><span>🚪</span> Logout</div>
+  <div class="sb-ft">
+    <a href="index.html" style="text-decoration:none"><div class="ni"><span class="ni-ico">🌐</span> View Website</div></a>
+    <div class="logout" onclick="doLogout()"><span>🚪</span> Logout</div>
   </div>
 </div>
 
-<!-- ── MAIN CONTENT ── -->
+<!-- MAIN -->
 <div class="main">
-  <div class="topbar">
-    <div>
-      <div class="tb-title" id="pageTitle">Dashboard <span id="pageSubtitle">Welcome back!</span></div>
-    </div>
+  <div id="sbOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999" onclick="this.style.display='none';document.getElementById('sidebar').style.left='-260px'"></div>
+<div class="topbar">
+    <button id="menuBtn" onclick="var sb=document.getElementById('sidebar'),ov=document.getElementById('sbOverlay');if(sb.offsetLeft<0||sb.style.left==='-260px'){sb.style.cssText+='left:0!important;transition:left .25s';ov.style.display='block'}else{sb.style.left='-260px';ov.style.display='none'}" style="display:none;background:none;border:none;color:white;font-size:22px;padding:6px 10px;cursor:pointer;min-height:40px">☰</button>
+    <div><div class="tb-title" id="pgTitle">Dashboard<span id="pgSub">Welcome back!</span></div></div>
     <div class="tb-right">
       <div class="tb-date" id="todayDate"></div>
-      <div class="notif-btn">🔔<div class="notif-dot"></div></div>
-      <div class="sb-avatar" id="tbAvatar">M</div>
+      <div class="notif" onclick="toast('🔔 3 new bookings in last 1 hour!')">🔔<div class="ndot"></div></div>
+      <div class="av" id="tbAv">A</div>
     </div>
   </div>
 
   <div class="content">
 
     <!-- DASHBOARD -->
-    <div class="page active" id="page-dashboard">
-      <div class="kpi-grid" id="kpiGrid">
-        <div class="kpi rev"><div class="kpi-ico">💰</div><div class="kpi-lbl">Total Revenue</div><div class="kpi-val">Loading...</div></div>
+    <div class="page on" id="page-dashboard">
+      <div class="kgrid" id="kgrid"></div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:22px">
+        <div class="card">
+          <div class="card-title">📊 Revenue (Last 7 Days)</div>
+          <div style="display:flex;align-items:flex-end;gap:5px;height:130px" id="barChart"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">🥧 Sales by Pass</div>
+          <div id="donutWrap" style="text-align:center"></div>
+        </div>
       </div>
-      <div class="charts-row">
-        <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span class="card-title" style="margin:0">Revenue vs Expenses</span><div class="ch-legend"><div class="ch-leg-item"><div class="leg-dot" style="background:var(--p)"></div>Revenue</div><div class="ch-leg-item"><div class="leg-dot" style="background:#BDC3C7"></div>Expenses</div></div></div><div class="bar-chart" id="barChart"></div></div>
-        <div class="card"><div class="card-title">Sales by Pass</div><div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 100 100" id="donutSvg"></svg><div class="donut-items" id="donutItems"></div></div></div>
-      </div>
-      <div class="sec-hdr"><div class="sec-ttl">Recent Bookings</div><button class="btn-add" onclick="showPage('sales',document.querySelector('[onclick*=sales]'))">View All →</button></div>
-      <div class="tbl-wrap"><table><thead><tr><th>Ticket</th><th>Customer</th><th>Event</th><th>Pass</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentBody"></tbody></table></div>
+      <div class="sec-hdr"><div class="sec-ttl">Recent Bookings</div><button class="btn-add" onclick="goPage('sales',document.querySelector('[onclick*=sales]'))">View All →</button></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Ticket</th><th>Customer</th><th>Event</th><th>Pass</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentTbl"></tbody></table></div>
     </div>
 
     <!-- SALES -->
     <div class="page" id="page-sales">
       <div class="tbl-wrap">
-        <div class="tbl-toolbar">
-          <div class="tbl-search">🔍<input id="salesSearch" placeholder="Search name, ticket ID..." oninput="renderSalesTable()"></div>
-          <div class="flt-chips">
-            <div class="fc active" onclick="setFlt('all',this)">All</div>
-            <div class="fc" onclick="setFlt('confirmed',this)">Confirmed</div>
-            <div class="fc" onclick="setFlt('pending',this)">Pending</div>
-            <div class="fc" onclick="setFlt('cancelled',this)">Cancelled</div>
+        <div class="tbl-bar">
+          <div class="srch">🔍<input id="srchInput" placeholder="Name, Ticket ID..." oninput="renderSales()"></div>
+          <div class="fchips">
+            <div class="fc on" onclick="setFlt('all',this)">All</div>
+            <div class="fc" onclick="setFlt('confirmed',this)">✓ Confirmed</div>
+            <div class="fc" onclick="setFlt('pending',this)">⏳ Pending</div>
+            <div class="fc" onclick="setFlt('cancelled',this)">✗ Cancelled</div>
           </div>
           <button class="btn-add" onclick="exportCSV()">📥 Export CSV</button>
         </div>
-        <table><thead><tr><th>Ticket</th><th>Name</th><th>Phone</th><th>Event</th><th>Pass</th><th>Qty</th><th>Coupon</th><th>Amount</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody id="salesBody"></tbody></table>
+        <table><thead><tr><th>Ticket</th><th>Name</th><th>Phone</th><th>Event</th><th>Pass</th><th>Qty</th><th>Amount</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody id="salesTbl"></tbody></table>
       </div>
     </div>
 
     <!-- P&L -->
     <div class="page" id="page-pnl">
-      <div class="sec-hdr"><div class="sec-ttl">Profit & Loss — Navratri 2025</div></div>
+      <div class="sec-hdr"><div class="sec-ttl">Profit &amp; Loss — Navratri 2025</div></div>
       <div class="pnl-grid">
-        <div class="pnl-card inc"><h3>📥 Income</h3><div id="incomeRows"><div style="text-align:center;padding:20px"><div class="spinner"></div></div></div></div>
-        <div class="pnl-card exp"><h3>📤 Expenses</h3>
-          <div class="pnl-row er"><span>Venue Rental</span><span>₹80,000</span></div>
-          <div class="pnl-row er"><span>Music & Performers</span><span>₹50,000</span></div>
-          <div class="pnl-row er"><span>Decoration & Lights</span><span>₹35,000</span></div>
-          <div class="pnl-row er"><span>Security Staff</span><span>₹20,000</span></div>
-          <div class="pnl-row er"><span>Catering</span><span>₹28,000</span></div>
-          <div class="pnl-row er"><span>Marketing</span><span>₹15,000</span></div>
-          <div class="pnl-row er"><span>Platform Fee (5%)</span><span id="platFee">—</span></div>
-          <div class="pnl-row er"><span>Misc</span><span>₹8,000</span></div>
-          <div class="pnl-row"><span>Total Expenses</span><span id="totalExp">—</span></div>
+        <div class="pnl-card"><h3>📥 Income</h3><div id="incRows"></div></div>
+        <div class="pnl-card"><h3>📤 Expenses</h3>
+          <div class="pr er"><span>Venue Rental</span><span>₹80,000</span></div>
+          <div class="pr er"><span>Music &amp; Performers</span><span>₹50,000</span></div>
+          <div class="pr er"><span>Decoration &amp; Lights</span><span>₹35,000</span></div>
+          <div class="pr er"><span>Security Staff</span><span>₹20,000</span></div>
+          <div class="pr er"><span>Catering</span><span>₹28,000</span></div>
+          <div class="pr er"><span>Marketing</span><span>₹15,000</span></div>
+          <div class="pr er"><span>Platform Fee (5%)</span><span id="platFee">—</span></div>
+          <div class="pr er"><span>Misc</span><span>₹8,000</span></div>
+          <div class="pr"><span>Total Expenses</span><span id="totExp">—</span></div>
         </div>
       </div>
-      <div class="profit-box" id="profitBox">
-        <div><div class="net-lbl">NET PROFIT</div><div class="net-val" id="netProfit">Calculating...</div><div class="net-pct" id="netPct"></div></div>
-        <div class="profit-meta" id="profitMeta"></div>
+      <div class="profit-box">
+        <div><div style="font-size:12px;opacity:.7;margin-bottom:4px">NET PROFIT</div><div style="font-size:32px;font-weight:900" id="netPro">Calculating...</div><div style="font-size:12px;opacity:.7;margin-top:2px" id="netPct"></div></div>
+        <div style="display:flex;gap:24px;flex-wrap:wrap" id="profMeta"></div>
       </div>
-      <div class="sec-hdr" style="margin-top:24px"><div class="sec-ttl">Per-Event Breakdown</div></div>
-      <div class="tbl-wrap"><table><thead><tr><th>Event</th><th>City</th><th>Passes Sold</th><th>Revenue</th><th>Expenses</th><th>Net Profit</th><th>Margin</th></tr></thead><tbody id="pnlBody"></tbody></table></div>
+      <div class="sec-hdr" style="margin-top:22px"><div class="sec-ttl">Per-Event Breakdown</div></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Event</th><th>City</th><th>Sold</th><th>Revenue</th><th>Expenses</th><th>Net Profit</th><th>Margin</th></tr></thead><tbody id="pnlTbl"></tbody></table></div>
     </div>
 
     <!-- EVENTS -->
     <div class="page" id="page-events">
-      <div class="sec-hdr"><div class="sec-ttl">All Events</div><button class="btn-add" onclick="document.getElementById('addEventModal').classList.add('active')">+ Add Event</button></div>
-      <div class="ev-grid" id="evGrid"><div style="text-align:center;padding:40px"><div class="spinner"></div></div></div>
+      <div class="sec-hdr">
+        <div class="sec-ttl">Event Management</div>
+        <button class="btn-add" onclick="openMo('moEvent')">+ Add Event</button>
+      </div>
+      <div class="ev-grid" id="evGrid"></div>
     </div>
 
     <!-- PASSES -->
     <div class="page" id="page-passes">
-      <div class="sec-hdr"><div class="sec-ttl">Pass Types</div><button class="btn-add" onclick="openAddPassModal()">+ Add Pass</button></div>
-      <div class="tbl-wrap"><table><thead><tr><th>Pass</th><th>Price</th><th>Features</th><th>Sold</th><th>Revenue</th><th>Status</th><th>Action</th></tr></thead><tbody id="passesBody"></tbody></table></div>
+      <div class="sec-hdr">
+        <div class="sec-ttl">Pass Types</div>
+        <button class="btn-add" onclick="openMo('moPass')">+ Add Pass</button>
+      </div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>Pass</th><th>Price</th><th>Features</th><th>Popular</th><th>Sold</th><th>Revenue</th><th>Action</th></tr></thead><tbody id="passTbl"></tbody></table>
+      </div>
+      <div style="text-align:right;margin-top:12px"><button onclick="resetPasses()" style="background:var(--bg);color:var(--mu);border:1px solid var(--bd);padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'Poppins',sans-serif">↺ Default Restore Karo</button></div>
     </div>
 
-    <!-- USER ACCESS -->
-    <div class="page" id="page-access">
-      <div class="sec-hdr"><div class="sec-ttl">User Access Control</div><button class="btn-add" onclick="document.getElementById('addEventModal').classList.add('active')">+ Invite Organizer</button></div>
-      <div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>City</th><th>Can Sell</th><th>Can Refund</th><th>Export</th><th>Status</th></tr></thead><tbody id="accessBody"></tbody></table></div>
+    <!-- COSTUMES -->
+    <div class="page" id="page-costumes">
+      <div class="sec-hdr">
+        <div class="sec-ttl">Costume Rental Management</div>
+        <button class="btn-add" onclick="openMo('moCostume')">+ Add Costume</button>
+      </div>
+      <div class="ev-grid" id="cosGrid"></div>
+      <div style="text-align:right;margin-top:12px"><button onclick="resetCostumes()" style="background:var(--bg);color:var(--mu);border:1px solid var(--bd);padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'Poppins',sans-serif">↺ Default Restore Karo</button></div>
     </div>
 
     <!-- ANALYTICS -->
     <div class="page" id="page-analytics">
-      <div class="kpi-grid" id="analyticsKpi"></div>
-      <div class="card"><div class="card-title">Day-wise Ticket Sales (Navratri 9 Nights)</div><div class="bar-chart" id="dayChart"></div></div>
+      <div class="kgrid" id="analyticsKpi"></div>
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-title">📅 Day-wise Sales (Navratri 9 Nights)</div>
+        <div style="display:flex;align-items:flex-end;gap:8px;height:140px" id="dayChart"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+        <div class="card"><div class="card-title">🏙️ City-wise Bookings</div><div id="cityChart"></div></div>
+        <div class="card"><div class="card-title">🎟 Pass Type Distribution</div><div id="passChart"></div></div>
+      </div>
     </div>
 
     <!-- CHECK-IN -->
     <div class="page" id="page-checkin">
-      <div class="sec-hdr"><div class="sec-ttl">Gate Check-In Manager</div><div style="display:flex;gap:10px;align-items:center"><span style="font-size:12px;color:var(--green);font-weight:600">🟢 Gate Live</span><button class="btn-add" onclick="openQRScanner()">📷 Scan QR</button></div></div>
-      <div class="kpi-grid">
-        <div class="kpi prf"><div class="kpi-ico">✅</div><div class="kpi-lbl">Checked In</div><div class="kpi-val" id="ciCount">—</div></div>
-        <div class="kpi tkt"><div class="kpi-ico">⏳</div><div class="kpi-lbl">Pending</div><div class="kpi-val" id="pendCount">—</div></div>
-        <div class="kpi rev"><div class="kpi-ico">🚫</div><div class="kpi-lbl">Denied</div><div class="kpi-val">3</div></div>
+      <div class="sec-hdr">
+        <div class="sec-ttl">Gate Check-In Manager</div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <span style="font-size:12px;color:var(--gr);font-weight:600">🟢 Gate Live</span>
+          <button class="btn-add" onclick="openQR()">📷 Scan QR</button>
+        </div>
+      </div>
+      <div class="kgrid" style="margin-bottom:18px">
+        <div class="kpi prf"><div class="kico">✅</div><div class="klbl">Checked In</div><div class="kval" id="ciCnt">—</div></div>
+        <div class="kpi tkt"><div class="kico">⏳</div><div class="klbl">Pending</div><div class="kval" id="pendCnt">—</div></div>
+        <div class="kpi rev"><div class="kico">🚫</div><div class="klbl">Denied</div><div class="kval">3</div></div>
+      </div>
+      <div class="ci-scan" onclick="openQR()">
+        <div style="font-size:44px;margin-bottom:8px">📷</div>
+        <div style="font-size:14px;font-weight:600">Click to Scan QR Code</div>
+        <div style="font-size:12px;color:var(--mu);margin-top:4px">Ya neeche ticket ID search karo</div>
       </div>
       <div class="tbl-wrap">
-        <div class="tbl-toolbar"><div class="tbl-search">🔍<input id="ciSearch" placeholder="Search ticket ID or name..." oninput="filterCheckin()"></div></div>
-        <table><thead><tr><th>Ticket ID</th><th>Name</th><th>Pass</th><th>Check-In Time</th><th>Gate</th><th>Status</th><th>Action</th></tr></thead><tbody id="ciBody"></tbody></table>
+        <div class="tbl-bar"><div class="srch">🔍<input id="ciSrch" placeholder="Ticket ID ya naam..." oninput="filterCI()"></div></div>
+        <table><thead><tr><th>Ticket ID</th><th>Name</th><th>Pass</th><th>Check-In Time</th><th>Gate</th><th>Status</th><th>Action</th></tr></thead><tbody id="ciTbl"></tbody></table>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- ADD EVENT MODAL -->
-<div class="modal2-overlay" id="addEventModal">
-  <div class="modal2">
-    <button class="m2-close" onclick="document.getElementById('addEventModal').classList.remove('active')">✕</button>
-    <h2 style="font-size:20px;font-weight:800;margin-bottom:4px">🎪 Add New Event</h2>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:20px">Event will be published on main site immediately</p>
-    <div class="fgrp"><label>Event Name *</label><input id="fName" placeholder="Navratri Mahotsav 2026"></div>
-    <div class="fgrp"><label>Organizer / Club Name</label><input id="fOrg" placeholder="Shree Ram Cultural Society"></div>
+<!-- MODALS -->
+
+<!-- Add Event Modal -->
+<div class="mo" id="moEvent">
+  <div class="mo-box">
+    <button class="mo-cl" onclick="closeMo('moEvent')">✕</button>
+    <h2>🎪 Event Add Karo</h2>
+    <p>Website pe turant publish hoga</p>
+    <div class="fg"><label>Event Name *</label><input id="feName" placeholder="Navratri Mahotsav 2026"></div>
+    <div class="fg"><label>Organizer / Club</label><input id="feOrg" placeholder="Shree Ram Cultural Society"></div>
     <div class="frow">
-      <div class="fgrp"><label>City *</label><input id="fCity" placeholder="Surat"></div>
-      <div class="fgrp"><label>Venue *</label><input id="fVenue" placeholder="GMDC Grounds"></div>
-    </div>
-    <div class="frow">
-      <div class="fgrp"><label>Start Date</label><input id="fStart" type="date"></div>
-      <div class="fgrp"><label>End Date</label><input id="fEnd" type="date"></div>
+      <div class="fg"><label>City *</label><input id="feCity" placeholder="Ahmedabad"></div>
+      <div class="fg"><label>Venue *</label><input id="feVenue" placeholder="GMDC Grounds"></div>
     </div>
     <div class="frow">
-      <div class="fgrp"><label>Timing</label><input id="fTime" placeholder="8:00 PM – 1:00 AM"></div>
-      <div class="fgrp"><label>Total Passes *</label><input id="fPasses" type="number" placeholder="500"></div>
+      <div class="fg"><label>Start Date</label><input id="feStart" type="date"></div>
+      <div class="fg"><label>End Date</label><input id="feEnd" type="date"></div>
     </div>
-    <div class="fgrp"><label>Theme</label>
-      <select id="fTheme"><option value="saffron">🟠 Saffron</option><option value="gold">🟡 Gold</option><option value="royal">🟣 Royal</option></select>
+    <div class="frow">
+      <div class="fg"><label>Timing</label><input id="feTime" placeholder="8:00 PM – 1:00 AM"></div>
+      <div class="fg"><label>Total Passes *</label><input id="fePasses" type="number" placeholder="500"></div>
     </div>
-    <div class="fgrp"><label>Description</label><textarea id="fDesc" rows="3" placeholder="Brief event description..."></textarea></div>
-    <button class="btn-add" style="width:100%;justify-content:center;padding:13px;font-size:14px" onclick="saveNewEvent()">✓ Publish Event</button>
+    <div class="frow">
+      <div class="fg"><label>Event Emoji</label><input id="feEmoji" placeholder="💃" maxlength="4"></div>
+      <div class="fg"><label>Theme</label>
+        <select id="feTheme"><option value="ts">🟠 Saffron</option><option value="tg">🟡 Gold</option><option value="tr">🟣 Royal</option></select>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <input type="checkbox" id="feFeat" style="width:16px;height:16px;accent-color:var(--p)">
+      <label for="feFeat" style="font-size:12px;color:var(--mu)">Featured event (top pe dikhao)</label>
+    </div>
+    <button class="mo-save" onclick="saveEvent()">✓ Event Publish Karo</button>
+  </div>
+</div>
+
+<!-- Add Pass Modal -->
+<div class="mo" id="moPass">
+  <div class="mo-box">
+    <button class="mo-cl" onclick="closeMo('moPass')">✕</button>
+    <h2>🎟 Pass Add Karo</h2>
+    <p>Naya pass type — website pe dikhega</p>
+    <div class="frow">
+      <div class="fg"><label>Pass Name *</label><input id="fpName" placeholder="Gold Pass"></div>
+      <div class="fg"><label>Price (₹) *</label><input id="fpPrice" type="number" placeholder="349"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>Emoji Icon</label><input id="fpIcon" placeholder="🏅" maxlength="4"></div>
+      <div class="fg"><label>Color Theme</label>
+        <select id="fpColor"><option value="silver">Silver</option><option value="gold-pass">Gold</option><option value="premium">Premium</option><option value="couple">Couple</option></select>
+      </div>
+    </div>
+    <div class="fg"><label>Features (ek line = ek feature)</label>
+      <textarea id="fpFeats" rows="5" placeholder="Single entry&#10;All 9 nights&#10;Premium seating&#10;VIP parking&#10;Digital QR pass"></textarea>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <input type="checkbox" id="fpPop" style="width:16px;height:16px;accent-color:var(--p)">
+      <label for="fpPop" style="font-size:12px;color:var(--mu)">🔥 Most Popular badge dikhao</label>
+    </div>
+    <button class="mo-save" onclick="savePass()">✓ Pass Save Karo</button>
+  </div>
+</div>
+
+<!-- Add Costume Modal -->
+<div class="mo" id="moCostume">
+  <div class="mo-box">
+    <button class="mo-cl" onclick="closeMo('moCostume')">✕</button>
+    <h2>👗 Costume Add Karo</h2>
+    <p>Rental ke liye naya costume</p>
+    <div class="fg"><label>Costume Name *</label><input id="fcName" placeholder="Bridal Chaniya Choli"></div>
+    <div class="fg"><label>Description</label><input id="fcDesc" placeholder="Heavy embroidery, mirror work..."></div>
+    <div class="frow">
+      <div class="fg"><label>Rent/Day (₹) *</label><input id="fcPrice" type="number" placeholder="299"></div>
+      <div class="fg"><label>Deposit (₹)</label><input id="fcDep" type="number" placeholder="500"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>Emoji</label><input id="fcEmoji" placeholder="👗" maxlength="4"></div>
+      <div class="fg"><label>Available Qty</label><input id="fcAvail" type="number" placeholder="10"></div>
+    </div>
+    <div class="fg"><label>Sizes (comma separated)</label><input id="fcSizes" placeholder="XS, S, M, L, XL"></div>
+    <div class="fg"><label>Tags (comma separated)</label><input id="fcTags" placeholder="Women, Traditional, Bridal"></div>
+    <div class="fg"><label>Color Theme</label>
+      <select id="fcCl"><option value="c1">Red/Orange</option><option value="c2">Purple/Pink</option><option value="c3">Gold/Orange</option><option value="c4">Green</option><option value="c5">Blue/Purple</option><option value="c6">Dark Red</option></select>
+    </div>
+    <button class="mo-save" onclick="saveCostume()">✓ Costume Save Karo</button>
+  </div>
+</div>
+
+<!-- QR Scanner Modal -->
+<div class="mo" id="moQR">
+  <div class="mo-box" style="text-align:center;max-width:380px">
+    <button class="mo-cl" onclick="closeMo('moQR')">✕</button>
+    <div style="font-size:56px;margin-bottom:12px">📷</div>
+    <h2 style="margin-bottom:4px">QR Scan Karo</h2>
+    <p>Ticket ID manually daalo ya QR scan karo</p>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input id="qrInput" placeholder="Ticket ID (e.g. GU12345678)" style="flex:1;padding:12px 14px;background:#F9FAFB;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;outline:none;font-family:'Poppins',sans-serif">
+      <button onclick="checkTicket()" style="background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:none;padding:12px 18px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer">Check</button>
+    </div>
+    <div id="qrResult" style="min-height:60px;padding:14px;background:#F9FAFB;border-radius:12px;font-size:13px;color:var(--mu)">Ticket ID daalo aur Check karo</div>
+    <p style="font-size:11px;color:var(--mu);margin-top:12px">Real deployment mein camera se QR scan hoga</p>
   </div>
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="adminToast"></div>
+<div class="toast" id="toast"></div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ══════════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════════
-const API = window.location.hostname==='localhost' ? 'http://localhost:3000/api' : '/api';
+// ═══════════════════════════════════════
+// SHARED STORAGE (same keys as main site)
+// ═══════════════════════════════════════
+const K={E:'gu_ev',P:'gu_ps',C:'gu_cs',B:'gu_bk'};
+function ls(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):JSON.parse(JSON.stringify(d))}catch{return JSON.parse(JSON.stringify(d))}}
+function lsw(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
 
-// Firebase config — replace with yours from Firebase Console
-const FB_CONFIG = {
-  apiKey:            "YOUR_FIREBASE_API_KEY",
-  authDomain:        "YOUR_PROJECT.firebaseapp.com",
-  projectId:         "YOUR_PROJECT_ID",
-};
+const DEF_EV=[
+  {id:'e1',name:'Navratri Mahotsav 2025',org:'Shree Ram Cultural Club',loc:'GMDC Grounds, Ahmedabad',city:'Ahmedabad',d1:'2 Oct',d2:'11 Oct 2025',time:'8PM–1AM',tot:500,sold:327,th:'ts',em:'💃',feat:true,active:true},
+  {id:'e2',name:'Royal Garba Night',org:'Patel Cultural Society',loc:'Sports Complex, Surat',city:'Surat',d1:'3 Oct',d2:'12 Oct 2025',time:'7:30PM–12:30AM',tot:400,sold:198,th:'tg',em:'🪔',active:true},
+  {id:'e3',name:'Heritage Garba Utsav',org:'Vadodara Navratri Samiti',loc:'Sayaji Park, Vadodara',city:'Vadodara',d1:'2 Oct',d2:'11 Oct 2025',time:'8PM–1:30AM',tot:600,sold:287,th:'tr',em:'🎶',active:true},
+  {id:'e4',name:'Grand Navratri Celebration',org:'Rajkot Sanskriti Mandal',loc:'Race Course Ground, Rajkot',city:'Rajkot',d1:'4 Oct',d2:'13 Oct 2025',time:'8:30PM–1AM',tot:450,sold:134,th:'ts',em:'🌟',active:true},
+  {id:'e5',name:'Falguni Pathak Nite 2025',org:'Gandhinagar Events',loc:'Sector 7 Grounds, Gandhinagar',city:'Gandhinagar',d1:'5 Oct',d2:'14 Oct 2025',time:'9PM–2AM',tot:800,sold:512,th:'tg',em:'🎤',feat:true,active:true},
+  {id:'e6',name:'Dandiya Dhamaka Night',org:'Anand Cultural Sangam',loc:'Town Hall, Anand',city:'Anand',d1:'2 Oct',d2:'11 Oct 2025',time:'8PM–1AM',tot:350,sold:89,th:'tr',em:'🎀',active:true},
+];
+const DEF_PS=[
+  {id:'silver',name:'Silver Entry',icon:'🎫',price:199,feats:['Single entry','All 9 nights','Basic seating','Free parking','Digital QR pass']},
+  {id:'gold',name:'Gold Pass',icon:'🏅',price:349,pop:true,feats:['Single entry','All 9 nights','Premium seating','Snacks included','VIP parking','Digital QR']},
+  {id:'premium',name:'Premium VIP',icon:'💎',price:599,feats:['Single entry','All 9 nights','VIP lounge','Dinner buffet','Dedicated parking','Gift hamper']},
+  {id:'couple',name:'Couple Pass',icon:'💑',price:649,feats:['2 persons entry','All 9 nights','Couple seating','Welcome drinks','Photo session','Parking']},
+];
+const DEF_CS=[
+  {id:'c1',name:'Bridal Chaniya Choli',em:'👗',cl:'c1',desc:'Heavy embroidery, mirror work, dupatta included.',tags:['Women','Traditional'],price:299,dep:500,sizes:['XS','S','M','L','XL'],avail:8,rating:4.9,rvs:124},
+  {id:'c2',name:'Designer Lehenga Set',em:'🥻',cl:'c2',desc:'Floral print lehenga with matching blouse.',tags:['Women','Designer'],price:349,dep:600,sizes:['S','M','L','XL'],avail:5,rating:4.8,rvs:89},
+  {id:'c3',name:'Rajasthani Kediya Set',em:'🧥',cl:'c3',desc:'Traditional Kediya with dhoti & pagdi.',tags:['Men','Traditional'],price:249,dep:400,sizes:['S','M','L','XL','XXL'],avail:12,rating:4.7,rvs:67},
+  {id:'c4',name:'Kids Chaniya Choli',em:'🎀',cl:'c4',desc:'Cute & comfortable for little girls.',tags:['Kids','Girls'],price:149,dep:200,sizes:['2-3Y','4-5Y','6-7Y','8-9Y'],avail:15,rating:5.0,rvs:203},
+];
+const DEF_BK=[
+  {tid:'GU20251001',nm:'Priya Sharma',ph:'9876543210',em:'priya@gmail.com',ev:'Navratri Mahotsav 2025',ps:'Gold Pass',qty:1,amt:356,disc:0,status:'confirmed',date:'01/10/2025',checkedIn:true},
+  {tid:'GU20251002',nm:'Rahul Patel',ph:'9898989898',em:'rahul@gmail.com',ev:'Navratri Mahotsav 2025',ps:'Couple Pass',qty:1,amt:662,disc:99,status:'confirmed',date:'01/10/2025',checkedIn:false},
+  {tid:'GU20251003',nm:'Sneha Modi',ph:'9712345678',em:'sneha@gmail.com',ev:'Royal Garba Night',ps:'Premium VIP',qty:1,amt:611,disc:0,status:'confirmed',date:'02/10/2025',checkedIn:false},
+  {tid:'GU20251004',nm:'Amit Shah',ph:'9924567890',em:'amit@gmail.com',ev:'Heritage Garba Utsav',ps:'Silver Entry',qty:2,amt:406,disc:45,status:'pending',date:'02/10/2025',checkedIn:false},
+  {tid:'GU20251005',nm:'Kavya Desai',ph:'9845678901',em:'kavya@gmail.com',ev:'Royal Garba Night',ps:'Gold Pass',qty:1,amt:297,disc:52,status:'confirmed',date:'03/10/2025',checkedIn:true},
+  {tid:'GU20251006',nm:'Ravi Kumar',ph:'9723456789',em:'ravi@gmail.com',ev:'Grand Navratri Celebration',ps:'Silver Entry',qty:3,amt:609,disc:0,status:'cancelled',date:'03/10/2025',checkedIn:false},
+  {tid:'GU20251007',nm:'Meera Joshi',ph:'9867543210',em:'meera@gmail.com',ev:'Falguni Pathak Nite 2025',ps:'Gold Pass',qty:2,amt:712,disc:0,status:'confirmed',date:'04/10/2025',checkedIn:false},
+  {tid:'GU20251008',nm:'Kiran Patel',ph:'9543218765',em:'kiran@gmail.com',ev:'Dandiya Dhamaka Night',ps:'Couple Pass',qty:1,amt:550,disc:99,status:'confirmed',date:'04/10/2025',checkedIn:false},
+];
 
-// Try to init Firebase (graceful fallback to demo mode if not configured)
-let fbAuth = null;
-try {
-  if (FB_CONFIG.apiKey !== 'YOUR_FIREBASE_API_KEY') {
-    firebase.initializeApp(FB_CONFIG);
-    fbAuth = firebase.auth();
-  }
-} catch(e) { console.log('Firebase not configured, running demo mode'); }
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let evs,pss,css_,bks,salesFlt='all';
 
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // AUTH
-// ══════════════════════════════════════════════════
-let currentUser = null;
-let salesFilter = 'all';
-let allSales = [];
-let allAdminEvents = [];
-
-function switchTab(tab, el) {
-  document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('loginForm').style.display   = tab==='login'    ? 'block' : 'none';
-  document.getElementById('registerForm').style.display = tab==='register' ? 'block' : 'none';
-}
-
-async function doLogin() {
-  const email = document.getElementById('lEmail').value.trim();
-  const pass  = document.getElementById('lPass').value;
-  const err   = document.getElementById('loginErr');
-  err.textContent = '';
-
-  if (!email || !pass) { err.textContent = '❌ Email aur password daalo!'; return; }
-
-  try {
-    // Verify via backend — ADMIN_SECRET_KEY se match karega
-    const r = await fetch('/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password: pass })
-    });
-    const d = await r.json();
-
-    if (!r.ok || !d.success) {
-      err.textContent = '❌ Galat email ya password!';
-      return;
-    }
-
-    // Save session
-    sessionStorage.setItem('adminToken', d.token);
-    sessionStorage.setItem('adminUser', JSON.stringify(d.user));
-    currentUser = d.user;
-    onLoginSuccess();
-
-  } catch(e) {
-    err.textContent = '❌ Server se connect nahi ho pa raha. Thodi der baad try karo.';
+// ═══════════════════════════════════════
+function doLogin(){
+  const em=document.getElementById('lEmail').value.trim();
+  const pw=document.getElementById('lPass').value;
+  const err=document.getElementById('lerr');
+  if(!em||!pw){err.textContent='⚠️ Email aur password daalo!';return}
+  if(pw==='admin123'&&em.includes('@')){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('sbName').textContent=em.split('@')[0].replace(/\./g,' ').split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+    document.getElementById('sbAv').textContent=em.charAt(0).toUpperCase();
+    document.getElementById('tbAv').textContent=em.charAt(0).toUpperCase();
+    document.getElementById('todayDate').textContent=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+    initDashboard();
+  } else {
+    err.textContent='❌ Wrong credentials! Use admin123';
   }
 }
-
-async function doRegister() {
-  const name  = document.getElementById('rName').value.trim();
-  const email = document.getElementById('rEmail').value.trim();
-  const phone = document.getElementById('rPhone').value.trim();
-  const city  = document.getElementById('rCity').value;
-  const pass  = document.getElementById('rPass').value;
-  const code  = document.getElementById('rCode').value.trim().toUpperCase();
-  const err   = document.getElementById('regErr');
-
-  if (!name||!email||!pass) { err.textContent='❌ Fill all required fields'; return; }
-  if (pass.length < 6) { err.textContent='❌ Password min 6 characters'; return; }
-  if (!fbAuth) { err.textContent='❌ Firebase not configured. Contact admin.'; return; }
-
-  try {
-    const r = await fetch(`${API}/auth/register-organizer`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ email, password:pass, name, phone, city, inviteCode:code })
-    });
-    const d = await r.json();
-    if (d.error) { err.textContent='❌ '+d.error; return; }
-    err.style.color='#27AE60'; err.textContent='✅ Registered! You can now sign in.';
-    setTimeout(()=>switchTab('login', document.querySelector('.ltab')), 2000);
-  } catch(e) {
-    err.textContent='❌ '+e.message;
-  }
-}
-
-function onLoginSuccess() {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('sbName').textContent   = currentUser.name;
-  document.getElementById('sbAvatar').textContent = currentUser.name[0].toUpperCase();
-  document.getElementById('tbAvatar').textContent = currentUser.name[0].toUpperCase();
-  document.getElementById('sbRoleBadge').textContent = currentUser.role==='superadmin' ? '⭐ Super Admin' : '🎪 Organizer';
-  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
-  if (currentUser.role==='superadmin') document.querySelectorAll('.superadmin-only').forEach(el=>el.style.display='flex');
-  initDashboard();
-}
-
-function doLogout() {
-  if(fbAuth) fbAuth.signOut();
-  currentUser=null;
+function doLogout(){
   document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('lPass').value='';
 }
 
-// ══════════════════════════════════════════════════
-// INIT DASHBOARD
-// ══════════════════════════════════════════════════
-async function initDashboard() {
-  await Promise.all([loadStats(), loadSales(), loadAdminEvents()]);
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+function initDashboard(){
+  evs=ls(K.E,DEF_EV); pss=ls(K.P,DEF_PS); css_=ls(K.C,DEF_CS); bks=ls(K.B,DEF_BK);
+  if(bks.length<8)bks=[...DEF_BK,...bks]; // ensure demo data
+  renderKPIs(); renderBarChart(); renderDonut(); renderRecentTbl();
+  document.getElementById('salesBadge').textContent=bks.filter(b=>b.status==='confirmed').length;
 }
 
-async function loadStats() {
-  try {
-    const r = await fetch(`${API}/admin/stats`);
-    const s = await r.json();
-    renderKPIs(s);
-    renderBarChart(s);
-    renderDonut(s);
-    renderAnalyticsKPIs(s);
-    renderPnL(s);
-  } catch {
-    renderKPIs({revenue:388383,tickets:1042,profit:132964,activeEvents:8,totalBookings:847});
-    renderBarChartStatic();
-    renderDonutStatic();
-  }
+// ═══════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════
+function renderKPIs(){
+  const rev=bks.filter(b=>b.status==='confirmed').reduce((s,b)=>s+b.amt,0);
+  const tix=bks.filter(b=>b.status==='confirmed').reduce((s,b)=>s+b.qty,0);
+  document.getElementById('kgrid').innerHTML=`
+    <div class="kpi rev"><div class="kico">💰</div><div class="klbl">Total Revenue</div><div class="kval">₹${fmt(rev)}</div><div class="kchg up">▲ 28% vs last year</div></div>
+    <div class="kpi tkt"><div class="kico">🎟</div><div class="klbl">Passes Sold</div><div class="kval">${tix.toLocaleString()}</div><div class="kchg up">▲ 15% growth</div></div>
+    <div class="kpi evt"><div class="kico">🎪</div><div class="klbl">Active Events</div><div class="kval">${evs.filter(e=>e.active!==false).length}</div><div class="kchg up">▲ 2 new events</div></div>
+    <div class="kpi prf"><div class="kico">💰</div><div class="klbl">Net Profit</div><div class="kval">₹${fmt(Math.round(rev*0.35))}</div><div class="kchg up">▲ 35% margin</div></div>`;
 }
-
-async function loadSales() {
-  try {
-    const r = await fetch(`${API}/admin/sales?limit=200`);
-    allSales = await r.json();
-  } catch {
-    allSales = getDemoSales();
-  }
-  document.getElementById('salesBadge').textContent = allSales.length;
-  renderSalesTable();
-  renderRecentSales();
-  renderCheckinTable();
-}
-
-async function loadAdminEvents() {
-  try {
-    const r = await fetch(`${API}/events`);
-    allAdminEvents = await r.json();
-  } catch {
-    allAdminEvents = getDemoAdminEvents();
-  }
-  renderEventsAdmin();
-  renderPassesTable();
-  renderAccessTable();
-}
-
-// ── KPIs ──────────────────────────────────────────
-function renderKPIs(s) {
-  document.getElementById('kpiGrid').innerHTML = `
-    <div class="kpi rev"><div class="kpi-ico">💰</div><div class="kpi-lbl">Total Revenue</div><div class="kpi-val">₹${fmtNum(s.revenue||0)}</div><div class="kpi-chg up">▲ 28% vs last year</div></div>
-    <div class="kpi tkt"><div class="kpi-ico">🎟</div><div class="kpi-lbl">Passes Sold</div><div class="kpi-val">${s.tickets||0}</div><div class="kpi-chg up">▲ 15% increase</div></div>
-    <div class="kpi evt"><div class="kpi-ico">🎪</div><div class="kpi-lbl">Active Events</div><div class="kpi-val">${s.activeEvents||0}</div><div class="kpi-chg up">Growing</div></div>
-    <div class="kpi prf"><div class="kpi-ico">📈</div><div class="kpi-lbl">Net Profit</div><div class="kpi-val">₹${fmtNum(s.profit||0)}</div><div class="kpi-chg up">▲ ${s.profitMargin||34}% margin</div></div>
-  `;
-}
-
-// ── Bar Chart ─────────────────────────────────────
-function renderBarChart(s) {
-  const data = s?.dailyRevenue ? Object.entries(s.dailyRevenue).slice(-6).map(([d,v])=>({m:d.slice(5),rev:v,exp:Math.round(v*0.55)}))
-    : [{m:'Jul',rev:0,exp:8000},{m:'Aug',rev:12000,exp:15000},{m:'Sep',rev:45000,exp:38000},{m:'Oct',rev:288383,exp:180000},{m:'Nov',rev:43000,exp:14419},{m:'Dec',rev:0,exp:0}];
-  renderBarChartData(data);
-}
-function renderBarChartStatic(){ renderBarChart(null); }
-function renderBarChartData(data) {
-  const mx = Math.max(...data.map(d=>Math.max(d.rev,d.exp)),1);
-  document.getElementById('barChart').innerHTML = data.map(d=>`
-    <div class="bar-grp">
-      <div class="bars">
-        <div class="bar rv" data-v="₹${fmtNum(d.rev)}" style="height:${Math.max((d.rev/mx)*135,d.rev?3:0)}px"></div>
-        <div class="bar ex" data-v="₹${fmtNum(d.exp)}" style="height:${Math.max((d.exp/mx)*135,d.exp?3:0)}px"></div>
+function renderBarChart(){
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const vals=[142,198,167,221,189,312,276];
+  const mx=Math.max(...vals);
+  document.getElementById('barChart').innerHTML=days.map((d,i)=>`
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="font-size:10px;color:var(--mu);font-weight:600">${vals[i]}</div>
+      <div style="flex:1;width:100%;display:flex;align-items:flex-end">
+        <div style="width:100%;height:${(vals[i]/mx)*120}px;background:linear-gradient(180deg,var(--p),var(--p2));border-radius:5px 5px 0 0;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'" title="${vals[i]} tickets"></div>
       </div>
-      <div class="bar-lbl">${d.m}</div>
+      <div style="font-size:9px;color:var(--mu)">${d}</div>
     </div>`).join('');
 }
-
-// ── Donut ─────────────────────────────────────────
-const DONUT_COLORS = ['#7F8C8D','#F0A500','#8E44AD','#FF6B00'];
-function renderDonut(s) {
-  const items = s?.byPass ? Object.entries(s.byPass).map(([k,v],i)=>({label:k.replace(' Pass','').replace(' Entry',''),val:v,color:DONUT_COLORS[i%4]}))
-    : [{label:'Silver',val:31,color:'#7F8C8D'},{label:'Gold',val:38,color:'#F0A500'},{label:'Premium',val:18,color:'#8E44AD'},{label:'Couple',val:13,color:'#FF6B00'}];
-  const total = items.reduce((a,b)=>a+b.val,0)||1;
-  const r=35,cx=50,cy=50,circ=2*Math.PI*r;
+function renderDonut(){
+  const data=[{l:'Gold Pass',v:38,c:'#F5A623'},{l:'Silver',v:24,c:'#6B7280'},{l:'Premium',v:22,c:'#8B5CF6'},{l:'Couple',v:16,c:'#E31E24'}];
+  const total=100,cx=60,cy=60,r=45,circ=2*Math.PI*r;
   let off=0;
-  document.getElementById('donutSvg').innerHTML = `<circle cx="50" cy="50" r="35" fill="none" stroke="#F0E8D8" stroke-width="14"/>` +
-    items.map(i=>{const d=(i.val/total)*circ;const p=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${i.color}" stroke-width="14" stroke-dasharray="${d} ${circ-d}" stroke-dashoffset="${-off}"/>`;off+=d;return p;}).join('');
-  document.getElementById('donutItems').innerHTML = items.map(i=>`
-    <div class="d-item"><div class="d-dot" style="background:${i.color}"></div><span class="d-lbl">${i.label}</span><span class="d-pct">${Math.round((i.val/total)*100)}%</span></div>`).join('');
+  const segs=data.map(d=>{
+    const len=(d.v/total)*circ;
+    const seg=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.c}" stroke-width="14" stroke-dasharray="${len} ${circ-len}" stroke-dashoffset="${-off}" style="cursor:pointer" title="${d.l}: ${d.v}%"/>`;
+    off+=len;return seg;
+  }).join('');
+  document.getElementById('donutWrap').innerHTML=`
+    <svg width="120" height="120" viewBox="0 0 120 120" style="transform:rotate(-90deg)">${segs}</svg>
+    <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px">
+      ${data.map(d=>`<div style="display:flex;align-items:center;justify-content:space-between;font-size:11px"><div style="display:flex;align-items:center;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:${d.c}"></div><span style="color:var(--mu)">${d.l}</span></div><span style="font-weight:700">${d.v}%</span></div>`).join('')}
+    </div>`;
 }
-function renderDonutStatic(){ renderDonut(null); }
-
-// ── P&L ──────────────────────────────────────────
-async function renderPnL(s) {
-  const rev = s?.revenue||388383;
-  const platFee = Math.round(rev*0.05);
-  const fixedExp = 80000+50000+35000+20000+28000+15000+8000;
-  const totalExp = fixedExp + platFee;
-  const profit = rev - totalExp;
-  const margin = Math.round((profit/rev)*100);
-
-  document.getElementById('incomeRows').innerHTML = `
-    <div class="pnl-row ir"><span>Silver Pass Sales</span><span>₹${fmtNum(Math.round(rev*0.25))}</span></div>
-    <div class="pnl-row ir"><span>Gold Pass Sales</span><span>₹${fmtNum(Math.round(rev*0.28))}</span></div>
-    <div class="pnl-row ir"><span>Premium Pass Sales</span><span>₹${fmtNum(Math.round(rev*0.22))}</span></div>
-    <div class="pnl-row ir"><span>Couple Pass Sales</span><span>₹${fmtNum(Math.round(rev*0.16))}</span></div>
-    <div class="pnl-row ir"><span>Convenience Fees</span><span>₹${fmtNum(Math.round(rev*0.02))}</span></div>
-    <div class="pnl-row ir"><span>Sponsorship</span><span>₹${fmtNum(Math.round(rev*0.07))}</span></div>
-    <div class="pnl-row"><span>Total Revenue</span><span style="color:var(--green);font-size:16px">₹${fmtNum(rev)}</span></div>`;
-  document.getElementById('platFee').textContent = '₹'+fmtNum(platFee);
-  document.getElementById('totalExp').textContent = '₹'+fmtNum(totalExp);
-  document.getElementById('netProfit').textContent = '₹'+fmtNum(profit);
-  document.getElementById('netPct').textContent = `▲ ${margin}% Profit Margin`;
-  document.getElementById('profitMeta').innerHTML = `
-    <div class="pm-item"><div class="v">${s?.tickets||1042}</div><div class="l">Passes Sold</div></div>
-    <div class="pm-item"><div class="v">₹${fmtNum(rev)}</div><div class="l">Gross Revenue</div></div>
-    <div class="pm-item"><div class="v">₹${fmtNum(totalExp)}</div><div class="l">Total Expenses</div></div>
-    <div class="pm-item"><div class="v">${margin}%</div><div class="l">Margin</div></div>`;
-
-  // Per-event P&L
-  try {
-    const r = await fetch(`${API}/admin/pnl`);
-    const rows = await r.json();
-    document.getElementById('pnlBody').innerHTML = rows.map(e=>`
-      <tr><td><strong>${e.eventName}</strong></td><td>${e.city}</td><td>${e.soldPasses}</td>
-      <td>₹${fmtNum(e.revenue)}</td><td>₹${fmtNum(e.expenses)}</td>
-      <td style="color:var(--green);font-weight:700">₹${fmtNum(e.profit)}</td>
-      <td style="color:var(--green)">${e.margin}%</td></tr>`).join('');
-  } catch {
-    document.getElementById('pnlBody').innerHTML = `
-      <tr><td><strong>Navratri Mahotsav 2025</strong></td><td>Ahmedabad</td><td>380</td><td>₹1,42,500</td><td>₹98,000</td><td style="color:var(--green);font-weight:700">₹44,500</td><td style="color:var(--green)">31.2%</td></tr>
-      <tr><td><strong>Royal Garba Night</strong></td><td>Surat</td><td>300</td><td>₹1,04,700</td><td>₹68,000</td><td style="color:var(--green);font-weight:700">₹36,700</td><td style="color:var(--green)">35.0%</td></tr>
-      <tr><td><strong>Heritage Garba Utsav</strong></td><td>Vadodara</td><td>210</td><td>₹81,900</td><td>₹58,419</td><td style="color:var(--green);font-weight:700">₹23,481</td><td style="color:var(--green)">28.7%</td></tr>
-      <tr><td><strong>Grand Navratri Celebration</strong></td><td>Rajkot</td><td>152</td><td>₹59,283</td><td>₹31,000</td><td style="color:var(--green);font-weight:700">₹28,283</td><td style="color:var(--green)">47.7%</td></tr>`;
-  }
-}
-
-// ── Sales Table ───────────────────────────────────
-function renderSalesTable() {
-  const q = document.getElementById('salesSearch')?.value.toLowerCase()||'';
-  const filtered = allSales.filter(s=>{
-    const mf = salesFilter==='all'||s.status===salesFilter;
-    const ms = !q||s.buyerName?.toLowerCase().includes(q)||s.ticketId?.toLowerCase().includes(q)||s.eventName?.toLowerCase().includes(q);
-    return mf&&ms;
-  });
-  document.getElementById('salesBody').innerHTML = filtered.slice(0,100).map(s=>`
+function renderRecentTbl(){
+  document.getElementById('recentTbl').innerHTML=bks.slice(0,6).map(b=>`
     <tr>
-      <td><code style="font-size:11px;background:#f5f5f5;padding:2px 6px;border-radius:4px">${s.ticketId||s.id}</code></td>
-      <td><strong>${s.buyerName||s.name||'—'}</strong></td>
-      <td style="font-size:11px">${s.buyerPhone||s.phone||'—'}</td>
-      <td style="font-size:11px;color:var(--muted)">${(s.eventName||s.event||'—').slice(0,22)}…</td>
-      <td><span class="pass-tag pt-${passTagClass(s.passName||s.pass)}">${s.passName||s.pass||'—'}</span></td>
-      <td>${s.qty||1}</td>
-      <td style="font-size:11px">${s.coupon&&s.coupon!=='—'?`🏷️ ${s.coupon}`:'—'}</td>
-      <td><strong>₹${s.amount||0}</strong></td>
-      <td><span class="sts sts-${s.status==='confirmed'?'ok':s.status==='pending'?'pend':'cancel'}">${s.status==='confirmed'?'✓ Confirmed':s.status==='pending'?'⏳ Pending':'✗ Cancelled'}</span></td>
-      <td style="font-size:11px;color:var(--muted)">${s.date||s.createdAt?.slice(0,10)||'—'}</td>
-      <td style="display:flex;gap:5px">
-        <button class="btn-sm bse" onclick="updateBookingStatus('${s.ticketId||s.id}','confirmed')">✓</button>
-        <button class="btn-sm bsd" onclick="updateBookingStatus('${s.ticketId||s.id}','cancelled')">✕</button>
-      </td>
-    </tr>`).join('')||'<tr><td colspan="11" style="text-align:center;padding:28px;color:var(--muted)">No records found</td></tr>';
-}
-
-function renderRecentSales() {
-  document.getElementById('recentBody').innerHTML = allSales.slice(0,6).map(s=>`
-    <tr>
-      <td><code style="font-size:11px;background:#f5f5f5;padding:2px 5px;border-radius:4px">${s.ticketId||s.id}</code></td>
-      <td><strong>${s.buyerName||s.name||'—'}</strong></td>
-      <td style="font-size:11px;color:var(--muted)">${(s.eventName||s.event||'—').slice(0,22)}…</td>
-      <td><span class="pass-tag pt-${passTagClass(s.passName||s.pass)}">${s.passName||s.pass||'—'}</span></td>
-      <td><strong>₹${s.amount||0}</strong></td>
-      <td><span class="sts sts-${s.status==='confirmed'?'ok':s.status==='pending'?'pend':'cancel'}">${s.status==='confirmed'?'✓':s.status==='pending'?'⏳':'✗'} ${s.status}</span></td>
-      <td style="font-size:11px;color:var(--muted)">${s.date||s.createdAt?.slice(0,10)||'—'}</td>
+      <td><code style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px">${b.tid}</code></td>
+      <td><strong>${b.nm}</strong></td>
+      <td style="font-size:11px;color:var(--mu)">${(b.ev||'').slice(0,20)}…</td>
+      <td><span class="ptag ${ptc(b.ps)}">${b.ps}</span></td>
+      <td><strong>₹${b.amt}</strong></td>
+      <td><span class="sts ${sc(b.status)}">${sl(b.status)}</span></td>
+      <td style="font-size:11px;color:var(--mu)">${b.date}</td>
     </tr>`).join('');
 }
 
-function passTagClass(n){ const l=(n||'').toLowerCase(); return l.includes('gold')?'g':l.includes('silver')?'s':l.includes('premium')?'p':'c'; }
-
-function setFlt(f,el){ salesFilter=f; document.querySelectorAll('.fc').forEach(c=>c.classList.remove('active')); el.classList.add('active'); renderSalesTable(); }
-
-async function updateBookingStatus(id, status) {
-  try { await fetch(`${API}/admin/booking/${id}/status`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})}); } catch{}
-  const s=allSales.find(x=>(x.ticketId||x.id)===id); if(s) s.status=status;
-  renderSalesTable(); renderRecentSales();
-  toast(status==='confirmed'?'✓ Booking confirmed!':'✗ Booking cancelled');
+// ═══════════════════════════════════════
+// SALES
+// ═══════════════════════════════════════
+function renderSales(){
+  const q=(document.getElementById('srchInput')?.value||'').toLowerCase();
+  const flt=bks.filter(b=>{
+    const mf=salesFlt==='all'||b.status===salesFlt;
+    const mq=!q||b.nm?.toLowerCase().includes(q)||b.tid?.toLowerCase().includes(q)||b.ev?.toLowerCase().includes(q);
+    return mf&&mq;
+  });
+  document.getElementById('salesTbl').innerHTML=flt.slice(0,100).map(b=>`
+    <tr>
+      <td><code style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px">${b.tid}</code></td>
+      <td><strong>${b.nm||'—'}</strong></td>
+      <td style="font-size:11px">${b.ph||'—'}</td>
+      <td style="font-size:11px;color:var(--mu)">${(b.ev||'').slice(0,18)}…</td>
+      <td><span class="ptag ${ptc(b.ps)}">${b.ps||'—'}</span></td>
+      <td>${b.qty||1}</td>
+      <td><strong>₹${b.amt||0}</strong></td>
+      <td><span class="sts ${sc(b.status)}">${sl(b.status)}</span></td>
+      <td style="font-size:11px;color:var(--mu)">${b.date||'—'}</td>
+      <td style="display:flex;gap:5px">
+        <button class="btn-sm btn-ok" onclick="updateStatus('${b.tid}','confirmed')">✓</button>
+        <button class="btn-sm btn-del" onclick="updateStatus('${b.tid}','cancelled')">✗</button>
+      </td>
+    </tr>`).join('')||'<tr><td colspan="10" style="text-align:center;padding:28px;color:var(--mu)">Koi booking nahi mili</td></tr>';
 }
-
-function exportCSV() {
-  const rows = [['Ticket','Name','Phone','Email','Event','Pass','Qty','Coupon','Amount','Status','Date'],
-    ...allSales.map(s=>[s.ticketId||s.id,s.buyerName||s.name,s.buyerPhone||s.phone,s.buyerEmail||s.email,s.eventName||s.event,s.passName||s.pass,s.qty,s.coupon||'',s.amount,s.status,s.date||s.createdAt?.slice(0,10)])];
-  const csv = rows.map(r=>r.join(',')).join('\n');
-  const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv); a.download='garbautsav_sales.csv'; a.click();
+function setFlt(f,el){salesFlt=f;document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderSales()}
+function updateStatus(tid,st){
+  const b=bks.find(x=>x.tid===tid);if(b)b.status=st;
+  lsw(K.B,bks);renderSales();renderRecentTbl();
+  toast(st==='confirmed'?'✓ Booking confirmed!':'✗ Booking cancelled!');
+}
+function exportCSV(){
+  const rows=[['Ticket','Name','Phone','Email','Event','Pass','Qty','Amount','Status','Date'],
+    ...bks.map(b=>[b.tid,b.nm,b.ph,b.em,b.ev,b.ps,b.qty,b.amt,b.status,b.date])];
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='garbautsav_sales.csv';a.click();
   toast('📥 CSV exported!');
 }
 
-// ── Events Admin ──────────────────────────────────
-function renderEventsAdmin() {
-  document.getElementById('evGrid').innerHTML = allAdminEvents.map(e=>{
-    const sold=e.soldPasses||0, total=e.totalPasses||1, pct=Math.round((sold/total)*100);
-    return `
-    <div class="ev-card">
-      <div class="ev-card-hdr">
-        <div><div class="ev-name">${e.emoji||'🎪'} ${e.name}</div><div class="ev-loc">📍 ${e.city||''}</div></div>
-        <span class="ev-sts es-${sold>=total?'end':'live'}">${sold>=total?'🔴 Sold Out':'🟢 Active'}</span>
-      </div>
-      <div class="ev-stats">
-        <div class="ev-stat"><div class="v">${total}</div><div class="l">Total</div></div>
-        <div class="ev-stat"><div class="v">${sold}</div><div class="l">Sold</div></div>
-        <div class="ev-stat"><div class="v">${total-sold}</div><div class="l">Left</div></div>
-      </div>
-      <div><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:4px"><span>Occupancy</span><span>${pct}%</span></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div>
-      <div class="ev-actions">
-        <button class="btn-sm bse">✏️ Edit</button>
-        <button class="btn-sm bsv">📊 Sales</button>
-        <button class="btn-sm bsd" onclick="deleteEvent('${e.id}')">🗑 Delete</button>
-      </div>
-    </div>`;
+// ═══════════════════════════════════════
+// P&L
+// ═══════════════════════════════════════
+function renderPnL(){
+  const rev=bks.filter(b=>b.status==='confirmed').reduce((s,b)=>s+b.amt,0)||388383;
+  const platFee=Math.round(rev*.05);
+  const fixedExp=80000+50000+35000+20000+28000+15000+8000;
+  const totExp=fixedExp+platFee;
+  const profit=rev-totExp;
+  const margin=Math.round((profit/rev)*100);
+  document.getElementById('incRows').innerHTML=`
+    <div class="pr ir"><span>Silver Pass Sales</span><span>₹${fmt(Math.round(rev*.25))}</span></div>
+    <div class="pr ir"><span>Gold Pass Sales</span><span>₹${fmt(Math.round(rev*.28))}</span></div>
+    <div class="pr ir"><span>Premium Pass Sales</span><span>₹${fmt(Math.round(rev*.22))}</span></div>
+    <div class="pr ir"><span>Couple Pass Sales</span><span>₹${fmt(Math.round(rev*.16))}</span></div>
+    <div class="pr ir"><span>Convenience Fees</span><span>₹${fmt(Math.round(rev*.02))}</span></div>
+    <div class="pr ir"><span>Sponsorship</span><span>₹${fmt(Math.round(rev*.07))}</span></div>
+    <div class="pr"><span>Total Revenue</span><span style="color:var(--gr);font-size:15px">₹${fmt(rev)}</span></div>`;
+  document.getElementById('platFee').textContent='₹'+fmt(platFee);
+  document.getElementById('totExp').textContent='₹'+fmt(totExp);
+  document.getElementById('netPro').textContent='₹'+fmt(profit);
+  document.getElementById('netPct').textContent='▲ '+margin+'% Profit Margin';
+  document.getElementById('profMeta').innerHTML=`
+    <div class="pm-item"><div class="v">${bks.filter(b=>b.status==='confirmed').reduce((s,b)=>s+b.qty,0).toLocaleString()}</div><div class="l">Passes Sold</div></div>
+    <div class="pm-item"><div class="v">₹${fmt(rev)}</div><div class="l">Gross Revenue</div></div>
+    <div class="pm-item"><div class="v">₹${fmt(totExp)}</div><div class="l">Total Expenses</div></div>
+    <div class="pm-item"><div class="v">${margin}%</div><div class="l">Margin</div></div>`;
+  document.getElementById('pnlTbl').innerHTML=evs.slice(0,6).map(ev=>{
+    const eRev=Math.round((ev.sold||0)*349*.9);const eExp=Math.round(eRev*.62);const eProfit=eRev-eExp;const eMg=eRev?Math.round((eProfit/eRev)*100):0;
+    return `<tr><td><strong>${ev.name}</strong></td><td>${ev.city}</td><td>${ev.sold||0}</td><td>₹${fmt(eRev)}</td><td>₹${fmt(eExp)}</td><td style="color:var(--gr);font-weight:700">₹${fmt(eProfit)}</td><td style="color:var(--gr)">${eMg}%</td></tr>`;
   }).join('');
 }
 
-async function saveNewEvent() {
-  const name=document.getElementById('fName').value.trim();
-  const city=document.getElementById('fCity').value.trim();
-  const venue=document.getElementById('fVenue').value.trim();
-  const passes=parseInt(document.getElementById('fPasses').value)||300;
-  if(!name||!city){ toast('⚠️ Event name & city required!'); return; }
-  const newEv = {
-    id:'ev_'+Date.now(), name, organizer:document.getElementById('fOrg').value||currentUser?.name,
-    city:city.toLowerCase(), location:`${venue}, ${city}`,
-    startDate:document.getElementById('fStart').value||'Oct 2025',
-    endDate:document.getElementById('fEnd').value||'Oct 2025',
-    time:document.getElementById('fTime').value||'8:00 PM – 1:00 AM',
-    totalPasses:passes, soldPasses:0, theme:document.getElementById('fTheme').value,
-    emoji:'🎪', active:true,
-    passes:[{id:'silver',name:'Silver Entry',icon:'🎫',price:199},{id:'gold',name:'Gold Pass',icon:'🏅',price:349},{id:'premium',name:'Premium VIP',icon:'💎',price:599},{id:'couple',name:'Couple Pass',icon:'💑',price:649}],
-  };
-  try { await fetch(`${API}/events`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer demo'},body:JSON.stringify(newEv)}); } catch{}
-  allAdminEvents.unshift(newEv);
-  renderEventsAdmin();
-  document.getElementById('addEventModal').classList.remove('active');
-  toast('🎪 Event published successfully!');
+// ═══════════════════════════════════════
+// EVENTS CRUD
+// ═══════════════════════════════════════
+function renderEvents(){
+  evs=ls(K.E,DEF_EV);
+  document.getElementById('evGrid').innerHTML=evs.length===0
+    ?'<div style="text-align:center;padding:40px;color:var(--mu);grid-column:1/-1">Koi event nahi. "+ Add Event" se add karo!</div>'
+    :evs.map((ev,i)=>{
+      const p=Math.min(100,Math.round(((ev.sold||0)/(ev.tot||500))*100));
+      return `<div class="ev-card">
+        <div class="ev-ch">
+          <div class="ev-em">${ev.em||'🎪'}</div>
+          <div style="flex:1;min-width:0">
+            <div class="ev-name">${ev.name}</div>
+            <div class="ev-meta">${ev.loc} · ${ev.d1} – ${ev.d2}</div>
+            <div class="ev-meta">⏰ ${ev.time} · ${ev.org||'—'}</div>
+          </div>
+          <span class="sts ${ev.active!==false?'s-ok':'s-can'}">${ev.active!==false?'Active':'Inactive'}</span>
+        </div>
+        <div class="ev-bar-w">
+          <div class="ev-bar"><div class="ev-bar-f" style="width:${p}%"></div></div>
+          <span style="font-size:11px;color:var(--mu);white-space:nowrap">${ev.sold||0}/${ev.tot||500} (${p}%)</span>
+        </div>
+        <div class="ev-btns">
+          <button class="btn-sm btn-ok" onclick="toggleActive(${i})">${ev.active!==false?'⏸ Deactivate':'▶ Activate'}</button>
+          <button class="btn-sm btn-ed" onclick="editEvent(${i})">✏️ Edit</button>
+          <button class="btn-sm btn-del" onclick="deleteEvent(${i})">🗑 Delete</button>
+        </div>
+      </div>`;
+    }).join('');
 }
-
-async function deleteEvent(id) {
-  if(!confirm('Delete this event?')) return;
-  try { await fetch(`${API}/events/${id}`,{method:'DELETE',headers:{'Authorization':'Bearer demo'}}); } catch{}
-  allAdminEvents = allAdminEvents.filter(e=>e.id!==id);
-  renderEventsAdmin();
-  toast('🗑 Event deleted');
+function saveEvent(){
+  const name=document.getElementById('feName').value.trim();
+  const org=document.getElementById('feOrg').value.trim();
+  const city=document.getElementById('feCity').value.trim();
+  const venue=document.getElementById('feVenue').value.trim();
+  const start=document.getElementById('feStart').value;
+  const end=document.getElementById('feEnd').value;
+  const time=document.getElementById('feTime').value.trim();
+  const tot=parseInt(document.getElementById('fePasses').value)||500;
+  const em=document.getElementById('feEmoji').value.trim()||'🎪';
+  const th=document.getElementById('feTheme').value||'ts';
+  const feat=document.getElementById('feFeat').checked;
+  if(!name){toast('⚠️ Event name bharo!');return}
+  evs.push({id:'ev_'+Date.now(),name,org:org||city+' Events',loc:venue?(venue+', '+city):city,city,d1:start?new Date(start).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'2 Oct',d2:end?new Date(end).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'11 Oct 2025',time:time||'8PM–1AM',tot,sold:0,em,th,feat,active:true});
+  lsw(K.E,evs);closeMo('moEvent');renderEvents();
+  ['feName','feOrg','feCity','feVenue','feTime','feEmoji'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('fePasses').value='';
+  toast('✅ Event published! Website pe bhi dikhega.');
 }
-
-// ── Passes Table ──────────────────────────────────
-function renderPassesTable() {
-  const passData=[{id:'silver',name:'Silver Entry',icon:'🎫',price:199,sold:487,cls:'s'},{id:'gold',name:'Gold Pass',icon:'🏅',price:349,sold:312,cls:'g'},{id:'premium',name:'Premium VIP',icon:'💎',price:599,sold:145,cls:'p'},{id:'couple',name:'Couple Pass',icon:'💑',price:649,sold:98,cls:'c'}];
-  document.getElementById('passesBody').innerHTML = passData.map(p=>`
-    <tr><td><span class="pass-tag pt-${p.cls}">${p.icon} ${p.name}</span></td><td><strong>₹${p.price}</strong></td><td style="font-size:11px;color:var(--muted)">Entry, all nights, seating, QR pass</td>
-    <td>${p.sold}</td><td style="color:var(--green)">₹${fmtNum(p.price*p.sold)}</td>
-    <td><span class="sts sts-ok">Active</span></td>
-    <td><button class="btn-sm bse">Edit</button></td></tr>`).join('');
+function editEvent(i){
+  const ev=evs[i];if(!ev)return;
+  document.getElementById('feName').value=ev.name||'';document.getElementById('feOrg').value=ev.org||'';
+  document.getElementById('feCity').value=ev.city||'';document.getElementById('feTime').value=ev.time||'';
+  document.getElementById('fePasses').value=ev.tot||500;document.getElementById('feEmoji').value=ev.em||'🎪';
+  openMo('moEvent');toast('✏️ Data load hua — edit karke save karo');
 }
+function toggleActive(i){evs[i].active=!evs[i].active;lsw(K.E,evs);renderEvents();toast('✅ Status update ho gaya!')}
+function deleteEvent(i){if(!confirm('Yeh event delete karna hai?'))return;evs.splice(i,1);lsw(K.E,evs);renderEvents();toast('🗑 Event deleted!')}
 
-// ── Access Table ──────────────────────────────────
-function renderAccessTable() {
-  const users=[
-    {name:'Mehul Raval',email:'mehul@garbautsav.com',role:'Super Admin',city:'All',cs:true,cr:true,ce:true,active:true},
-    {name:'Deepa Shah',email:'deepa@garbautsav.com',role:'Event Manager',city:'Ahmedabad, Surat',cs:true,cr:false,ce:true,active:true},
-    {name:'Raj Patel',email:'raj@garbautsav.com',role:'Gate Staff',city:'Ahmedabad',cs:false,cr:false,ce:false,active:true},
-    {name:'Sonal Mehta',email:'sonal@garbautsav.com',role:'Finance',city:'All',cs:false,cr:true,ce:true,active:false},
-  ];
-  document.getElementById('accessBody').innerHTML = users.map(u=>`
-    <tr><td><strong>${u.name}</strong></td><td style="font-size:11px;color:var(--muted)">${u.email}</td>
-    <td><span class="sts" style="background:rgba(255,107,0,0.1);color:var(--p)">${u.role}</span></td>
-    <td style="font-size:11px">${u.city}</td>
-    <td><div class="toggle ${u.cs?'on':'off'}" onclick="this.classList.toggle('on');this.classList.toggle('off')"></div></td>
-    <td><div class="toggle ${u.cr?'on':'off'}" onclick="this.classList.toggle('on');this.classList.toggle('off')"></div></td>
-    <td><div class="toggle ${u.ce?'on':'off'}" onclick="this.classList.toggle('on');this.classList.toggle('off')"></div></td>
-    <td><span class="sts ${u.active?'sts-ok':'sts-cancel'}">${u.active?'Active':'Inactive'}</span></td></tr>`).join('');
+// ═══════════════════════════════════════
+// PASSES CRUD
+// ═══════════════════════════════════════
+function renderPasses(){
+  pss=ls(K.P,DEF_PS);
+  document.getElementById('passTbl').innerHTML=pss.map((p,i)=>{
+    const sold=bks.filter(b=>(b.ps||'').toLowerCase().includes(p.name.toLowerCase())).length;
+    return `<tr>
+      <td><div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">${p.icon||'🎟'}</span><strong>${p.name}</strong></div></td>
+      <td><strong style="color:var(--p)">₹${p.price}</strong></td>
+      <td style="font-size:11px;color:var(--mu);max-width:160px">${(p.feats||[]).slice(0,3).join(' · ')}...</td>
+      <td>${p.pop?'<span class="sts s-ok">🔥 Yes</span>':'<span class="sts" style="background:#F3F4F6;color:#6B7280">No</span>'}</td>
+      <td>${sold}</td>
+      <td style="color:var(--gr);font-weight:600">₹${fmt(sold*p.price)}</td>
+      <td style="display:flex;gap:5px">
+        <button class="btn-sm btn-ed" onclick="editPass(${i})">✏️</button>
+        <button class="btn-sm btn-del" onclick="deletePass(${i})">🗑</button>
+      </td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--mu)">Koi pass nahi!</td></tr>';
 }
+function savePass(){
+  const name=document.getElementById('fpName').value.trim();
+  const price=parseInt(document.getElementById('fpPrice').value);
+  const icon=document.getElementById('fpIcon').value.trim()||'🎟';
+  const color=document.getElementById('fpColor').value||'silver';
+  const feats=(document.getElementById('fpFeats').value||'').split('\n').map(s=>s.trim()).filter(Boolean);
+  const pop=document.getElementById('fpPop').checked;
+  if(!name||!price){toast('⚠️ Name aur price bharo!');return}
+  pss.push({id:'ps_'+Date.now(),name,icon,price,color,feats:feats.length?feats:['Single entry','All 9 nights'],pop});
+  lsw(K.P,pss);closeMo('moPass');renderPasses();
+  ['fpName','fpIcon','fpFeats'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  document.getElementById('fpPrice').value='';document.getElementById('fpPop').checked=false;
+  toast('✅ Pass add ho gaya! Website pe bhi dikhega.');
+}
+function editPass(i){
+  const p=pss[i];if(!p)return;
+  document.getElementById('fpName').value=p.name||'';document.getElementById('fpPrice').value=p.price||'';
+  document.getElementById('fpIcon').value=p.icon||'🎟';document.getElementById('fpColor').value=p.color||'silver';
+  document.getElementById('fpFeats').value=(p.feats||[]).join('\n');document.getElementById('fpPop').checked=!!p.pop;
+  openMo('moPass');toast('✏️ Data load hua — edit karke save karo');
+}
+function deletePass(i){if(!confirm('Pass delete karna hai?'))return;pss.splice(i,1);lsw(K.P,pss);renderPasses();toast('🗑 Pass deleted!')}
+function resetPasses(){if(!confirm('Sab passes reset ho jayenge!'))return;lsw(K.P,DEF_PS);pss=JSON.parse(JSON.stringify(DEF_PS));renderPasses();toast('✅ Passes reset ho gaye!')}
 
-// ── Analytics ─────────────────────────────────────
-function renderAnalyticsKPIs(s) {
-  document.getElementById('analyticsKpi').innerHTML = `
-    <div class="kpi rev"><div class="kpi-ico">💰</div><div class="kpi-lbl">Total Revenue</div><div class="kpi-val">₹${fmtNum(s.revenue||388383)}</div><div class="kpi-chg up">▲ 28% vs 2024</div></div>
-    <div class="kpi tkt"><div class="kpi-ico">🎟</div><div class="kpi-lbl">Total Tickets</div><div class="kpi-val">${s.tickets||1042}</div><div class="kpi-chg up">▲ 15% growth</div></div>
-    <div class="kpi prf"><div class="kpi-ico">🔄</div><div class="kpi-lbl">Conversion Rate</div><div class="kpi-val">68.4%</div><div class="kpi-chg up">▲ 5% better</div></div>
-    <div class="kpi evt"><div class="kpi-ico">💎</div><div class="kpi-lbl">Avg Ticket Value</div><div class="kpi-val">₹373</div><div class="kpi-chg up">▲ 11% higher</div></div>`;
-  const dayData=[{d:'Day 1',v:142},{d:'Day 2',v:198},{d:'Day 3',v:167},{d:'Day 4',v:221},{d:'Day 5',v:189},{d:'Day 6',v:243},{d:'Day 7',v:209},{d:'Day 8',v:276},{d:'Day 9',v:312}];
-  const mx=Math.max(...dayData.map(d=>d.v));
-  document.getElementById('dayChart').innerHTML = dayData.map(d=>`
-    <div class="bar-grp">
-      <div class="bars" style="height:140px"><div class="bar rv" data-v="${d.v} tickets" style="height:${(d.v/mx)*135}px;flex:1"></div></div>
-      <div class="bar-lbl">${d.d}</div>
+// ═══════════════════════════════════════
+// COSTUMES CRUD
+// ═══════════════════════════════════════
+function renderCostumes(){
+  css_=ls(K.C,DEF_CS);
+  document.getElementById('cosGrid').innerHTML=css_.length===0
+    ?'<div style="text-align:center;padding:40px;color:var(--mu);grid-column:1/-1">Koi costume nahi!</div>'
+    :css_.map((c,i)=>`
+    <div class="ev-card">
+      <div class="ev-ch">
+        <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,rgba(227,30,36,.12),rgba(245,166,35,.08));display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">${c.em||'👗'}</div>
+        <div style="flex:1;min-width:0">
+          <div class="ev-name">${c.name}</div>
+          <div class="ev-meta">${c.desc||''}</div>
+          <div class="ev-meta" style="margin-top:3px"><strong style="color:var(--p)">₹${c.price}/day</strong> + ₹${c.dep} deposit · ${c.avail||0} available</div>
+        </div>
+        <div style="text-align:right"><div style="color:var(--g);font-size:13px;font-weight:700">★${c.rating||5.0}</div><div style="font-size:11px;color:var(--mu)">${c.rvs||0} reviews</div></div>
+      </div>
+      <div class="ev-btns" style="margin-top:10px">
+        <button class="btn-sm btn-ok" onclick="updateStock(${i})">📦 Stock Update</button>
+        <button class="btn-sm btn-ed" onclick="editCostume(${i})">✏️ Edit</button>
+        <button class="btn-sm btn-del" onclick="deleteCostume(${i})">🗑 Delete</button>
+      </div>
+    </div>`).join('');
+}
+function saveCostume(){
+  const name=document.getElementById('fcName').value.trim();
+  const price=parseInt(document.getElementById('fcPrice').value);
+  const dep=parseInt(document.getElementById('fcDep').value)||300;
+  const em=document.getElementById('fcEmoji').value.trim()||'👗';
+  const avail=parseInt(document.getElementById('fcAvail').value)||5;
+  const sizes=(document.getElementById('fcSizes').value||'S,M,L').split(',').map(s=>s.trim()).filter(Boolean);
+  const tags=(document.getElementById('fcTags').value||'Traditional').split(',').map(s=>s.trim()).filter(Boolean);
+  const cl=document.getElementById('fcCl').value||'c1';
+  const desc=document.getElementById('fcDesc').value.trim();
+  if(!name||!price){toast('⚠️ Name aur price bharo!');return}
+  css_.push({id:'c_'+Date.now(),name,em,cl,desc:desc||name,tags,price,dep,sizes,avail,rating:5.0,rvs:0});
+  lsw(K.C,css_);closeMo('moCostume');renderCostumes();
+  ['fcName','fcDesc','fcEmoji','fcSizes','fcTags'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['fcPrice','fcDep','fcAvail'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  toast('✅ Costume add ho gaya! Website pe bhi dikhega.');
+}
+function editCostume(i){
+  const c=css_[i];if(!c)return;
+  document.getElementById('fcName').value=c.name||'';document.getElementById('fcDesc').value=c.desc||'';
+  document.getElementById('fcPrice').value=c.price||'';document.getElementById('fcDep').value=c.dep||'';
+  document.getElementById('fcEmoji').value=c.em||'👗';document.getElementById('fcAvail').value=c.avail||0;
+  document.getElementById('fcSizes').value=(c.sizes||[]).join(', ');document.getElementById('fcTags').value=(c.tags||[]).join(', ');
+  document.getElementById('fcCl').value=c.cl||'c1';
+  openMo('moCostume');toast('✏️ Data load hua — edit karke save karo');
+}
+function updateStock(i){
+  const n=prompt(`"${css_[i].name}" ki available qty:`,css_[i].avail);
+  if(n===null)return;const v=parseInt(n);if(isNaN(v)||v<0){toast('⚠️ Valid number daalo!');return}
+  css_[i].avail=v;lsw(K.C,css_);renderCostumes();toast('✅ Stock updated: '+v+' available');
+}
+function deleteCostume(i){if(!confirm('Costume delete karna hai?'))return;css_.splice(i,1);lsw(K.C,css_);renderCostumes();toast('🗑 Costume deleted!')}
+function resetCostumes(){if(!confirm('Sab costumes reset ho jayenge!'))return;lsw(K.C,DEF_CS);css_=JSON.parse(JSON.stringify(DEF_CS));renderCostumes();toast('✅ Costumes reset ho gaye!')}
+
+// ═══════════════════════════════════════
+// ANALYTICS
+// ═══════════════════════════════════════
+function renderAnalytics(){
+  const rev=bks.filter(b=>b.status==='confirmed').reduce((s,b)=>s+b.amt,0)||388383;
+  const tix=bks.filter(b=>b.status==='confirmed').reduce((s,b)=>s+b.qty,0)||1042;
+  document.getElementById('analyticsKpi').innerHTML=`
+    <div class="kpi rev"><div class="kico">💰</div><div class="klbl">Total Revenue</div><div class="kval">₹${fmt(rev)}</div><div class="kchg up">▲ 28% vs 2024</div></div>
+    <div class="kpi tkt"><div class="kico">🎟</div><div class="klbl">Total Tickets</div><div class="kval">${tix.toLocaleString()}</div><div class="kchg up">▲ 15% growth</div></div>
+    <div class="kpi prf"><div class="kico">🔄</div><div class="klbl">Conversion Rate</div><div class="kval">68.4%</div><div class="kchg up">▲ 5% better</div></div>
+    <div class="kpi evt"><div class="kico">💎</div><div class="klbl">Avg Ticket Value</div><div class="kval">₹${Math.round(rev/Math.max(tix,1))}</div><div class="kchg up">▲ 11% higher</div></div>`;
+  const days=[{d:'Day 1',v:142},{d:'Day 2',v:198},{d:'Day 3',v:167},{d:'Day 4',v:221},{d:'Day 5',v:189},{d:'Day 6',v:243},{d:'Day 7',v:209},{d:'Day 8',v:276},{d:'Day 9',v:312}];
+  const mx=Math.max(...days.map(d=>d.v));
+  document.getElementById('dayChart').innerHTML=days.map(d=>`
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="font-size:9px;color:var(--mu)">${d.v}</div>
+      <div style="flex:1;width:100%;display:flex;align-items:flex-end">
+        <div style="width:100%;height:${(d.v/mx)*120}px;background:linear-gradient(180deg,var(--p),var(--p2));border-radius:4px 4px 0 0;cursor:pointer" title="${d.v} tickets"></div>
+      </div>
+      <div style="font-size:9px;color:var(--mu)">${d.d}</div>
+    </div>`).join('');
+  const cities=[{c:'Ahmedabad',v:38},{c:'Surat',v:24},{c:'Vadodara',v:18},{c:'Rajkot',v:12},{c:'Others',v:8}];
+  document.getElementById('cityChart').innerHTML=cities.map(c=>`
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>${c.c}</span><strong>${c.v}%</strong></div>
+      <div style="height:6px;background:#F3F4F6;border-radius:3px;overflow:hidden"><div style="height:100%;width:${c.v}%;background:linear-gradient(90deg,var(--p),var(--g));border-radius:3px"></div></div>
+    </div>`).join('');
+  const ptypes=[{l:'Gold Pass',v:38,c:'#F5A623'},{l:'Silver Entry',v:24,c:'#6B7280'},{l:'Premium VIP',v:22,c:'#8B5CF6'},{l:'Couple Pass',v:16,c:'#E31E24'}];
+  document.getElementById('passChart').innerHTML=ptypes.map(p=>`
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${p.c};display:inline-block"></span>${p.l}</span><strong>${p.v}%</strong></div>
+      <div style="height:6px;background:#F3F4F6;border-radius:3px;overflow:hidden"><div style="height:100%;width:${p.v}%;background:${p.c};border-radius:3px"></div></div>
     </div>`).join('');
 }
 
-// ── Check-In ──────────────────────────────────────
-function renderCheckinTable() {
-  const ci = allSales.filter(s=>s.checkedIn);
-  const pend = allSales.filter(s=>!s.checkedIn&&s.status==='confirmed');
-  document.getElementById('ciCount').textContent = ci.length;
-  document.getElementById('pendCount').textContent = pend.length;
-  const rows = allSales.slice(0,20).map(s=>`
+// ═══════════════════════════════════════
+// CHECK-IN
+// ═══════════════════════════════════════
+function renderCheckIn(){
+  const ci=bks.filter(b=>b.checkedIn);
+  const pend=bks.filter(b=>!b.checkedIn&&b.status==='confirmed');
+  document.getElementById('ciCnt').textContent=ci.length;
+  document.getElementById('pendCnt').textContent=pend.length;
+  const q=(document.getElementById('ciSrch')?.value||'').toLowerCase();
+  const flt=q?bks.filter(b=>b.tid?.toLowerCase().includes(q)||b.nm?.toLowerCase().includes(q)):bks.slice(0,15);
+  document.getElementById('ciTbl').innerHTML=flt.map(b=>`
     <tr>
-      <td><code style="font-size:11px;background:#f5f5f5;padding:2px 5px;border-radius:4px">${s.ticketId||s.id}</code></td>
-      <td>${s.buyerName||s.name||'—'}</td>
-      <td><span class="pass-tag pt-${passTagClass(s.passName||s.pass)}">${s.passName||s.pass||'—'}</span></td>
-      <td style="font-size:11px">${s.checkinTime||'—'}</td>
+      <td><code style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px">${b.tid}</code></td>
+      <td>${b.nm||'—'}</td>
+      <td><span class="ptag ${ptc(b.ps)}">${b.ps||'—'}</span></td>
+      <td style="font-size:11px">${b.checkinTime||'—'}</td>
       <td>Gate A</td>
-      <td><span class="sts ${s.checkedIn?'sts-ok':'sts-pend'}">${s.checkedIn?'✓ Entered':'⏳ Pending'}</span></td>
-      <td><button class="btn-sm bse" onclick="checkInTicket('${s.ticketId||s.id}')">✓ Check In</button></td>
+      <td><span class="sts ${b.checkedIn?'s-ok':'s-pend'}">${b.checkedIn?'✓ Entered':'⏳ Pending'}</span></td>
+      <td><button class="btn-sm ${b.checkedIn?'btn-del':'btn-ok'}" onclick="checkIn('${b.tid}')">${b.checkedIn?'↩ Undo':'✓ Check In'}</button></td>
     </tr>`).join('');
-  document.getElementById('ciBody').innerHTML = rows;
+}
+function checkIn(tid){
+  const b=bks.find(x=>x.tid===tid);if(!b)return;
+  b.checkedIn=!b.checkedIn;
+  b.checkinTime=b.checkedIn?new Date().toLocaleTimeString('en-IN'):'—';
+  lsw(K.B,bks);renderCheckIn();
+  toast(b.checkedIn?'✅ '+b.nm+' checked in!':'↩ Check-in undone');
+}
+function filterCI(){renderCheckIn()}
+function openQR(){
+  document.getElementById('qrInput').value='';
+  document.getElementById('qrResult').textContent='Ticket ID daalo aur Check karo';
+  document.getElementById('qrResult').style.color='var(--mu)';
+  openMo('moQR');
+}
+function checkTicket(){
+  const id=document.getElementById('qrInput').value.trim().toUpperCase();
+  const r=document.getElementById('qrResult');
+  if(!id){r.textContent='⚠️ Ticket ID daalo!';r.style.color='var(--rd)';return}
+  const b=bks.find(x=>x.tid===id);
+  if(!b){r.innerHTML=`<div style="color:var(--rd);font-weight:700">❌ Ticket not found!</div><div style="font-size:11px;color:var(--mu);margin-top:4px">ID: ${id}</div>`;return}
+  if(b.checkedIn){r.innerHTML=`<div style="color:var(--rd);font-weight:700">⚠️ Already Checked In!</div><div style="font-size:11px;margin-top:6px">${b.nm} · ${b.ps}</div><div style="font-size:11px;color:var(--mu)">Entry time: ${b.checkinTime}</div>`;return}
+  b.checkedIn=true;b.checkinTime=new Date().toLocaleTimeString('en-IN');
+  lsw(K.B,bks);
+  r.innerHTML=`<div style="color:var(--gr);font-weight:700;font-size:16px">✅ Valid! Entry Allow Karo</div><div style="margin-top:8px;font-size:13px"><strong>${b.nm}</strong></div><div style="font-size:12px;color:var(--mu)">${b.ps} · ${b.ev}</div><div style="font-size:12px;color:var(--mu)">Checked in: ${b.checkinTime}</div>`;
+  toast('✅ '+b.nm+' checked in!');
+  renderCheckIn();
 }
 
-async function checkInTicket(id) {
-  try {
-    const r = await fetch(`${API}/booking/checkin/${id}`,{method:'POST',headers:{'Content-Type':'application/json'}});
-    const d = await r.json();
-    if(d.valid){ toast('✅ Check-in successful!'); } else { toast('❌ '+d.error); }
-  } catch { toast('✅ Check-in recorded (demo)'); }
-  const s=allSales.find(x=>(x.ticketId||x.id)===id);
-  if(s){ s.checkedIn=true; s.checkinTime=new Date().toLocaleTimeString('en-IN'); }
-  renderCheckinTable();
-}
-
-function filterCheckin(){ const q=document.getElementById('ciSearch')?.value.toLowerCase()||''; /* filter impl */ }
-
-function openQRScanner() {
-  toast('📷 QR Scanner — Use a phone camera with the QR scan URL feature, or integrate with a barcode scanner library');
-}
-
-// ── Page Navigation ────────────────────────────────
-const PAGE_INFO = {
-  dashboard:  ['Dashboard',       'Overview of your events & revenue'],
-  sales:      ['Sales & Transactions', 'All ticket bookings'],
-  pnl:        ['Profit & Loss',   'Income, expenses and net profit'],
-  events:     ['Event Management','Create and manage events'],
-  passes:     ['Pass Types',      'Configure pass pricing'],
-  access:     ['User Access',     'Manage organizer permissions'],
-  analytics:  ['Analytics',       'Detailed performance metrics'],
-  checkin:    ['Check-In Gate',   'Real-time gate entry management'],
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+const PAGES={
+  dashboard:['Dashboard','Overview & summary'],
+  sales:['Sales & Transactions','All bookings'],
+  pnl:['Profit & Loss','Income & expenses'],
+  events:['Event Management','Add & manage events'],
+  passes:['Pass Types','Configure pass pricing'],
+  costumes:['Costume Rental','Manage costumes'],
+  analytics:['Analytics','Detailed metrics'],
+  checkin:['Check-In Gate','Real-time entry'],
 };
-function showPage(p, el) {
-  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-  const pg=document.getElementById('page-'+p);
-  if(pg) pg.classList.add('active');
-  if(el) el.classList.add('active');
-  const [title,sub]=PAGE_INFO[p]||[p,''];
-  document.getElementById('pageTitle').innerHTML=`${title}<span>${sub}</span>`;
+function goPage(p,el){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));
+  const pg=document.getElementById('page-'+p);if(pg)pg.classList.add('on');
+  if(el)el.classList.add('on');
+  const [t,s]=PAGES[p]||[p,''];
+  document.getElementById('pgTitle').innerHTML=t+'<span>'+s+'</span>';
+  if(p==='sales')renderSales();
+  if(p==='pnl')renderPnL();
+  if(p==='events')renderEvents();
+  if(p==='passes')renderPasses();
+  if(p==='costumes')renderCostumes();
+  if(p==='analytics')renderAnalytics();
+  if(p==='checkin')renderCheckIn();
 }
 
-// ── Demo Data ─────────────────────────────────────
-function getDemoSales() {
-  return [
-    {ticketId:'GU20251001',buyerName:'Priya Sharma',buyerPhone:'9876543210',buyerEmail:'priya@gmail.com',eventName:'Navratri Mahotsav 2025',passName:'Gold Pass',qty:1,amount:356,coupon:'',date:'01/10/2025',status:'confirmed'},
-    {ticketId:'GU20251002',buyerName:'Rahul Patel',buyerPhone:'9898989898',buyerEmail:'rahul@gmail.com',eventName:'Navratri Mahotsav 2025',passName:'Couple Pass',qty:1,amount:662,coupon:'COUPLE99',date:'01/10/2025',status:'confirmed'},
-    {ticketId:'GU20251003',buyerName:'Sneha Modi',buyerPhone:'9712345678',buyerEmail:'sneha@gmail.com',eventName:'Royal Garba Night',passName:'Premium VIP',qty:1,amount:611,coupon:'',date:'02/10/2025',status:'confirmed'},
-    {ticketId:'GU20251004',buyerName:'Amit Shah',buyerPhone:'9924567890',buyerEmail:'amit@gmail.com',eventName:'Heritage Garba Utsav',passName:'Silver Entry',qty:2,amount:406,coupon:'GARBA10',date:'02/10/2025',status:'pending'},
-    {ticketId:'GU20251005',buyerName:'Kavya Desai',buyerPhone:'9845678901',buyerEmail:'kavya@gmail.com',eventName:'Royal Garba Night',passName:'Gold Pass',qty:1,amount:356,coupon:'NAVRATRI',date:'03/10/2025',status:'confirmed'},
-    {ticketId:'GU20251006',buyerName:'Ravi Kumar',buyerPhone:'9723456789',buyerEmail:'ravi@gmail.com',eventName:'Grand Navratri Celebration',passName:'Silver Entry',qty:3,amount:609,coupon:'',date:'03/10/2025',status:'cancelled'},
-  ];
-}
-function getDemoAdminEvents() {
-  return [
-    {id:'ev1',name:'Navratri Mahotsav 2025',city:'Ahmedabad',totalPasses:450,soldPasses:380,emoji:'💃',active:true},
-    {id:'ev2',name:'Royal Garba Night',city:'Surat',totalPasses:300,soldPasses:210,emoji:'🪔',active:true},
-    {id:'ev3',name:'Heritage Garba Utsav',city:'Vadodara',totalPasses:600,soldPasses:210,emoji:'🎶',active:true},
-    {id:'ev4',name:'Grand Navratri Celebration',city:'Rajkot',totalPasses:500,soldPasses:90,emoji:'🌟',active:true},
-  ];
-}
-
-function openAddPassModal() { toast('💡 Pass types are configured per-event. Edit an event to customize pass prices.'); }
-
-// ── Helpers ────────────────────────────────────────
-function fmtNum(n){ return
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+function openMo(id){const m=document.getElementById(id);m.classList.add('open');m.onclick=e=>{if(e.target===m)closeMo(id)}}
+function closeMo(id){document.getElementById(id).classList.remove('open')}
+function fmt(n){return Number(n||0).toLocaleString('en-IN')}
+function ptc(ps){const l=(ps||'').toLowerCase();return l.includes('gold')?'pt-g':l.includes('silver')?'pt-s':l.includes('premium')?'pt-p':'pt-c'}
+function sc(s){return s==='confirmed'?'s-ok':s==='pending'?'s-pend':'s-can'}
+function sl(s){return s==='confirmed'?'✓ Confirmed':s==='pending'?'⏳ Pend
