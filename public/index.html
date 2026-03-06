@@ -925,15 +925,7 @@ function downloadDemoTicket(tid){
   setTimeout(()=>{
     const d=lsGet(LS.B,[]).find(b=>b.ticketId===tid);
     if(!d){showToast('Ticket not found!');return}
-    const html=`<html><head><title>Ticket ${tid}</title><style>body{overscroll-behavior-y:none;font-family:Arial;background:#0F0F1A;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}.ticket{background:#1A1A2E;border-radius:20px;padding:32px;max-width:360px;width:90%;border:3px dashed rgba(245,166,35,.4);text-align:center}.logo{font-size:40px;margin-bottom:8px}.title{font-size:24px;font-weight:900;color:#F5A623;margin-bottom:4px}.tid{font-size:22px;font-weight:900;color:#F5A623;background:#0F0F1A;padding:12px;border-radius:10px;margin:12px 0;letter-spacing:.06em}.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:14px}.label{color:#9A9AB0}.qr{font-size:64px;margin:16px 0;color:rgba(255,255,255,.2)}.footer{font-size:13px;color:#9A9AB0;margin-top:16px}</style><script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <!-- PWA + Mobile App Tags -->
-  <link rel="manifest" href="/manifest.json">
-  <link rel="apple-touch-icon" href="/icon-192.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="GarbaUtsav">
-  <meta name="mobile-web-app-capable" content="yes">
-</head><body><div class="ticket"><div class="logo">🪔</div><div class="title">GarbaUtsav</div><p style="color:#9A9AB0;font-size:13px;margin-bottom:8px">E-TICKET</p><div class="tid">${tid}</div><div class="row"><span class="label">Event</span><span>${d.eventName}</span></div><div class="row"><span class="label">Pass</span><span>${d.passName} ×${d.qty}</span></div><div class="row"><span class="label">Amount</span><span style="color:#F5A623">₹${d.amount}</span></div><div class="row"><span class="label">Status</span><span style="color:#4CAF50">✓ Confirmed</span></div><div class="qr">▦</div><p style="font-size:13px;color:#9A9AB0">Gate pe yeh QR scan karein</p><div class="footer">GarbaUtsav Events · Ahmedabad, Gujarat</div></div></body></html>`;
+    const html=`<html><head><title>Ticket ${tid}</title><style>body{overscroll-behavior-y:none;font-family:Arial;background:#0F0F1A;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}.ticket{background:#1A1A2E;border-radius:20px;padding:32px;max-width:360px;width:90%;border:3px dashed rgba(245,166,35,.4);text-align:center}.logo{font-size:40px;margin-bottom:8px}.title{font-size:24px;font-weight:900;color:#F5A623;margin-bottom:4px}.tid{font-size:22px;font-weight:900;color:#F5A623;background:#0F0F1A;padding:12px;border-radius:10px;margin:12px 0;letter-spacing:.06em}.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:14px}.label{color:#9A9AB0}.qr{font-size:64px;margin:16px 0;color:rgba(255,255,255,.2)}.footer{font-size:13px;color:#9A9AB0;margin-top:16px}</style></head><body><div class="ticket"><div class="logo">🪔</div><div class="title">GarbaUtsav</div><p style="color:#9A9AB0;font-size:13px;margin-bottom:8px">E-TICKET</p><div class="tid">${tid}</div><div class="row"><span class="label">Event</span><span>${d.eventName}</span></div><div class="row"><span class="label">Pass</span><span>${d.passName} ×${d.qty}</span></div><div class="row"><span class="label">Amount</span><span style="color:#F5A623">₹${d.amount}</span></div><div class="row"><span class="label">Status</span><span style="color:#4CAF50">✓ Confirmed</span></div><div class="qr">▦</div><p style="font-size:13px;color:#9A9AB0">Gate pe yeh QR scan karein</p><div class="footer">GarbaUtsav Events · Ahmedabad, Gujarat</div><\/div><\/body><\/html>`;
     const w=window.open('','_blank');w.document.write(html);w.document.close();
   },300);
 }
@@ -1203,5 +1195,52 @@ function animateStats(){
 // 🔔 TOAST
 // ══════════════════════════════════════════════════════════
 let toastTimer;
-function showToast(msg){
-  const el=do
+function showToast(msg, type='info'){
+  clearTimeout(toastTimer);
+  let el = document.getElementById('toastEl');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'toastEl';
+    el.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1A1A2E;color:#fff;padding:12px 22px;border-radius:12px;font-size:14px;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);max-width:90vw;text-align:center;transition:opacity .3s';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.opacity = '1';
+  toastTimer = setTimeout(()=>{ el.style.opacity='0'; }, 3200);
+}
+
+// ══════════════════════════════════════════════════════════
+// 🎫 DOWNLOAD TICKET
+// ══════════════════════════════════════════════════════════
+function downloadTicket(tid){
+  setTimeout(function(){
+    var d=lsGet(LS.B,[]).find(function(b){return b.ticketId===tid;});
+    if(!d){showToast('Ticket not found!');return;}
+    var w=window.open('','_blank');
+    if(!w){showToast('Popup blocked! Please allow popups and try again.');return;}
+    w.document.open();
+    w.document.write('<!DOCTYPE html><html><head><title>GarbaUtsav Ticket '+tid+'</title>');
+    w.document.write('<meta name="viewport" content="width=device-width,initial-scale=1">');
+    w.document.write('<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#0F0F1A;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.ticket{background:#1A1A2E;border-radius:20px;padding:32px;max-width:360px;width:100%;border:3px dashed rgba(245,166,35,.4);text-align:center}.logo{font-size:40px;margin-bottom:8px}.brand{font-size:24px;font-weight:900;color:#F5A623}.sub{color:#9A9AB0;font-size:13px;margin:4px 0 12px}.tid-box{font-size:20px;font-weight:800;color:#F5A623;background:#0F0F1A;padding:12px;border-radius:10px;margin:12px 0;letter-spacing:.1em}.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}.lbl{color:#9A9AB0}.qr{font-size:72px;margin:16px 0;color:rgba(255,255,255,.15)}.print-btn{background:#E31E24;color:#fff;border:none;padding:11px 28px;border-radius:10px;font-size:15px;cursor:pointer;margin-top:16px;width:100%}.footer{font-size:12px;color:#9A9AB0;margin-top:14px}@media print{.print-btn{display:none}body{background:#fff;color:#000}.ticket{border-color:#333;background:#f9f9f9}}</style>');
+    w.document.write('</head><body><div class="ticket">');
+    w.document.write('<div class="logo">🪔</div>');
+    w.document.write('<div class="brand">GarbaUtsav</div>');
+    w.document.write('<div class="sub">E-TICKET</div>');
+    w.document.write('<div class="tid-box">'+tid+'</div>');
+    w.document.write('<div class="row"><span class="lbl">Event</span><span>'+(d.eventName||d.ev||'Navratri 2025')+'</span></div>');
+    w.document.write('<div class="row"><span class="lbl">Pass</span><span>'+(d.passName||d.ps||'Pass')+' &times;'+(d.qty||1)+'</span></div>');
+    w.document.write('<div class="row"><span class="lbl">Name</span><span>'+(d.nm||'Guest')+'</span></div>');
+    w.document.write('<div class="row"><span class="lbl">Amount</span><span style="color:#F5A623">&#8377;'+(d.amount||d.amt||0)+'</span></div>');
+    w.document.write('<div class="row"><span class="lbl">Status</span><span style="color:#4CAF50">&#10003; Confirmed</span></div>');
+    w.document.write('<div class="qr">&#9638;</div>');
+    w.document.write('<p style="font-size:13px;color:#9A9AB0;margin-bottom:14px">Gate pe yeh QR scan karein</p>');
+    w.document.write('<button class="print-btn" onclick="window.print()">&#128438; Download / Print</button>');
+    w.document.write('<div class="footer">GarbaUtsav Events &middot; Ahmedabad, Gujarat</div>');
+    w.document.write('</div></body></html>');
+    w.document.close();
+  },300);
+}
+
+</script>
+</body>
+</html>
