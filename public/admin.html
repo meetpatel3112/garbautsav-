@@ -613,10 +613,11 @@ const DEF_EV=[
   {id:'e6',name:'Dandiya Dhamaka Night',org:'Anand Cultural Sangam',loc:'Town Hall, Anand',city:'Anand',d1:'2 Oct',d2:'11 Oct 2025',time:'8PM–1AM',tot:350,sold:89,th:'tr',em:'🎀',active:true},
 ];
 const DEF_PS=[
-  {id:'silver',name:'Silver Entry',icon:'🎫',price:199,feats:['Single entry','All 9 nights','Basic seating','Free parking','Digital QR pass']},
-  {id:'gold',name:'Gold Pass',icon:'🏅',price:349,pop:true,feats:['Single entry','All 9 nights','Premium seating','Snacks included','VIP parking','Digital QR']},
-  {id:'premium',name:'Premium VIP',icon:'💎',price:599,feats:['Single entry','All 9 nights','VIP lounge','Dinner buffet','Dedicated parking','Gift hamper']},
-  {id:'couple',name:'Couple Pass',icon:'💑',price:649,feats:['2 persons entry','All 9 nights','Couple seating','Welcome drinks','Photo session','Parking']},
+  {id:'silver',name:'Silver Entry',icon:'🎫',price:199,color:'silver',pop:false,popular:false,feats:['9 Raaton ki Entry','General Seating Area','Free Parking','Digital QR Ticket','Garba + DJ Music'],features:['9 Raaton ki Entry','General Seating Area','Free Parking','Digital QR Ticket','Garba + DJ Music']},
+  {id:'gold',name:'Gold Pass',icon:'🏅',price:349,color:'gold-pass',pop:true,popular:true,feats:['9 Raaton ki Entry','Premium Front Seating','Priority Entry Gate','Snacks Voucher ₹100/night','VIP Parking','Photo Booth Access'],features:['9 Raaton ki Entry','Premium Front Seating','Priority Entry Gate','Snacks Voucher ₹100/night','VIP Parking','Photo Booth Access']},
+  {id:'premium',name:'Premium VIP',icon:'💎',price:599,color:'premium',pop:false,popular:false,feats:['9 Raaton ki Entry','VIP AC Lounge','Dinner Buffet Included','Valet Parking','Welcome Gift Hamper','Dedicated Concierge'],features:['9 Raaton ki Entry','VIP AC Lounge','Dinner Buffet Included','Valet Parking','Welcome Gift Hamper','Dedicated Concierge']},
+  {id:'couple',name:'Couple Pass',icon:'💑',price:649,color:'couple',pop:false,popular:false,feats:['2 Logon ki Entry (9 Nights)','Couple Reserved Seating','Welcome Drinks Night 1 & 9','Couple Photo Session','Priority Parking','Couple Dance Zone'],features:['2 Logon ki Entry (9 Nights)','Couple Reserved Seating','Welcome Drinks Night 1 & 9','Couple Photo Session','Priority Parking','Couple Dance Zone']},
+  {id:'family',name:'Family Pack',icon:'🏠',price:999,color:'silver',pop:false,popular:false,feats:['4 Family Members (9 Nights)','Family Block Seating','Snack Combo ₹200 Voucher','1 Reserved Parking Spot','Kids Costume 20% Off','Family Welcome Kit'],features:['4 Family Members (9 Nights)','Family Block Seating','Snack Combo ₹200 Voucher','1 Reserved Parking Spot','Kids Costume 20% Off','Family Welcome Kit']},
 ];
 const DEF_CS=[
   {id:'c1',name:'Bridal Chaniya Choli',em:'👗',cl:'c1',desc:'Heavy embroidery, mirror work, dupatta included.',tags:['Women','Traditional'],price:299,dep:500,sizes:['XS','S','M','L','XL'],avail:8,rating:4.9,rvs:124},
@@ -845,7 +846,21 @@ function saveEvent(){
   const th=document.getElementById('feTheme').value||'ts';
   const feat=document.getElementById('feFeat').checked;
   if(!name){toast('⚠️ Event name bharo!');return}
-  evs.push({id:'ev_'+Date.now(),name,org:org||city+' Events',loc:venue?(venue+', '+city):city,city,d1:start?new Date(start).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'2 Oct',d2:end?new Date(end).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'11 Oct 2025',time:time||'8PM–1AM',tot,sold:0,em,th,feat,active:true});
+  const location=venue?(venue+', '+city):city;
+  const startDate=start?new Date(start).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'2 Oct';
+  const endDate=end?new Date(end).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'11 Oct 2026';
+  const theme=th==='ts'?'saffron':th==='tg'?'gold':'royal';
+  evs.push({
+    id:'ev_'+Date.now(), name,
+    organizer:org||city+' Events',
+    location, city:city.toLowerCase(),
+    startDate, endDate, time:time||'8PM–1AM',
+    totalPasses:tot, soldPasses:0,
+    theme, emoji:em, featured:feat, active:true,
+    // also keep short keys for admin display
+    org:org||city+' Events', loc:location,
+    d1:startDate, d2:endDate, tot, sold:0, em, th, feat
+  });
   lsw(K.E,evs);closeMo('moEvent');renderEvents();
   ['feName','feOrg','feCity','feVenue','feTime','feEmoji'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('fePasses').value='';
@@ -942,7 +957,16 @@ function saveCostume(){
   const cl=document.getElementById('fcCl').value||'c1';
   const desc=document.getElementById('fcDesc').value.trim();
   if(!name||!price){toast('⚠️ Name aur price bharo!');return}
-  css_.push({id:'c_'+Date.now(),name,em,cl,desc:desc||name,tags,price,dep,sizes,avail,rating:5.0,rvs:0});
+  css_.push({
+    id:'c_'+Date.now(), name,
+    em, emoji:em,
+    cl:'ci'+(Math.floor(Math.random()*5)+1), colorClass:'ci'+(Math.floor(Math.random()*5)+1),
+    desc:desc||name, tags,
+    price, pricePerDay:price,
+    dep, deposit:dep,
+    sizes, avail, available:avail,
+    rating:5.0, rvs:0, reviews:0
+  });
   lsw(K.C,css_);closeMo('moCostume');renderCostumes();
   ['fcName','fcDesc','fcEmoji','fcSizes','fcTags'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   ['fcPrice','fcDep','fcAvail'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
