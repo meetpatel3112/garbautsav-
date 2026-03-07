@@ -1086,4 +1086,13 @@ function closeMo(id){document.getElementById(id).classList.remove('open')}
 function fmt(n){return Number(n||0).toLocaleString('en-IN')}
 function ptc(ps){const l=(ps||'').toLowerCase();return l.includes('gold')?'pt-g':l.includes('silver')?'pt-s':l.includes('premium')?'pt-p':'pt-c'}
 function sc(s){return s==='confirmed'?'s-ok':s==='pending'?'s-pend':'s-can'}
-function sl(s){return s==='confirmed'?'✓ Confirmed':s==='pending'?'⏳ Pend
+function sl(s){return s==='confirmed'?'✓ Confirmed':s==='pending'?'⏳ Pending':'✗ Cancelled'}
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast '+(type==='error'?'toast-err':'toast-ok')+' show';
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
