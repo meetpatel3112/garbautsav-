@@ -1242,5 +1242,41 @@ function downloadTicket(tid){
 }
 
 </script>
+  <script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+collection,
+getDocs
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+async function loadEvents(){
+
+const querySnapshot = await getDocs(collection(db,"events"));
+
+querySnapshot.forEach((doc)=>{
+
+let e = doc.data();
+
+document.getElementById("eventList").innerHTML += `
+
+<div class="card">
+
+<h3>${e.name}</h3>
+<p>${e.date}</p>
+<p>₹${e.price}</p>
+
+</div>
+
+`;
+
+});
+
+}
+
+loadEvents();
+
+</script>
 </body>
 </html>
