@@ -573,7 +573,7 @@ input,select,textarea{font-size:16px!important} /* Prevent iOS zoom on focus */
 // ══════════════════════════════════════════════════════════
 // 🗄️ DATA STORE
 // ══════════════════════════════════════════════════════════
-const LS = { E:'gu_events_v1', P:'gu_passes_v1', C:'gu_costumes_v1', B:'gu_bookings_v1', R:'gu_reviews_v1' };
+const LS = { E:'gu_events_v3', P:'gu_passes_v3', C:'gu_costumes_v3', B:'gu_bookings_v1', R:'gu_reviews_v1' };
 function lsGet(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):JSON.parse(JSON.stringify(d))}catch{return JSON.parse(JSON.stringify(d))}}
 function lsSave(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
 
@@ -632,6 +632,7 @@ const CONV_FEE=18;
 // 🚀 INIT
 // ══════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
+  // Load from localStorage first (instant display)
   allEvents  = lsGet(LS.E, SEED_EVENTS);
   allPasses  = lsGet(LS.P, SEED_PASSES);
   allCostumes= lsGet(LS.C, SEED_COSTUMES);
@@ -643,6 +644,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderReviews();
   drawWheel();
   animateStats();
+  // Then silently sync from backend (updates without page reload)
+  syncFromBackend();
   // Scroll top button
   window.addEventListener('scroll',()=>{
     document.getElementById('scrollTopBtn').classList.toggle('show',window.scrollY>400);
@@ -1276,6 +1279,101 @@ document.getElementById("eventList").innerHTML += `
 }
 
 loadEvents();
+
+
+// ══════════════════════════════════════════════════════════
+// 🔌 BACKEND SYNC — MAIN WEBSITE
+// ══════════════════════════════════════════════════════════
+const BACKEND = (()=>{
+  const BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000'
+    : 'https://garbautsav.onrender.com';
+
+  async function get(path){
+    const res = await fetch(BASE + path);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    return res.json();
+  }
+  async function post(path, body){
+    const res = await fetch(BASE + path, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    return res.json();
+  }
+  return { get, post, BASE };
+})();
+
+// ── Sync data from backend silently ──
+async function syncFromBackend(){
+  let updated = false;
+  try {
+    const evData = await BACKEND.get('/api/events');
+    if(evData && evData.length > 0){
+      allEvents = evData.map(e=>({
+        ...e,
+        id: e.id || e._id,
+        name: e.name,
+        location: e.location || e.loc || '',
+        city: (e.city||'').toLowerCase(),
+        time: e.time || '',
+        totalPasses: e.totalPasses || e.total_passes || e.tot || 500,
+        soldPasses: e.soldPasses || e.sold_passes || e.sold || 0,
+        theme: e.theme || 'saffron',
+        emoji: e.emoji || e.em || '🎪',
+        featured: e.featured || e.feat || false,
+      }));
+      lsSave(LS.E, allEvents);
+      renderCityTabs();
+      renderEvents('all');
+      updated = true;
+    }
+  } catch(e){ console.log('Events: using local data'); }
+
+  try {
+    const psData = await BACKEND.get('/api/passes');
+    if(psData && psData.length > 0){
+      allPasses = psData.map(p=>({
+        ...p,
+        id: p.id || p._id,
+        features: p.features || p.feats || [],
+        popular: p.popular || p.pop || false,
+      }));
+      lsSave(LS.P, allPasses);
+      renderPasses();
+      updated = true;
+    }
+  } catch(e){ console.log('Passes: using local data'); }
+
+  try {
+    const csData = await BACKEND.get('/api/costumes');
+    if(csData && csData.length > 0){
+      allCostumes = csData.map(c=>({
+        ...c,
+        id: c.id || c._id,
+        emoji: c.emoji || c.em || '👗',
+        colorClass: c.colorClass || c.cl || 'ci1',
+        pricePerDay: c.pricePerDay || c.price_per_day || c.price || 0,
+        deposit: c.deposit || c.dep || 0,
+        available: c.available || c.avail || 0,
+      }));
+      lsSave(LS.C, allCostumes);
+      renderCostumes();
+      updated = true;
+    }
+  } catch(e){ console.log('Costumes: using local data'); }
+
+  if(updated) console.log('✅ Website synced from backend!');
+}
+
+// ── Submit review to backend ──
+async function submitReviewToBackend(reviewData){
+  try {
+    await BACKEND.post('/api/reviews', reviewData);
+  } catch(e){ console.log('Review: local only'); }
+}
 
 </script>
 </body>
