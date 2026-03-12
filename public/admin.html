@@ -644,123 +644,378 @@ let evs,pss,css_,bks,salesFlt='all';
 // ═══════════════════════════════════════
 // AUTH
 // ═══════════════════════════════════════
-function doLogin(){
-  const em=document.getElementById('lEmail').value.trim();
-  const pw=document.getElementById('lPass').value;
-  const err=document.getElementById('lerr');
-  if(!em||!pw){err.textContent='⚠️ Email aur password daalo!';return}
-  if(pw==='admin123'&&em.includes('@')){
+// ══════════════════════════════════════════════════════════
+// 🔌 BACKEND API INTEGRATION — ADMIN PANEL
+// ══════════════════════════════════════════════════════════
+
+const API = (()=>{
+  // Render pe deploy hone ke baad yahan apna URL daalo
+  const BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000'
+    : 'https://garbautsav.onrender.com';
+
+  let TOKEN = localStorage.getItem('gu_admin_token') || '';
+
+  function setToken(t){ TOKEN=t; localStorage.setItem('gu_admin_token', t); }
+  function clearToken(){ TOKEN=''; localStorage.removeItem('gu_admin_token'); }
+
+  async function req(method, path, body){
+    const opts = {
+      method,
+      headers: { 'Content-Type':'application/json', ...(TOKEN ? {'Authorization':'Bearer '+TOKEN} : {}) }
+    };
+    if(body) opts.body = JSON.stringify(body);
+    try {
+      const res = await fetch(BASE+path, opts);
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.message || data.error || 'Server error');
+      return data;
+    } catch(e) {
+      console.warn('API error:', e.message);
+      throw e;
+    }
+  }
+
+  return {
+    BASE,
+    setToken, clearToken,
+    get:    (path)        => req('GET',    path),
+    post:   (path, body)  => req('POST',   path, body),
+    put:    (path, body)  => req('PUT',    path, body),
+    delete: (path)        => req('DELETE', path),
+    isLoggedIn: ()        => !!TOKEN,
+    getToken:   ()        => TOKEN,
+  };
+})();
+
+// ── Login via backend ──
+async function doLogin(){
+  const em = document.getElementById('lEmail').value.trim();
+  const pw = document.getElementById('lPass').value;
+  const err = document.getElementById('lerr');
+  if(!em||!pw){ err.textContent='⚠️ Email aur password daalo!'; return; }
+
+  err.textContent = '⏳ Login ho raha hai...';
+  try {
+    const data = await API.post('/api/auth/login', { email:em, password:pw });
+    API.setToken(data.token);
     document.getElementById('loginScreen').style.display='none';
-    document.getElementById('sbName').textContent=em.split('@')[0].replace(/\./g,' ').split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
-    document.getElementById('sbAv').textContent=em.charAt(0).toUpperCase();
-    document.getElementById('tbAv').textContent=em.charAt(0).toUpperCase();
-    document.getElementById('todayDate').textContent=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+    const name = (data.user?.name || em.split('@')[0]).replace(/\./g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+    document.getElementById('sbName').textContent = name;
+    document.getElementById('sbAv').textContent   = name.charAt(0).toUpperCase();
+    document.getElementById('tbAv').textContent   = name.charAt(0).toUpperCase();
+    document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
     initDashboard();
-  } else {
-    err.textContent='❌ Wrong credentials! Use admin123';
+  } catch(e) {
+    // Backend na mile toh local fallback
+    if(pw==='admin123' && em.includes('@')){
+      console.warn('Backend offline, using local mode');
+      err.textContent='⚠️ Backend offline — local mode mein login ho raha hai';
+      setTimeout(()=>{
+        document.getElementById('loginScreen').style.display='none';
+        const name = em.split('@')[0].replace(/\./g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+        document.getElementById('sbName').textContent = name;
+        document.getElementById('sbAv').textContent   = name.charAt(0).toUpperCase();
+        document.getElementById('tbAv').textContent   = name.charAt(0).toUpperCase();
+        document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+        initDashboard();
+      }, 1000);
+    } else {
+      err.textContent = '❌ Wrong credentials! Email ya password galat hai.';
+    }
   }
 }
+
+// ── Logout ──
 function doLogout(){
+  API.clearToken();
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('lPass').value='';
 }
 
-// ═══════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════
-function initDashboard(){
-  evs=ls(K.E,DEF_EV); pss=ls(K.P,DEF_PS); css_=ls(K.C,DEF_CS); bks=ls(K.B,DEF_BK);
-  if(bks.length<8)bks=[...DEF_BK,...bks]; // ensure demo data
-  renderKPIs(); renderBarChart(); renderDonut(); renderRecentTbl();
-  document.getElementById('salesBadge').textContent=bks.filter(b=>b.status==='confirmed').length;
+// ── Init Dashboard: load from backend, fallback to localStorage ──
+async function initDashboard(){
+  showToast('⏳ Data load ho raha hai...', 'info');
+  
+  try {
+    // Load events from backend
+    const evData = await API.get('/api/events?admin=true');
+    if(evData && evData.length >= 0){
+      evs = evData.map(e=>({
+        ...e,
+        id: e.id || e._id,
+        name: e.name,
+        org: e.organizer || e.org,
+        organizer: e.organizer || e.org,
+        loc: e.location || e.loc,
+        location: e.location || e.loc,
+        city: (e.city||'').toLowerCase(),
+        d1: e.startDate || e.d1,
+        d2: e.endDate || e.d2,
+        startDate: e.startDate || e.d1,
+        endDate: e.endDate || e.d2,
+        tot: e.totalPasses || e.tot || 500,
+        totalPasses: e.totalPasses || e.tot || 500,
+        sold: e.soldPasses || e.sold || 0,
+        soldPasses: e.soldPasses || e.sold || 0,
+        em: e.emoji || e.em || '🎪',
+        emoji: e.emoji || e.em || '🎪',
+        th: e.theme || e.th || 'saffron',
+        theme: e.theme || e.th || 'saffron',
+        feat: e.featured || e.feat || false,
+        featured: e.featured || e.feat || false,
+        active: e.is_active !== false,
+      }));
+      lsw(K.E, evs);
+    }
+  } catch(e){ evs = ls(K.E, DEF_EV); console.warn('Events: using local', e.message); }
+
+  try {
+    // Load passes from backend
+    const psData = await API.get('/api/passes');
+    if(psData && psData.length >= 0){
+      pss = psData.map(p=>({
+        ...p,
+        id: p.id || p._id,
+        feats: p.features || p.feats || [],
+        features: p.features || p.feats || [],
+        pop: p.popular || p.pop || false,
+        popular: p.popular || p.pop || false,
+      }));
+      lsw(K.P, pss);
+    }
+  } catch(e){ pss = ls(K.P, DEF_PS); console.warn('Passes: using local', e.message); }
+
+  try {
+    // Load costumes from backend
+    const csData = await API.get('/api/costumes');
+    if(csData && csData.length >= 0){
+      css_ = csData.map(c=>({
+        ...c,
+        id: c.id || c._id,
+        em: c.emoji || c.em || '👗',
+        emoji: c.emoji || c.em || '👗',
+        cl: c.colorClass || c.cl || 'ci1',
+        colorClass: c.colorClass || c.cl || 'ci1',
+        price: c.pricePerDay || c.price || 0,
+        pricePerDay: c.pricePerDay || c.price || 0,
+        dep: c.deposit || c.dep || 0,
+        deposit: c.deposit || c.dep || 0,
+        avail: c.available || c.avail || 0,
+        available: c.available || c.avail || 0,
+      }));
+      lsw(K.C, css_);
+    }
+  } catch(e){ css_ = ls(K.C, DEF_CS); console.warn('Costumes: using local', e.message); }
+
+  try {
+    // Load bookings from backend
+    const bkData = await API.get('/api/bookings');
+    if(bkData && (bkData.bookings||bkData).length >= 0){
+      bks = (bkData.bookings || bkData).map(b=>({
+        ...b,
+        id: b.id || b._id || b.ticket_id,
+        ticket: b.ticket_id || b.ticket || b.id,
+        buyer: b.buyer_name || b.buyer || b.name,
+        phone: b.buyer_phone || b.phone,
+        event: b.event_name || b.event,
+        pass: b.pass_name || b.pass,
+        qty: b.quantity || b.qty || 1,
+        amt: b.amount || b.amt || 0,
+        status: b.payment_status || b.status || 'confirmed',
+        date: b.created_at || b.date || new Date().toISOString(),
+      }));
+      lsw(K.B, bks);
+    }
+  } catch(e){ bks = ls(K.B, DEF_BK); console.warn('Bookings: using local', e.message); }
+
+  if(bks.length < 8) bks = [...DEF_BK, ...bks];
+
+  renderKPIs();
+  renderBarChart();
+  renderDonut();
+  renderRecentTbl();
+  document.getElementById('salesBadge').textContent = bks.filter(b=>b.status==='confirmed').length;
+  showToast('✅ Data load ho gaya!', 'success');
 }
 
-// ═══════════════════════════════════════
-// DASHBOARD
-// ═══════════════════════════════════════
-function renderKPIs(){
-  const rev=bks.filter(b=>b.status==='confirmed').reduce((s,b)=>s+b.amt,0);
-  const tix=bks.filter(b=>b.status==='confirmed').reduce((s,b)=>s+b.qty,0);
-  document.getElementById('kgrid').innerHTML=`
-    <div class="kpi rev"><div class="kico">💰</div><div class="klbl">Total Revenue</div><div class="kval">₹${fmt(rev)}</div><div class="kchg up">▲ 28% vs last year</div></div>
-    <div class="kpi tkt"><div class="kico">🎟</div><div class="klbl">Passes Sold</div><div class="kval">${tix.toLocaleString()}</div><div class="kchg up">▲ 15% growth</div></div>
-    <div class="kpi evt"><div class="kico">🎪</div><div class="klbl">Active Events</div><div class="kval">${evs.filter(e=>e.active!==false).length}</div><div class="kchg up">▲ 2 new events</div></div>
-    <div class="kpi prf"><div class="kico">💰</div><div class="klbl">Net Profit</div><div class="kval">₹${fmt(Math.round(rev*0.35))}</div><div class="kchg up">▲ 35% margin</div></div>`;
-}
-function renderBarChart(){
-  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const vals=[142,198,167,221,189,312,276];
-  const mx=Math.max(...vals);
-  document.getElementById('barChart').innerHTML=days.map((d,i)=>`
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
-      <div style="font-size:10px;color:var(--mu);font-weight:600">${vals[i]}</div>
-      <div style="flex:1;width:100%;display:flex;align-items:flex-end">
-        <div style="width:100%;height:${(vals[i]/mx)*120}px;background:linear-gradient(180deg,var(--p),var(--p2));border-radius:5px 5px 0 0;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'" title="${vals[i]} tickets"></div>
-      </div>
-      <div style="font-size:9px;color:var(--mu)">${d}</div>
-    </div>`).join('');
-}
-function renderDonut(){
-  const data=[{l:'Gold Pass',v:38,c:'#F5A623'},{l:'Silver',v:24,c:'#6B7280'},{l:'Premium',v:22,c:'#8B5CF6'},{l:'Couple',v:16,c:'#E31E24'}];
-  const total=100,cx=60,cy=60,r=45,circ=2*Math.PI*r;
-  let off=0;
-  const segs=data.map(d=>{
-    const len=(d.v/total)*circ;
-    const seg=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.c}" stroke-width="14" stroke-dasharray="${len} ${circ-len}" stroke-dashoffset="${-off}" style="cursor:pointer" title="${d.l}: ${d.v}%"/>`;
-    off+=len;return seg;
-  }).join('');
-  document.getElementById('donutWrap').innerHTML=`
-    <svg width="120" height="120" viewBox="0 0 120 120" style="transform:rotate(-90deg)">${segs}</svg>
-    <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px">
-      ${data.map(d=>`<div style="display:flex;align-items:center;justify-content:space-between;font-size:11px"><div style="display:flex;align-items:center;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:${d.c}"></div><span style="color:var(--mu)">${d.l}</span></div><span style="font-weight:700">${d.v}%</span></div>`).join('')}
-    </div>`;
-}
-function renderRecentTbl(){
-  document.getElementById('recentTbl').innerHTML=bks.slice(0,6).map(b=>`
-    <tr>
-      <td><code style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px">${b.tid}</code></td>
-      <td><strong>${b.nm}</strong></td>
-      <td style="font-size:11px;color:var(--mu)">${(b.ev||'').slice(0,20)}…</td>
-      <td><span class="ptag ${ptc(b.ps)}">${b.ps}</span></td>
-      <td><strong>₹${b.amt}</strong></td>
-      <td><span class="sts ${sc(b.status)}">${sl(b.status)}</span></td>
-      <td style="font-size:11px;color:var(--mu)">${b.date}</td>
-    </tr>`).join('');
-}
+// ── Save Event to backend + localStorage ──
+async function saveEvent(){
+  const name   = document.getElementById('feName').value.trim();
+  const org    = document.getElementById('feOrg').value.trim();
+  const city   = document.getElementById('feCity').value.trim();
+  const venue  = document.getElementById('feVenue').value.trim();
+  const start  = document.getElementById('feStart').value;
+  const end    = document.getElementById('feEnd').value;
+  const time   = document.getElementById('feTime').value.trim();
+  const tot    = parseInt(document.getElementById('fePasses').value)||500;
+  const em     = document.getElementById('feEmoji').value.trim()||'🎪';
+  const th     = document.getElementById('feTheme').value||'ts';
+  const feat   = document.getElementById('feFeat').checked;
+  if(!name){ showToast('⚠️ Event name bharo!', 'error'); return; }
 
-// ═══════════════════════════════════════
-// SALES
-// ═══════════════════════════════════════
-function renderSales(){
-  const q=(document.getElementById('srchInput')?.value||'').toLowerCase();
-  const flt=bks.filter(b=>{
-    const mf=salesFlt==='all'||b.status===salesFlt;
-    const mq=!q||b.nm?.toLowerCase().includes(q)||b.tid?.toLowerCase().includes(q)||b.ev?.toLowerCase().includes(q);
-    return mf&&mq;
+  const location  = venue ? venue+', '+city : city;
+  const startDate = start ? new Date(start).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : '2 Oct';
+  const endDate   = end   ? new Date(end).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '11 Oct 2026';
+  const theme     = th==='ts'?'saffron': th==='tg'?'gold':'royal';
+
+  const newEv = {
+    name, organizer:org||city+' Events', org:org||city+' Events',
+    location, loc:location,
+    city:city.toLowerCase(),
+    startDate, endDate, d1:startDate, d2:endDate,
+    time:time||'8:00 PM – 1:00 AM',
+    totalPasses:tot, tot,
+    soldPasses:0, sold:0,
+    theme, th,
+    emoji:em, em,
+    featured:feat, feat,
+    active:true,
+  };
+
+  // Try backend first
+  try {
+    const saved = await API.post('/api/events', newEv);
+    newEv.id = saved.id || saved._id || 'ev_'+Date.now();
+    showToast('✅ Event backend pe save ho gaya! Sab jagah dikhega.', 'success');
+  } catch(e) {
+    newEv.id = 'ev_'+Date.now();
+    console.warn('Backend save failed, saving locally:', e.message);
+    showToast('⚠️ Backend offline — local save ho gaya', 'warning');
+  }
+
+  evs.push(newEv);
+  lsw(K.E, evs);
+  closeMo('moEvent');
+  renderEvents();
+  ['feName','feOrg','feCity','feVenue','feTime','feEmoji'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
   });
-  document.getElementById('salesTbl').innerHTML=flt.slice(0,100).map(b=>`
-    <tr>
-      <td><code style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px">${b.tid}</code></td>
-      <td><strong>${b.nm||'—'}</strong></td>
-      <td style="font-size:11px">${b.ph||'—'}</td>
-      <td style="font-size:11px;color:var(--mu)">${(b.ev||'').slice(0,18)}…</td>
-      <td><span class="ptag ${ptc(b.ps)}">${b.ps||'—'}</span></td>
-      <td>${b.qty||1}</td>
-      <td><strong>₹${b.amt||0}</strong></td>
-      <td><span class="sts ${sc(b.status)}">${sl(b.status)}</span></td>
-      <td style="font-size:11px;color:var(--mu)">${b.date||'—'}</td>
-      <td style="display:flex;gap:5px">
-        <button class="btn-sm btn-ok" onclick="updateStatus('${b.tid}','confirmed')">✓</button>
-        <button class="btn-sm btn-del" onclick="updateStatus('${b.tid}','cancelled')">✗</button>
-      </td>
-    </tr>`).join('')||'<tr><td colspan="10" style="text-align:center;padding:28px;color:var(--mu)">Koi booking nahi mili</td></tr>';
+  document.getElementById('fePasses').value='';
 }
-function setFlt(f,el){salesFlt=f;document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderSales()}
-function updateStatus(tid,st){
-  const b=bks.find(x=>x.tid===tid);if(b)b.status=st;
-  lsw(K.B,bks);renderSales();renderRecentTbl();
-  toast(st==='confirmed'?'✓ Booking confirmed!':'✗ Booking cancelled!');
+
+// ── Delete Event ──
+async function deleteEvent(id){
+  if(!confirm('Event delete karna chahte ho?')) return;
+  try { await API.delete('/api/events/'+id); } catch(e){ console.warn('Delete backend failed:', e.message); }
+  evs = evs.filter(e=>e.id!==id);
+  lsw(K.E, evs);
+  renderEvents();
+  showToast('🗑️ Event delete ho gaya!', 'success');
 }
+
+// ── Toggle Event Active ──
+async function toggleActive(id){
+  const ev = evs.find(e=>e.id===id);
+  if(!ev) return;
+  ev.active = !ev.active;
+  try { await API.put('/api/events/'+id, {is_active: ev.active}); } catch(e){ console.warn('Toggle backend failed:', e.message); }
+  lsw(K.E, evs);
+  renderEvents();
+  showToast(ev.active ? '✅ Event active!' : '⏸️ Event paused!', 'success');
+}
+
+// ── Save Pass ──
+async function savePass(){
+  const name  = document.getElementById('fpName').value.trim();
+  const price = parseInt(document.getElementById('fpPrice').value);
+  const icon  = document.getElementById('fpIcon').value.trim()||'🎟';
+  const color = document.getElementById('fpColor').value||'silver';
+  const feats = (document.getElementById('fpFeats').value||'').split('\n').map(s=>s.trim()).filter(Boolean);
+  const pop   = document.getElementById('fpPop').checked;
+  if(!name||!price){ showToast('⚠️ Name aur price bharo!', 'error'); return; }
+
+  const featList = feats.length ? feats : ['Single entry','All 9 nights'];
+  const newPs = { name, icon, price, color, feats:featList, features:featList, pop, popular:pop };
+
+  try {
+    const saved = await API.post('/api/passes', newPs);
+    newPs.id = saved.id || saved._id || 'ps_'+Date.now();
+    showToast('✅ Pass backend pe save ho gaya!', 'success');
+  } catch(e) {
+    newPs.id = 'ps_'+Date.now();
+    showToast('⚠️ Backend offline — local save', 'warning');
+  }
+
+  pss.push(newPs);
+  lsw(K.P, pss);
+  closeMo('moPass');
+  renderPasses();
+  ['fpName','fpIcon','fpFeats'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('fpPrice').value='';
+  document.getElementById('fpPop').checked=false;
+}
+
+// ── Delete Pass ──
+async function deletePass(id){
+  if(!confirm('Pass delete karna chahte ho?')) return;
+  try { await API.delete('/api/passes/'+id); } catch(e){ console.warn('Delete failed:', e.message); }
+  pss = pss.filter(p=>p.id!==id);
+  lsw(K.P, pss);
+  renderPasses();
+  showToast('🗑️ Pass delete ho gaya!', 'success');
+}
+
+// ── Save Costume ──
+async function saveCostume(){
+  const name  = document.getElementById('fcName').value.trim();
+  const desc  = document.getElementById('fcDesc').value.trim();
+  const em    = document.getElementById('fcEmoji').value.trim()||'👗';
+  const price = parseInt(document.getElementById('fcPrice').value)||0;
+  const dep   = parseInt(document.getElementById('fcDep').value)||0;
+  const avail = parseInt(document.getElementById('fcAvail').value)||0;
+  const sizes = (document.getElementById('fcSizes').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const tags  = (document.getElementById('fcTags').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const cl    = document.getElementById('fcCl').value||'ci1';
+  if(!name){ showToast('⚠️ Costume name bharo!', 'error'); return; }
+
+  const newCs = {
+    name, em, emoji:em, cl, colorClass:cl,
+    desc:desc||name, tags,
+    price, pricePerDay:price,
+    dep, deposit:dep,
+    sizes, avail, available:avail,
+    rating:5.0, reviews:0,
+  };
+
+  try {
+    const saved = await API.post('/api/costumes', newCs);
+    newCs.id = saved.id || saved._id || 'c_'+Date.now();
+    showToast('✅ Costume backend pe save ho gaya!', 'success');
+  } catch(e) {
+    newCs.id = 'c_'+Date.now();
+    showToast('⚠️ Backend offline — local save', 'warning');
+  }
+
+  css_.push(newCs);
+  lsw(K.C, css_);
+  closeMo('moCostume');
+  renderCostumes();
+  ['fcName','fcDesc','fcEmoji','fcSizes','fcTags'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  ['fcPrice','fcDep','fcAvail'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+}
+
+// ── Delete Costume ──
+async function deleteCostume(id){
+  if(!confirm('Costume delete karna chahte ho?')) return;
+  try { await API.delete('/api/costumes/'+id); } catch(e){ console.warn('Delete failed:', e.message); }
+  css_ = css_.filter(c=>c.id!==id);
+  lsw(K.C, css_);
+  renderCostumes();
+  showToast('🗑️ Costume delete ho gaya!', 'success');
+}
+
+// ── Update Booking Status ──
+async function updateStatus(id, status){
+  try { await API.put('/api/bookings/'+id+'/status', {status}); } catch(e){ console.warn('Status update failed:', e.message); }
+  const bk = bks.find(b=>b.id===id);
+  if(bk){ bk.status=status; bk.payment_status=status; }
+  lsw(K.B, bks);
+  renderSales();
+  showToast('✅ Status update ho gaya!', 'success');
+}
+
+
 function exportCSV(){
   const rows=[['Ticket','Name','Phone','Email','Event','Pass','Qty','Amount','Status','Date'],
     ...bks.map(b=>[b.tid,b.nm,b.ph,b.em,b.ev,b.ps,b.qty,b.amt,b.status,b.date])];
