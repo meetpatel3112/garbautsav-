@@ -641,9 +641,10 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderPasses();
   renderCostumes();
   renderReviews();
-  syncFromFirebase();
   drawWheel();
   animateStats();
+  // Firebase se live data load karo
+  syncFromFirebase();
   // Scroll top button
   window.addEventListener('scroll',()=>{
     document.getElementById('scrollTopBtn').classList.toggle('show',window.scrollY>400);
@@ -1279,73 +1280,51 @@ document.getElementById("eventList").innerHTML += `
 loadEvents();
 
 
-// ═══════════════════════════════════════════════════
-// FIREBASE SYNC — MAIN WEBSITE
-// Admin me change karo → yahan automatically aayega!
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// 🔥 FIREBASE SYNC — jab bhi koi visit kare, fresh data mile
+// ═══════════════════════════════════════════════════════
 async function syncFromFirebase() {
-  const FB = 'https://garbautsav-898e2-default-rtdb.firebaseio.com';
   try {
-    const [evRes, psRes, csRes] = await Promise.all([
-      fetch(FB+'/events.json'),
-      fetch(FB+'/passes.json'),
-      fetch(FB+'/costumes.json'),
-    ]);
-    const [evData, psData, csData] = await Promise.all([
-      evRes.json(), psRes.json(), csRes.json()
-    ]);
+    const r = await fetch('https://garbautsav-898e2-default-rtdb.firebaseio.com/data.json');
+    if (!r.ok) return;
+    const d = await r.json();
+    if (!d) return;
 
-    let updated = false;
-
-    if (evData && typeof evData === 'object') {
-      const arr = Object.values(evData).filter(e => e && e.name && e.active !== false);
+    if (d.events) {
+      const arr = Object.values(d.events).filter(e => e && e.name && e.active !== false);
       if (arr.length > 0) {
         allEvents = arr;
         lsSave(LS.E, allEvents);
         renderCityTabs();
         renderEvents('all');
-        updated = true;
       }
     }
-
-    if (psData && typeof psData === 'object') {
-      const arr = Object.values(psData).filter(p => p && p.name);
+    if (d.passes) {
+      const arr = Object.values(d.passes).filter(p => p && p.name);
       if (arr.length > 0) {
-        allPasses = arr.map(p => ({
-          ...p,
-          features: p.features || p.feats || [],
-          popular: p.popular || p.pop || false,
-        }));
+        allPasses = arr.map(p => ({...p, features: p.features||p.feats||[], popular: p.popular||p.pop||false}));
         lsSave(LS.P, allPasses);
         renderPasses();
-        updated = true;
       }
     }
-
-    if (csData && typeof csData === 'object') {
-      const arr = Object.values(csData).filter(c => c && c.name);
+    if (d.costumes) {
+      const arr = Object.values(d.costumes).filter(c => c && c.name);
       if (arr.length > 0) {
         allCostumes = arr.map(c => ({
           ...c,
-          emoji: c.emoji || c.em || '👗',
-          colorClass: c.colorClass || c.cl || 'ci1',
-          pricePerDay: c.pricePerDay || c.price || 0,
-          deposit: c.deposit || c.dep || 0,
-          available: c.available || c.avail || 0,
-          tags: c.tags || [],
+          emoji: c.emoji||c.em||'👗',
+          colorClass: c.colorClass||c.cl||'ci1',
+          pricePerDay: c.pricePerDay||c.price||0,
+          deposit: c.deposit||c.dep||0,
+          available: c.available||c.avail||0,
+          tags: c.tags||[],
         }));
         lsSave(LS.C, allCostumes);
         renderCostumes();
-        updated = true;
       }
     }
-
-    if (updated) console.log('Firebase sync done!');
-  } catch(e) {
-    console.log('Firebase offline, using local data');
-  }
+  } catch(e) { /* Firebase offline - local data use hoga */ }
 }
-
 </script>
 </body>
 </html>
