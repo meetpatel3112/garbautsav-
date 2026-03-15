@@ -597,60 +597,34 @@ input,select,textarea{font-size:16px!important} /* Prevent iOS zoom */
 <div class="toast" id="toast"></div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ═══════════════════════════════════════════════════
-// FIREBASE REALTIME DATABASE
-// ═══════════════════════════════════════════════════
-const FB = "https://garbautsav-898e2-default-rtdb.firebaseio.com";
+// ═══════════════════════════════════════════════════════
+// 🔥 FIREBASE — Admin changes → sab jagah dikhega!
+// ═══════════════════════════════════════════════════════
+const FB_URL = 'https://garbautsav-898e2-default-rtdb.firebaseio.com';
 
-async function fbWrite(path, data) {
+async function fbSave() {
   try {
-    await fetch(FB+'/'+path+'.json', {method:'PUT', body:JSON.stringify(data)});
-  } catch(e) { console.warn('FB write error:', e); }
+    const data = {
+      events:   Object.fromEntries(evs.map(e=>  [e.id.replace(/[^a-z0-9]/gi,'_'), e])),
+      passes:   Object.fromEntries(pss.map(p=>  [p.id.replace(/[^a-z0-9]/gi,'_'), p])),
+      costumes: Object.fromEntries(css_.map(c=> [c.id.replace(/[^a-z0-9]/gi,'_'), c])),
+    };
+    await fetch(FB_URL+'/data.json', {method:'PUT', body:JSON.stringify(data)});
+    console.log('✅ Firebase saved!');
+  } catch(e) { console.warn('Firebase save failed:', e.message); }
 }
 
-async function fbRead(path) {
+async function fbLoad() {
   try {
-    const r = await fetch(FB+'/'+path+'.json');
+    const r = await fetch(FB_URL+'/data.json');
+    if (!r.ok) return false;
     const d = await r.json();
-    return d;
-  } catch(e) { return null; }
-}
-
-async function fbSaveAll() {
-  const evObj={}, psObj={}, csObj={};
-  evs.forEach(e=>{ evObj[e.id.replace(/[^a-zA-Z0-9_]/g,'_')]=e; });
-  pss.forEach(p=>{ psObj[p.id.replace(/[^a-zA-Z0-9_]/g,'_')]=p; });
-  css_.forEach(c=>{ csObj[c.id.replace(/[^a-zA-Z0-9_]/g,'_')]=c; });
-  await Promise.all([
-    fbWrite('events', evObj),
-    fbWrite('passes', psObj),
-    fbWrite('costumes', csObj),
-  ]);
-  console.log('Firebase synced!');
-}
-
-async function fbLoadAndInit() {
-  try {
-    const [evData, psData, csData, bkData] = await Promise.all([
-      fbRead('events'), fbRead('passes'),
-      fbRead('costumes'), fbRead('bookings')
-    ]);
-    if(evData) { evs=Object.values(evData); lsw(K.E,evs); }
-    else evs=ls(K.E,DEF_EV);
-    if(psData) { pss=Object.values(psData); lsw(K.P,pss); }
-    else pss=ls(K.P,DEF_PS);
-    if(csData) { css_=Object.values(csData); lsw(K.C,css_); }
-    else css_=ls(K.C,DEF_CS);
-    if(bkData) { bks=Object.values(bkData); lsw(K.B,bks); }
-    else bks=ls(K.B,DEF_BK);
-  } catch(e) {
-    evs=ls(K.E,DEF_EV); pss=ls(K.P,DEF_PS);
-    css_=ls(K.C,DEF_CS); bks=ls(K.B,DEF_BK);
-  }
-  if(bks.length<8) bks=[...DEF_BK,...bks];
-  renderKPIs(); renderBarChart(); renderDonut(); renderRecentTbl();
-  document.getElementById('salesBadge').textContent=bks.filter(b=>b.status==='confirmed').length;
-  showToast('Data loaded!');
+    if (!d) return false;
+    if (d.events)   { evs  = Object.values(d.events).filter(e=>e&&e.name);   lsw(K.E, evs);  }
+    if (d.passes)   { pss  = Object.values(d.passes).filter(p=>p&&p.name);   lsw(K.P, pss);  }
+    if (d.costumes) { css_ = Object.values(d.costumes).filter(c=>c&&c.name); lsw(K.C, css_); }
+    return true;
+  } catch(e) { return false; }
 }
 
 // ═══════════════════════════════════════
@@ -672,7 +646,7 @@ const DEF_PS=[
   {id:'gold',name:'Gold Pass',icon:'🏅',price:349,color:'gold-pass',pop:true,popular:true,feats:['9 Raaton ki Entry','Premium Seating','Priority Entry','Snacks Rs.100/night','VIP Parking'],features:['9 Raaton ki Entry','Premium Seating','Priority Entry','Snacks Rs.100/night','VIP Parking']},
   {id:'premium',name:'Premium VIP',icon:'💎',price:599,color:'premium',pop:false,popular:false,feats:['9 Raaton ki Entry','VIP AC Lounge','Dinner Buffet','Valet Parking','Gift Hamper'],features:['9 Raaton ki Entry','VIP AC Lounge','Dinner Buffet','Valet Parking','Gift Hamper']},
   {id:'couple',name:'Couple Pass',icon:'💑',price:649,color:'couple',pop:false,popular:false,feats:['2 Persons (9 Nights)','Couple Seating','Welcome Drinks','Photo Session','Parking'],features:['2 Persons (9 Nights)','Couple Seating','Welcome Drinks','Photo Session','Parking']},
-  {id:'family',name:'Family Pack',icon:'🏠',price:999,color:'silver',pop:false,popular:false,feats:['4 Members (9 Nights)','Family Seating','Snack Combo','Parking','Kids Costume 20% Off'],features:['4 Members (9 Nights)','Family Seating','Snack Combo','Parking','Kids Costume 20% Off']},
+  {id:'family',name:'Family Pack',icon:'🏠',price:999,color:'silver',pop:false,popular:false,feats:['4 Members (9 Nights)','Family Seating','Snack Combo','Parking','Kids 20% Off'],features:['4 Members (9 Nights)','Family Seating','Snack Combo','Parking','Kids 20% Off']},
 ];
 const DEF_CS=[
   {id:'c1',name:'Bridal Chaniya Choli',em:'👗',emoji:'👗',cl:'ci1',colorClass:'ci1',desc:'Heavy embroidery, mirror work, dupatta included.',tags:['Women','Traditional'],price:299,pricePerDay:299,dep:500,deposit:500,sizes:['XS','S','M','L','XL'],avail:8,available:8,rating:4.9,reviews:124},
@@ -708,8 +682,8 @@ async function doLogin(){
   const err=document.getElementById('lerr');
   if(!em||!pw){err.textContent='⚠️ Email aur password daalo!';return}
   if(pw==='admin123'&&em.includes('@')){
+    await fbLoad();
     document.getElementById('loginScreen').style.display='none';
-    await fbLoadAndInit(); return;
     document.getElementById('sbName').textContent=em.split('@')[0].replace(/\./g,' ').split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
     document.getElementById('sbAv').textContent=em.charAt(0).toUpperCase();
     document.getElementById('tbAv').textContent=em.charAt(0).toUpperCase();
@@ -909,9 +883,8 @@ function saveEvent(){
   const startDate=start?new Date(start).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'2 Oct';
   const endDate=end?new Date(end).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'11 Oct 2026';
   const theme=th==='ts'?'saffron':th==='tg'?'gold':'royal';
-  evs.push({
-    id:'ev_'+Date.now(),
-    name:name,
+  const newEv = {
+    id:'ev_'+Date.now(), name:name,
     organizer:org||city+' Events', org:org||city+' Events',
     location:location||city, loc:location||city,
     city:city.toLowerCase(),
@@ -921,8 +894,9 @@ function saveEvent(){
     theme:theme||'saffron', th:th,
     emoji:em, em:em,
     featured:feat, feat:feat, active:true
-  });
-  lsw(K.E,evs);fbSaveAll();closeMo('moEvent');renderEvents();
+  };
+  evs.push(newEv);
+  lsw(K.E,evs);fbSave();closeMo('moEvent');renderEvents();
   ['feName','feOrg','feCity','feVenue','feTime','feEmoji'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('fePasses').value='';
   toast('✅ Event published! Website pe bhi dikhega.');
@@ -934,8 +908,8 @@ function editEvent(i){
   document.getElementById('fePasses').value=ev.tot||500;document.getElementById('feEmoji').value=ev.em||'🎪';
   openMo('moEvent');toast('✏️ Data load hua — edit karke save karo');
 }
-function toggleActive(i){evs[i].active=!evs[i].active;lsw(K.E,evs);fbSaveAll();renderEvents();toast('✅ Status update ho gaya!')}
-function deleteEvent(i){if(!confirm('Yeh event delete karna hai?'))return;evs.splice(i,1);lsw(K.E,evs);fbSaveAll();renderEvents();toast('🗑 Event deleted!')}
+function toggleActive(i){evs[i].active=!evs[i].active;lsw(K.E,evs);fbSave();renderEvents();toast('✅ Status update ho gaya!')}
+function deleteEvent(i){if(!confirm('Yeh event delete karna hai?'))return;evs.splice(i,1);lsw(K.E,evs);fbSave();renderEvents();toast('🗑 Event deleted!')}
 
 // ═══════════════════════════════════════
 // PASSES CRUD
@@ -966,8 +940,9 @@ function savePass(){
   const feats=(document.getElementById('fpFeats').value||'').split('\n').map(s=>s.trim()).filter(Boolean);
   const pop=document.getElementById('fpPop').checked;
   if(!name||!price){toast('⚠️ Name aur price bharo!');return}
-  pss.push({id:'ps_'+Date.now(),name:name,icon:icon,price:price,color:color,feats:feats.length?feats:['Single entry','All 9 nights'],features:feats.length?feats:['Single entry','All 9 nights'],pop:pop,popular:pop});
-  lsw(K.P,pss);fbSaveAll();closeMo('moPass');renderPasses();
+  const fl=feats.length?feats:['Single entry','All 9 nights'];
+  pss.push({id:'ps_'+Date.now(),name:name,icon:icon,price:price,color:color,feats:fl,features:fl,pop:pop,popular:pop});
+  lsw(K.P,pss);fbSave();closeMo('moPass');renderPasses();
   ['fpName','fpIcon','fpFeats'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   document.getElementById('fpPrice').value='';document.getElementById('fpPop').checked=false;
   toast('✅ Pass add ho gaya! Website pe bhi dikhega.');
@@ -979,7 +954,7 @@ function editPass(i){
   document.getElementById('fpFeats').value=(p.feats||[]).join('\n');document.getElementById('fpPop').checked=!!p.pop;
   openMo('moPass');toast('✏️ Data load hua — edit karke save karo');
 }
-function deletePass(i){if(!confirm('Pass delete karna hai?'))return;pss.splice(i,1);lsw(K.P,pss);fbSaveAll();renderPasses();toast('🗑 Pass deleted!')}
+function deletePass(i){if(!confirm('Pass delete karna hai?'))return;pss.splice(i,1);lsw(K.P,pss);fbSave();renderPasses();toast('🗑 Pass deleted!')}
 function resetPasses(){if(!confirm('Sab passes reset ho jayenge!'))return;lsw(K.P,DEF_PS);pss=JSON.parse(JSON.stringify(DEF_PS));renderPasses();toast('✅ Passes reset ho gaye!')}
 
 // ═══════════════════════════════════════
@@ -1018,19 +993,17 @@ function saveCostume(){
   const cl=document.getElementById('fcCl').value||'c1';
   const desc=document.getElementById('fcDesc').value.trim();
   if(!name||!price){toast('⚠️ Name aur price bharo!');return}
+  const ci='ci'+(Math.floor(Math.random()*5)+1);
   css_.push({
-    id:'c_'+Date.now(),
-    name:name,
-    em:em, emoji:em,
-    cl:'ci'+(Math.floor(Math.random()*5)+1),
-    colorClass:'ci'+(Math.floor(Math.random()*5)+1),
+    id:'c_'+Date.now(), name:name,
+    em:em, emoji:em, cl:ci, colorClass:ci,
     desc:desc||name, tags:tags||[],
     price:price, pricePerDay:price,
     dep:dep, deposit:dep,
     sizes:sizes||[], avail:avail, available:avail,
     rating:5.0, reviews:0
   });
-  lsw(K.C,css_);fbSaveAll();closeMo('moCostume');renderCostumes();
+  lsw(K.C,css_);fbSave();closeMo('moCostume');renderCostumes();
   ['fcName','fcDesc','fcEmoji','fcSizes','fcTags'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   ['fcPrice','fcDep','fcAvail'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   toast('✅ Costume add ho gaya! Website pe bhi dikhega.');
@@ -1047,9 +1020,9 @@ function editCostume(i){
 function updateStock(i){
   const n=prompt(`"${css_[i].name}" ki available qty:`,css_[i].avail);
   if(n===null)return;const v=parseInt(n);if(isNaN(v)||v<0){toast('⚠️ Valid number daalo!');return}
-  css_[i].avail=v;lsw(K.C,css_);fbSaveAll();renderCostumes();toast('✅ Stock updated: '+v+' available');
+  css_[i].avail=v;lsw(K.C,css_);fbSave();renderCostumes();toast('✅ Stock updated: '+v+' available');
 }
-function deleteCostume(i){if(!confirm('Costume delete karna hai?'))return;css_.splice(i,1);lsw(K.C,css_);fbSaveAll();renderCostumes();toast('🗑 Costume deleted!')}
+function deleteCostume(i){if(!confirm('Costume delete karna hai?'))return;css_.splice(i,1);lsw(K.C,css_);fbSave();renderCostumes();toast('🗑 Costume deleted!')}
 function resetCostumes(){if(!confirm('Sab costumes reset ho jayenge!'))return;lsw(K.C,DEF_CS);css_=JSON.parse(JSON.stringify(DEF_CS));renderCostumes();toast('✅ Costumes reset ho gaye!')}
 
 // ═══════════════════════════════════════
