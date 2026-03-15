@@ -597,6 +597,62 @@ input,select,textarea{font-size:16px!important} /* Prevent iOS zoom */
 <div class="toast" id="toast"></div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ═══════════════════════════════════════════════════
+// FIREBASE REALTIME DATABASE
+// ═══════════════════════════════════════════════════
+const FB = "https://garbautsav-898e2-default-rtdb.firebaseio.com";
+
+async function fbWrite(path, data) {
+  try {
+    await fetch(FB+'/'+path+'.json', {method:'PUT', body:JSON.stringify(data)});
+  } catch(e) { console.warn('FB write error:', e); }
+}
+
+async function fbRead(path) {
+  try {
+    const r = await fetch(FB+'/'+path+'.json');
+    const d = await r.json();
+    return d;
+  } catch(e) { return null; }
+}
+
+async function fbSaveAll() {
+  const evObj={}, psObj={}, csObj={};
+  evs.forEach(e=>{ evObj[e.id.replace(/[^a-zA-Z0-9_]/g,'_')]=e; });
+  pss.forEach(p=>{ psObj[p.id.replace(/[^a-zA-Z0-9_]/g,'_')]=p; });
+  css_.forEach(c=>{ csObj[c.id.replace(/[^a-zA-Z0-9_]/g,'_')]=c; });
+  await Promise.all([
+    fbWrite('events', evObj),
+    fbWrite('passes', psObj),
+    fbWrite('costumes', csObj),
+  ]);
+  console.log('Firebase synced!');
+}
+
+async function fbLoadAndInit() {
+  try {
+    const [evData, psData, csData, bkData] = await Promise.all([
+      fbRead('events'), fbRead('passes'),
+      fbRead('costumes'), fbRead('bookings')
+    ]);
+    if(evData) { evs=Object.values(evData); lsw(K.E,evs); }
+    else evs=ls(K.E,DEF_EV);
+    if(psData) { pss=Object.values(psData); lsw(K.P,pss); }
+    else pss=ls(K.P,DEF_PS);
+    if(csData) { css_=Object.values(csData); lsw(K.C,css_); }
+    else css_=ls(K.C,DEF_CS);
+    if(bkData) { bks=Object.values(bkData); lsw(K.B,bks); }
+    else bks=ls(K.B,DEF_BK);
+  } catch(e) {
+    evs=ls(K.E,DEF_EV); pss=ls(K.P,DEF_PS);
+    css_=ls(K.C,DEF_CS); bks=ls(K.B,DEF_BK);
+  }
+  if(bks.length<8) bks=[...DEF_BK,...bks];
+  renderKPIs(); renderBarChart(); renderDonut(); renderRecentTbl();
+  document.getElementById('salesBadge').textContent=bks.filter(b=>b.status==='confirmed').length;
+  showToast('Data loaded!');
+}
+
 // ═══════════════════════════════════════
 // SHARED STORAGE (same keys as main site)
 // ═══════════════════════════════════════
@@ -605,25 +661,27 @@ function ls(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):JSON
 function lsw(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
 
 const DEF_EV=[
-  {id:'e1',name:'Navratri Mahotsav 2025',org:'Shree Ram Cultural Club',loc:'GMDC Grounds, Ahmedabad',city:'Ahmedabad',d1:'2 Oct',d2:'11 Oct 2025',time:'8PM–1AM',tot:500,sold:327,th:'ts',em:'💃',feat:true,active:true},
-  {id:'e2',name:'Royal Garba Night',org:'Patel Cultural Society',loc:'Sports Complex, Surat',city:'Surat',d1:'3 Oct',d2:'12 Oct 2025',time:'7:30PM–12:30AM',tot:400,sold:198,th:'tg',em:'🪔',active:true},
-  {id:'e3',name:'Heritage Garba Utsav',org:'Vadodara Navratri Samiti',loc:'Sayaji Park, Vadodara',city:'Vadodara',d1:'2 Oct',d2:'11 Oct 2025',time:'8PM–1:30AM',tot:600,sold:287,th:'tr',em:'🎶',active:true},
-  {id:'e4',name:'Grand Navratri Celebration',org:'Rajkot Sanskriti Mandal',loc:'Race Course Ground, Rajkot',city:'Rajkot',d1:'4 Oct',d2:'13 Oct 2025',time:'8:30PM–1AM',tot:450,sold:134,th:'ts',em:'🌟',active:true},
-  {id:'e5',name:'Falguni Pathak Nite 2025',org:'Gandhinagar Events',loc:'Sector 7 Grounds, Gandhinagar',city:'Gandhinagar',d1:'5 Oct',d2:'14 Oct 2025',time:'9PM–2AM',tot:800,sold:512,th:'tg',em:'🎤',feat:true,active:true},
-  {id:'e6',name:'Dandiya Dhamaka Night',org:'Anand Cultural Sangam',loc:'Town Hall, Anand',city:'Anand',d1:'2 Oct',d2:'11 Oct 2025',time:'8PM–1AM',tot:350,sold:89,th:'tr',em:'🎀',active:true},
+  {id:'ev1',name:'Navratri Mahotsav 2026',organizer:'Shree Ram Cultural Club',org:'Shree Ram Cultural Club',location:'GMDC Grounds, Ahmedabad',loc:'GMDC Grounds, Ahmedabad',city:'ahmedabad',startDate:'2 Oct',endDate:'11 Oct 2026',d1:'2 Oct',d2:'11 Oct 2026',time:'8:00 PM - 1:00 AM',totalPasses:500,tot:500,soldPasses:423,sold:423,theme:'saffron',th:'ts',emoji:'💃',em:'💃',featured:true,feat:true,active:true},
+  {id:'ev2',name:'Royal Garba Night 2026',organizer:'Patel Cultural Society',org:'Patel Cultural Society',location:'Sports Complex, Surat',loc:'Sports Complex, Surat',city:'surat',startDate:'3 Oct',endDate:'12 Oct 2026',d1:'3 Oct',d2:'12 Oct 2026',time:'7:30 PM - 12:30 AM',totalPasses:400,tot:400,soldPasses:318,sold:318,theme:'gold',th:'tg',emoji:'🪔',em:'🪔',featured:true,feat:true,active:true},
+  {id:'ev3',name:'Heritage Garba Utsav',organizer:'Vadodara Navratri Samiti',org:'Vadodara Navratri Samiti',location:'Sayaji Park, Vadodara',loc:'Sayaji Park, Vadodara',city:'vadodara',startDate:'2 Oct',endDate:'11 Oct 2026',d1:'2 Oct',d2:'11 Oct 2026',time:'8:00 PM - 1:30 AM',totalPasses:600,tot:600,soldPasses:244,sold:244,theme:'royal',th:'tr',emoji:'🎶',em:'🎶',featured:false,feat:false,active:true},
+  {id:'ev4',name:'Falguni Pathak Live Night',organizer:'Rajkot Sanskriti Mandal',org:'Rajkot Sanskriti Mandal',location:'Race Course Ground, Rajkot',loc:'Race Course Ground, Rajkot',city:'rajkot',startDate:'4 Oct',endDate:'13 Oct 2026',d1:'4 Oct',d2:'13 Oct 2026',time:'9:00 PM - 2:00 AM',totalPasses:800,tot:800,soldPasses:675,sold:675,theme:'gold',th:'tg',emoji:'🎤',em:'🎤',featured:false,feat:false,active:true},
+  {id:'ev5',name:'Dandiya Dhamaka 2026',organizer:'Gandhinagar Events',org:'Gandhinagar Events',location:'Sector 7 Grounds, Gandhinagar',loc:'Sector 7 Grounds, Gandhinagar',city:'gandhinagar',startDate:'5 Oct',endDate:'14 Oct 2026',d1:'5 Oct',d2:'14 Oct 2026',time:'8:30 PM - 1:00 AM',totalPasses:350,tot:350,soldPasses:129,sold:129,theme:'saffron',th:'ts',emoji:'🎀',em:'🎀',featured:false,feat:false,active:true},
 ];
 const DEF_PS=[
-  {id:'silver',name:'Silver Entry',icon:'🎫',price:199,color:'silver',pop:false,popular:false,feats:['9 Raaton ki Entry','General Seating Area','Free Parking','Digital QR Ticket','Garba + DJ Music'],features:['9 Raaton ki Entry','General Seating Area','Free Parking','Digital QR Ticket','Garba + DJ Music']},
-  {id:'gold',name:'Gold Pass',icon:'🏅',price:349,color:'gold-pass',pop:true,popular:true,feats:['9 Raaton ki Entry','Premium Front Seating','Priority Entry Gate','Snacks Voucher ₹100/night','VIP Parking','Photo Booth Access'],features:['9 Raaton ki Entry','Premium Front Seating','Priority Entry Gate','Snacks Voucher ₹100/night','VIP Parking','Photo Booth Access']},
-  {id:'premium',name:'Premium VIP',icon:'💎',price:599,color:'premium',pop:false,popular:false,feats:['9 Raaton ki Entry','VIP AC Lounge','Dinner Buffet Included','Valet Parking','Welcome Gift Hamper','Dedicated Concierge'],features:['9 Raaton ki Entry','VIP AC Lounge','Dinner Buffet Included','Valet Parking','Welcome Gift Hamper','Dedicated Concierge']},
-  {id:'couple',name:'Couple Pass',icon:'💑',price:649,color:'couple',pop:false,popular:false,feats:['2 Logon ki Entry (9 Nights)','Couple Reserved Seating','Welcome Drinks Night 1 & 9','Couple Photo Session','Priority Parking','Couple Dance Zone'],features:['2 Logon ki Entry (9 Nights)','Couple Reserved Seating','Welcome Drinks Night 1 & 9','Couple Photo Session','Priority Parking','Couple Dance Zone']},
-  {id:'family',name:'Family Pack',icon:'🏠',price:999,color:'silver',pop:false,popular:false,feats:['4 Family Members (9 Nights)','Family Block Seating','Snack Combo ₹200 Voucher','1 Reserved Parking Spot','Kids Costume 20% Off','Family Welcome Kit'],features:['4 Family Members (9 Nights)','Family Block Seating','Snack Combo ₹200 Voucher','1 Reserved Parking Spot','Kids Costume 20% Off','Family Welcome Kit']},
+  {id:'silver',name:'Silver Entry',icon:'🎫',price:199,color:'silver',pop:false,popular:false,feats:['9 Raaton ki Entry','General Seating','Free Parking','Digital QR Ticket'],features:['9 Raaton ki Entry','General Seating','Free Parking','Digital QR Ticket']},
+  {id:'gold',name:'Gold Pass',icon:'🏅',price:349,color:'gold-pass',pop:true,popular:true,feats:['9 Raaton ki Entry','Premium Seating','Priority Entry','Snacks Rs.100/night','VIP Parking'],features:['9 Raaton ki Entry','Premium Seating','Priority Entry','Snacks Rs.100/night','VIP Parking']},
+  {id:'premium',name:'Premium VIP',icon:'💎',price:599,color:'premium',pop:false,popular:false,feats:['9 Raaton ki Entry','VIP AC Lounge','Dinner Buffet','Valet Parking','Gift Hamper'],features:['9 Raaton ki Entry','VIP AC Lounge','Dinner Buffet','Valet Parking','Gift Hamper']},
+  {id:'couple',name:'Couple Pass',icon:'💑',price:649,color:'couple',pop:false,popular:false,feats:['2 Persons (9 Nights)','Couple Seating','Welcome Drinks','Photo Session','Parking'],features:['2 Persons (9 Nights)','Couple Seating','Welcome Drinks','Photo Session','Parking']},
+  {id:'family',name:'Family Pack',icon:'🏠',price:999,color:'silver',pop:false,popular:false,feats:['4 Members (9 Nights)','Family Seating','Snack Combo','Parking','Kids Costume 20% Off'],features:['4 Members (9 Nights)','Family Seating','Snack Combo','Parking','Kids Costume 20% Off']},
 ];
 const DEF_CS=[
-  {id:'c1',name:'Bridal Chaniya Choli',em:'👗',cl:'c1',desc:'Heavy embroidery, mirror work, dupatta included.',tags:['Women','Traditional'],price:299,dep:500,sizes:['XS','S','M','L','XL'],avail:8,rating:4.9,rvs:124},
-  {id:'c2',name:'Designer Lehenga Set',em:'🥻',cl:'c2',desc:'Floral print lehenga with matching blouse.',tags:['Women','Designer'],price:349,dep:600,sizes:['S','M','L','XL'],avail:5,rating:4.8,rvs:89},
-  {id:'c3',name:'Rajasthani Kediya Set',em:'🧥',cl:'c3',desc:'Traditional Kediya with dhoti & pagdi.',tags:['Men','Traditional'],price:249,dep:400,sizes:['S','M','L','XL','XXL'],avail:12,rating:4.7,rvs:67},
-  {id:'c4',name:'Kids Chaniya Choli',em:'🎀',cl:'c4',desc:'Cute & comfortable for little girls.',tags:['Kids','Girls'],price:149,dep:200,sizes:['2-3Y','4-5Y','6-7Y','8-9Y'],avail:15,rating:5.0,rvs:203},
+  {id:'c1',name:'Bridal Chaniya Choli',em:'👗',emoji:'👗',cl:'ci1',colorClass:'ci1',desc:'Heavy embroidery, mirror work, dupatta included.',tags:['Women','Traditional'],price:299,pricePerDay:299,dep:500,deposit:500,sizes:['XS','S','M','L','XL'],avail:8,available:8,rating:4.9,reviews:124},
+  {id:'c2',name:'Designer Lehenga Set',em:'🥻',emoji:'🥻',cl:'ci2',colorClass:'ci2',desc:'Silk lehenga with matching blouse and dupatta.',tags:['Women','Designer'],price:349,pricePerDay:349,dep:600,deposit:600,sizes:['S','M','L','XL'],avail:5,available:5,rating:4.8,reviews:89},
+  {id:'c3',name:'Royal Sherwani + Pagdi',em:'🤴',emoji:'🤴',cl:'ci5',colorClass:'ci5',desc:'Gold zari sherwani with churidar and pagdi.',tags:['Men','Royal'],price:399,pricePerDay:399,dep:700,deposit:700,sizes:['S','M','L','XL'],avail:3,available:3,rating:4.9,reviews:56},
+  {id:'c4',name:'Rajasthani Kediya Set',em:'🧥',emoji:'🧥',cl:'ci3',colorClass:'ci3',desc:'Traditional Kediya with dhoti and pagdi.',tags:['Men','Traditional'],price:249,pricePerDay:249,dep:400,deposit:400,sizes:['S','M','L','XL','XXL'],avail:12,available:12,rating:4.7,reviews:67},
+  {id:'c5',name:'Kids Chaniya Choli',em:'🎀',emoji:'🎀',cl:'ci4',colorClass:'ci4',desc:'Cute for little girls age 3-12. Soft fabric!',tags:['Kids','Girls'],price:149,pricePerDay:149,dep:200,deposit:200,sizes:['3-4Y','5-6Y','7-8Y','9-10Y'],avail:18,available:18,rating:5.0,reviews:203},
+  {id:'c6',name:'Couple Matching Set',em:'💑',emoji:'💑',cl:'ci1',colorClass:'ci1',desc:'Matching outfit for couples! Same color theme.',tags:['Couple','Matching'],price:549,pricePerDay:549,dep:900,deposit:900,sizes:['Mix Sizes'],avail:6,available:6,rating:4.9,reviews:78},
+  {id:'c7',name:'Navratri Dupatta + Dandiya',em:'🪇',emoji:'🪇',cl:'ci3',colorClass:'ci3',desc:'Festive dupatta + dandiya sticks. 8 colors!',tags:['Unisex','Accessories'],price:99,pricePerDay:99,dep:150,deposit:150,sizes:['Free Size'],avail:35,available:35,rating:4.6,reviews:312},
 ];
 const DEF_BK=[
   {tid:'GU20251001',nm:'Priya Sharma',ph:'9876543210',em:'priya@gmail.com',ev:'Navratri Mahotsav 2025',ps:'Gold Pass',qty:1,amt:356,disc:0,status:'confirmed',date:'01/10/2025',checkedIn:true},
@@ -644,378 +702,124 @@ let evs,pss,css_,bks,salesFlt='all';
 // ═══════════════════════════════════════
 // AUTH
 // ═══════════════════════════════════════
-// ══════════════════════════════════════════════════════════
-// 🔌 BACKEND API INTEGRATION — ADMIN PANEL
-// ══════════════════════════════════════════════════════════
-
-const API = (()=>{
-  // Render pe deploy hone ke baad yahan apna URL daalo
-  const BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:3000'
-    : 'https://garbautsav.onrender.com';
-
-  let TOKEN = localStorage.getItem('gu_admin_token') || '';
-
-  function setToken(t){ TOKEN=t; localStorage.setItem('gu_admin_token', t); }
-  function clearToken(){ TOKEN=''; localStorage.removeItem('gu_admin_token'); }
-
-  async function req(method, path, body){
-    const opts = {
-      method,
-      headers: { 'Content-Type':'application/json', ...(TOKEN ? {'Authorization':'Bearer '+TOKEN} : {}) }
-    };
-    if(body) opts.body = JSON.stringify(body);
-    try {
-      const res = await fetch(BASE+path, opts);
-      const data = await res.json();
-      if(!res.ok) throw new Error(data.message || data.error || 'Server error');
-      return data;
-    } catch(e) {
-      console.warn('API error:', e.message);
-      throw e;
-    }
-  }
-
-  return {
-    BASE,
-    setToken, clearToken,
-    get:    (path)        => req('GET',    path),
-    post:   (path, body)  => req('POST',   path, body),
-    put:    (path, body)  => req('PUT',    path, body),
-    delete: (path)        => req('DELETE', path),
-    isLoggedIn: ()        => !!TOKEN,
-    getToken:   ()        => TOKEN,
-  };
-})();
-
-// ── Login via backend ──
 async function doLogin(){
-  const em = document.getElementById('lEmail').value.trim();
-  const pw = document.getElementById('lPass').value;
-  const err = document.getElementById('lerr');
-  if(!em||!pw){ err.textContent='⚠️ Email aur password daalo!'; return; }
-
-  err.textContent = '⏳ Login ho raha hai...';
-  try {
-    const data = await API.post('/api/auth/login', { email:em, password:pw });
-    API.setToken(data.token);
+  const em=document.getElementById('lEmail').value.trim();
+  const pw=document.getElementById('lPass').value;
+  const err=document.getElementById('lerr');
+  if(!em||!pw){err.textContent='⚠️ Email aur password daalo!';return}
+  if(pw==='admin123'&&em.includes('@')){
     document.getElementById('loginScreen').style.display='none';
-    const name = (data.user?.name || em.split('@')[0]).replace(/\./g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-    document.getElementById('sbName').textContent = name;
-    document.getElementById('sbAv').textContent   = name.charAt(0).toUpperCase();
-    document.getElementById('tbAv').textContent   = name.charAt(0).toUpperCase();
-    document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+    await fbLoadAndInit(); return;
+    document.getElementById('sbName').textContent=em.split('@')[0].replace(/\./g,' ').split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+    document.getElementById('sbAv').textContent=em.charAt(0).toUpperCase();
+    document.getElementById('tbAv').textContent=em.charAt(0).toUpperCase();
+    document.getElementById('todayDate').textContent=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
     initDashboard();
-  } catch(e) {
-    // Backend na mile toh local fallback
-    if(pw==='admin123' && em.includes('@')){
-      console.warn('Backend offline, using local mode');
-      err.textContent='⚠️ Backend offline — local mode mein login ho raha hai';
-      setTimeout(()=>{
-        document.getElementById('loginScreen').style.display='none';
-        const name = em.split('@')[0].replace(/\./g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-        document.getElementById('sbName').textContent = name;
-        document.getElementById('sbAv').textContent   = name.charAt(0).toUpperCase();
-        document.getElementById('tbAv').textContent   = name.charAt(0).toUpperCase();
-        document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-        initDashboard();
-      }, 1000);
-    } else {
-      err.textContent = '❌ Wrong credentials! Email ya password galat hai.';
-    }
+  } else {
+    err.textContent='❌ Wrong credentials! Use admin123';
   }
 }
-
-// ── Logout ──
 function doLogout(){
-  API.clearToken();
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('lPass').value='';
 }
 
-// ── Init Dashboard: load from backend, fallback to localStorage ──
-async function initDashboard(){
-  showToast('⏳ Data load ho raha hai...', 'info');
-  
-  try {
-    // Load events from backend
-    const evData = await API.get('/api/events?admin=true');
-    if(evData && evData.length >= 0){
-      evs = evData.map(e=>({
-        ...e,
-        id: e.id || e._id,
-        name: e.name,
-        org: e.organizer || e.org,
-        organizer: e.organizer || e.org,
-        loc: e.location || e.loc,
-        location: e.location || e.loc,
-        city: (e.city||'').toLowerCase(),
-        d1: e.startDate || e.d1,
-        d2: e.endDate || e.d2,
-        startDate: e.startDate || e.d1,
-        endDate: e.endDate || e.d2,
-        tot: e.totalPasses || e.tot || 500,
-        totalPasses: e.totalPasses || e.tot || 500,
-        sold: e.soldPasses || e.sold || 0,
-        soldPasses: e.soldPasses || e.sold || 0,
-        em: e.emoji || e.em || '🎪',
-        emoji: e.emoji || e.em || '🎪',
-        th: e.theme || e.th || 'saffron',
-        theme: e.theme || e.th || 'saffron',
-        feat: e.featured || e.feat || false,
-        featured: e.featured || e.feat || false,
-        active: e.is_active !== false,
-      }));
-      lsw(K.E, evs);
-    }
-  } catch(e){ evs = ls(K.E, DEF_EV); console.warn('Events: using local', e.message); }
-
-  try {
-    // Load passes from backend
-    const psData = await API.get('/api/passes');
-    if(psData && psData.length >= 0){
-      pss = psData.map(p=>({
-        ...p,
-        id: p.id || p._id,
-        feats: p.features || p.feats || [],
-        features: p.features || p.feats || [],
-        pop: p.popular || p.pop || false,
-        popular: p.popular || p.pop || false,
-      }));
-      lsw(K.P, pss);
-    }
-  } catch(e){ pss = ls(K.P, DEF_PS); console.warn('Passes: using local', e.message); }
-
-  try {
-    // Load costumes from backend
-    const csData = await API.get('/api/costumes');
-    if(csData && csData.length >= 0){
-      css_ = csData.map(c=>({
-        ...c,
-        id: c.id || c._id,
-        em: c.emoji || c.em || '👗',
-        emoji: c.emoji || c.em || '👗',
-        cl: c.colorClass || c.cl || 'ci1',
-        colorClass: c.colorClass || c.cl || 'ci1',
-        price: c.pricePerDay || c.price || 0,
-        pricePerDay: c.pricePerDay || c.price || 0,
-        dep: c.deposit || c.dep || 0,
-        deposit: c.deposit || c.dep || 0,
-        avail: c.available || c.avail || 0,
-        available: c.available || c.avail || 0,
-      }));
-      lsw(K.C, css_);
-    }
-  } catch(e){ css_ = ls(K.C, DEF_CS); console.warn('Costumes: using local', e.message); }
-
-  try {
-    // Load bookings from backend
-    const bkData = await API.get('/api/bookings');
-    if(bkData && (bkData.bookings||bkData).length >= 0){
-      bks = (bkData.bookings || bkData).map(b=>({
-        ...b,
-        id: b.id || b._id || b.ticket_id,
-        ticket: b.ticket_id || b.ticket || b.id,
-        buyer: b.buyer_name || b.buyer || b.name,
-        phone: b.buyer_phone || b.phone,
-        event: b.event_name || b.event,
-        pass: b.pass_name || b.pass,
-        qty: b.quantity || b.qty || 1,
-        amt: b.amount || b.amt || 0,
-        status: b.payment_status || b.status || 'confirmed',
-        date: b.created_at || b.date || new Date().toISOString(),
-      }));
-      lsw(K.B, bks);
-    }
-  } catch(e){ bks = ls(K.B, DEF_BK); console.warn('Bookings: using local', e.message); }
-
-  if(bks.length < 8) bks = [...DEF_BK, ...bks];
-
-  renderKPIs();
-  renderBarChart();
-  renderDonut();
-  renderRecentTbl();
-  document.getElementById('salesBadge').textContent = bks.filter(b=>b.status==='confirmed').length;
-  showToast('✅ Data load ho gaya!', 'success');
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+function initDashboard(){
+  evs=ls(K.E,DEF_EV); pss=ls(K.P,DEF_PS); css_=ls(K.C,DEF_CS); bks=ls(K.B,DEF_BK);
+  if(bks.length<8)bks=[...DEF_BK,...bks]; // ensure demo data
+  renderKPIs(); renderBarChart(); renderDonut(); renderRecentTbl();
+  document.getElementById('salesBadge').textContent=bks.filter(b=>b.status==='confirmed').length;
 }
 
-// ── Save Event to backend + localStorage ──
-async function saveEvent(){
-  const name   = document.getElementById('feName').value.trim();
-  const org    = document.getElementById('feOrg').value.trim();
-  const city   = document.getElementById('feCity').value.trim();
-  const venue  = document.getElementById('feVenue').value.trim();
-  const start  = document.getElementById('feStart').value;
-  const end    = document.getElementById('feEnd').value;
-  const time   = document.getElementById('feTime').value.trim();
-  const tot    = parseInt(document.getElementById('fePasses').value)||500;
-  const em     = document.getElementById('feEmoji').value.trim()||'🎪';
-  const th     = document.getElementById('feTheme').value||'ts';
-  const feat   = document.getElementById('feFeat').checked;
-  if(!name){ showToast('⚠️ Event name bharo!', 'error'); return; }
+// ═══════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════
+function renderKPIs(){
+  const rev=bks.filter(b=>b.status==='confirmed').reduce((s,b)=>s+b.amt,0);
+  const tix=bks.filter(b=>b.status==='confirmed').reduce((s,b)=>s+b.qty,0);
+  document.getElementById('kgrid').innerHTML=`
+    <div class="kpi rev"><div class="kico">💰</div><div class="klbl">Total Revenue</div><div class="kval">₹${fmt(rev)}</div><div class="kchg up">▲ 28% vs last year</div></div>
+    <div class="kpi tkt"><div class="kico">🎟</div><div class="klbl">Passes Sold</div><div class="kval">${tix.toLocaleString()}</div><div class="kchg up">▲ 15% growth</div></div>
+    <div class="kpi evt"><div class="kico">🎪</div><div class="klbl">Active Events</div><div class="kval">${evs.filter(e=>e.active!==false).length}</div><div class="kchg up">▲ 2 new events</div></div>
+    <div class="kpi prf"><div class="kico">💰</div><div class="klbl">Net Profit</div><div class="kval">₹${fmt(Math.round(rev*0.35))}</div><div class="kchg up">▲ 35% margin</div></div>`;
+}
+function renderBarChart(){
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const vals=[142,198,167,221,189,312,276];
+  const mx=Math.max(...vals);
+  document.getElementById('barChart').innerHTML=days.map((d,i)=>`
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="font-size:10px;color:var(--mu);font-weight:600">${vals[i]}</div>
+      <div style="flex:1;width:100%;display:flex;align-items:flex-end">
+        <div style="width:100%;height:${(vals[i]/mx)*120}px;background:linear-gradient(180deg,var(--p),var(--p2));border-radius:5px 5px 0 0;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'" title="${vals[i]} tickets"></div>
+      </div>
+      <div style="font-size:9px;color:var(--mu)">${d}</div>
+    </div>`).join('');
+}
+function renderDonut(){
+  const data=[{l:'Gold Pass',v:38,c:'#F5A623'},{l:'Silver',v:24,c:'#6B7280'},{l:'Premium',v:22,c:'#8B5CF6'},{l:'Couple',v:16,c:'#E31E24'}];
+  const total=100,cx=60,cy=60,r=45,circ=2*Math.PI*r;
+  let off=0;
+  const segs=data.map(d=>{
+    const len=(d.v/total)*circ;
+    const seg=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.c}" stroke-width="14" stroke-dasharray="${len} ${circ-len}" stroke-dashoffset="${-off}" style="cursor:pointer" title="${d.l}: ${d.v}%"/>`;
+    off+=len;return seg;
+  }).join('');
+  document.getElementById('donutWrap').innerHTML=`
+    <svg width="120" height="120" viewBox="0 0 120 120" style="transform:rotate(-90deg)">${segs}</svg>
+    <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px">
+      ${data.map(d=>`<div style="display:flex;align-items:center;justify-content:space-between;font-size:11px"><div style="display:flex;align-items:center;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:${d.c}"></div><span style="color:var(--mu)">${d.l}</span></div><span style="font-weight:700">${d.v}%</span></div>`).join('')}
+    </div>`;
+}
+function renderRecentTbl(){
+  document.getElementById('recentTbl').innerHTML=bks.slice(0,6).map(b=>`
+    <tr>
+      <td><code style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px">${b.tid}</code></td>
+      <td><strong>${b.nm}</strong></td>
+      <td style="font-size:11px;color:var(--mu)">${(b.ev||'').slice(0,20)}…</td>
+      <td><span class="ptag ${ptc(b.ps)}">${b.ps}</span></td>
+      <td><strong>₹${b.amt}</strong></td>
+      <td><span class="sts ${sc(b.status)}">${sl(b.status)}</span></td>
+      <td style="font-size:11px;color:var(--mu)">${b.date}</td>
+    </tr>`).join('');
+}
 
-  const location  = venue ? venue+', '+city : city;
-  const startDate = start ? new Date(start).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : '2 Oct';
-  const endDate   = end   ? new Date(end).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '11 Oct 2026';
-  const theme     = th==='ts'?'saffron': th==='tg'?'gold':'royal';
-
-  const newEv = {
-    name, organizer:org||city+' Events', org:org||city+' Events',
-    location, loc:location,
-    city:city.toLowerCase(),
-    startDate, endDate, d1:startDate, d2:endDate,
-    time:time||'8:00 PM – 1:00 AM',
-    totalPasses:tot, tot,
-    soldPasses:0, sold:0,
-    theme, th,
-    emoji:em, em,
-    featured:feat, feat,
-    active:true,
-  };
-
-  // Try backend first
-  try {
-    const saved = await API.post('/api/events', newEv);
-    newEv.id = saved.id || saved._id || 'ev_'+Date.now();
-    showToast('✅ Event backend pe save ho gaya! Sab jagah dikhega.', 'success');
-  } catch(e) {
-    newEv.id = 'ev_'+Date.now();
-    console.warn('Backend save failed, saving locally:', e.message);
-    showToast('⚠️ Backend offline — local save ho gaya', 'warning');
-  }
-
-  evs.push(newEv);
-  lsw(K.E, evs);
-  closeMo('moEvent');
-  renderEvents();
-  ['feName','feOrg','feCity','feVenue','feTime','feEmoji'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.value='';
+// ═══════════════════════════════════════
+// SALES
+// ═══════════════════════════════════════
+function renderSales(){
+  const q=(document.getElementById('srchInput')?.value||'').toLowerCase();
+  const flt=bks.filter(b=>{
+    const mf=salesFlt==='all'||b.status===salesFlt;
+    const mq=!q||b.nm?.toLowerCase().includes(q)||b.tid?.toLowerCase().includes(q)||b.ev?.toLowerCase().includes(q);
+    return mf&&mq;
   });
-  document.getElementById('fePasses').value='';
+  document.getElementById('salesTbl').innerHTML=flt.slice(0,100).map(b=>`
+    <tr>
+      <td><code style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px">${b.tid}</code></td>
+      <td><strong>${b.nm||'—'}</strong></td>
+      <td style="font-size:11px">${b.ph||'—'}</td>
+      <td style="font-size:11px;color:var(--mu)">${(b.ev||'').slice(0,18)}…</td>
+      <td><span class="ptag ${ptc(b.ps)}">${b.ps||'—'}</span></td>
+      <td>${b.qty||1}</td>
+      <td><strong>₹${b.amt||0}</strong></td>
+      <td><span class="sts ${sc(b.status)}">${sl(b.status)}</span></td>
+      <td style="font-size:11px;color:var(--mu)">${b.date||'—'}</td>
+      <td style="display:flex;gap:5px">
+        <button class="btn-sm btn-ok" onclick="updateStatus('${b.tid}','confirmed')">✓</button>
+        <button class="btn-sm btn-del" onclick="updateStatus('${b.tid}','cancelled')">✗</button>
+      </td>
+    </tr>`).join('')||'<tr><td colspan="10" style="text-align:center;padding:28px;color:var(--mu)">Koi booking nahi mili</td></tr>';
 }
-
-// ── Delete Event ──
-async function deleteEvent(id){
-  if(!confirm('Event delete karna chahte ho?')) return;
-  try { await API.delete('/api/events/'+id); } catch(e){ console.warn('Delete backend failed:', e.message); }
-  evs = evs.filter(e=>e.id!==id);
-  lsw(K.E, evs);
-  renderEvents();
-  showToast('🗑️ Event delete ho gaya!', 'success');
+function setFlt(f,el){salesFlt=f;document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderSales()}
+function updateStatus(tid,st){
+  const b=bks.find(x=>x.tid===tid);if(b)b.status=st;
+  lsw(K.B,bks);renderSales();renderRecentTbl();
+  toast(st==='confirmed'?'✓ Booking confirmed!':'✗ Booking cancelled!');
 }
-
-// ── Toggle Event Active ──
-async function toggleActive(id){
-  const ev = evs.find(e=>e.id===id);
-  if(!ev) return;
-  ev.active = !ev.active;
-  try { await API.put('/api/events/'+id, {is_active: ev.active}); } catch(e){ console.warn('Toggle backend failed:', e.message); }
-  lsw(K.E, evs);
-  renderEvents();
-  showToast(ev.active ? '✅ Event active!' : '⏸️ Event paused!', 'success');
-}
-
-// ── Save Pass ──
-async function savePass(){
-  const name  = document.getElementById('fpName').value.trim();
-  const price = parseInt(document.getElementById('fpPrice').value);
-  const icon  = document.getElementById('fpIcon').value.trim()||'🎟';
-  const color = document.getElementById('fpColor').value||'silver';
-  const feats = (document.getElementById('fpFeats').value||'').split('\n').map(s=>s.trim()).filter(Boolean);
-  const pop   = document.getElementById('fpPop').checked;
-  if(!name||!price){ showToast('⚠️ Name aur price bharo!', 'error'); return; }
-
-  const featList = feats.length ? feats : ['Single entry','All 9 nights'];
-  const newPs = { name, icon, price, color, feats:featList, features:featList, pop, popular:pop };
-
-  try {
-    const saved = await API.post('/api/passes', newPs);
-    newPs.id = saved.id || saved._id || 'ps_'+Date.now();
-    showToast('✅ Pass backend pe save ho gaya!', 'success');
-  } catch(e) {
-    newPs.id = 'ps_'+Date.now();
-    showToast('⚠️ Backend offline — local save', 'warning');
-  }
-
-  pss.push(newPs);
-  lsw(K.P, pss);
-  closeMo('moPass');
-  renderPasses();
-  ['fpName','fpIcon','fpFeats'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-  document.getElementById('fpPrice').value='';
-  document.getElementById('fpPop').checked=false;
-}
-
-// ── Delete Pass ──
-async function deletePass(id){
-  if(!confirm('Pass delete karna chahte ho?')) return;
-  try { await API.delete('/api/passes/'+id); } catch(e){ console.warn('Delete failed:', e.message); }
-  pss = pss.filter(p=>p.id!==id);
-  lsw(K.P, pss);
-  renderPasses();
-  showToast('🗑️ Pass delete ho gaya!', 'success');
-}
-
-// ── Save Costume ──
-async function saveCostume(){
-  const name  = document.getElementById('fcName').value.trim();
-  const desc  = document.getElementById('fcDesc').value.trim();
-  const em    = document.getElementById('fcEmoji').value.trim()||'👗';
-  const price = parseInt(document.getElementById('fcPrice').value)||0;
-  const dep   = parseInt(document.getElementById('fcDep').value)||0;
-  const avail = parseInt(document.getElementById('fcAvail').value)||0;
-  const sizes = (document.getElementById('fcSizes').value||'').split(',').map(s=>s.trim()).filter(Boolean);
-  const tags  = (document.getElementById('fcTags').value||'').split(',').map(s=>s.trim()).filter(Boolean);
-  const cl    = document.getElementById('fcCl').value||'ci1';
-  if(!name){ showToast('⚠️ Costume name bharo!', 'error'); return; }
-
-  const newCs = {
-    name, em, emoji:em, cl, colorClass:cl,
-    desc:desc||name, tags,
-    price, pricePerDay:price,
-    dep, deposit:dep,
-    sizes, avail, available:avail,
-    rating:5.0, reviews:0,
-  };
-
-  try {
-    const saved = await API.post('/api/costumes', newCs);
-    newCs.id = saved.id || saved._id || 'c_'+Date.now();
-    showToast('✅ Costume backend pe save ho gaya!', 'success');
-  } catch(e) {
-    newCs.id = 'c_'+Date.now();
-    showToast('⚠️ Backend offline — local save', 'warning');
-  }
-
-  css_.push(newCs);
-  lsw(K.C, css_);
-  closeMo('moCostume');
-  renderCostumes();
-  ['fcName','fcDesc','fcEmoji','fcSizes','fcTags'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-  ['fcPrice','fcDep','fcAvail'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-}
-
-// ── Delete Costume ──
-async function deleteCostume(id){
-  if(!confirm('Costume delete karna chahte ho?')) return;
-  try { await API.delete('/api/costumes/'+id); } catch(e){ console.warn('Delete failed:', e.message); }
-  css_ = css_.filter(c=>c.id!==id);
-  lsw(K.C, css_);
-  renderCostumes();
-  showToast('🗑️ Costume delete ho gaya!', 'success');
-}
-
-// ── Update Booking Status ──
-async function updateStatus(id, status){
-  try { await API.put('/api/bookings/'+id+'/status', {status}); } catch(e){ console.warn('Status update failed:', e.message); }
-  const bk = bks.find(b=>b.id===id);
-  if(bk){ bk.status=status; bk.payment_status=status; }
-  lsw(K.B, bks);
-  renderSales();
-  showToast('✅ Status update ho gaya!', 'success');
-}
-
-
 function exportCSV(){
   const rows=[['Ticket','Name','Phone','Email','Event','Pass','Qty','Amount','Status','Date'],
     ...bks.map(b=>[b.tid,b.nm,b.ph,b.em,b.ev,b.ps,b.qty,b.amt,b.status,b.date])];
@@ -1106,17 +910,19 @@ function saveEvent(){
   const endDate=end?new Date(end).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'11 Oct 2026';
   const theme=th==='ts'?'saffron':th==='tg'?'gold':'royal';
   evs.push({
-    id:'ev_'+Date.now(), name,
-    organizer:org||city+' Events',
-    location, city:city.toLowerCase(),
-    startDate, endDate, time:time||'8PM–1AM',
-    totalPasses:tot, soldPasses:0,
-    theme, emoji:em, featured:feat, active:true,
-    // also keep short keys for admin display
-    org:org||city+' Events', loc:location,
-    d1:startDate, d2:endDate, tot, sold:0, em, th, feat
+    id:'ev_'+Date.now(),
+    name:name,
+    organizer:org||city+' Events', org:org||city+' Events',
+    location:location||city, loc:location||city,
+    city:city.toLowerCase(),
+    startDate:startDate, endDate:endDate, d1:startDate, d2:endDate,
+    time:time||'8:00 PM - 1:00 AM',
+    totalPasses:tot, tot:tot, soldPasses:0, sold:0,
+    theme:theme||'saffron', th:th,
+    emoji:em, em:em,
+    featured:feat, feat:feat, active:true
   });
-  lsw(K.E,evs);closeMo('moEvent');renderEvents();
+  lsw(K.E,evs);fbSaveAll();closeMo('moEvent');renderEvents();
   ['feName','feOrg','feCity','feVenue','feTime','feEmoji'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('fePasses').value='';
   toast('✅ Event published! Website pe bhi dikhega.');
@@ -1128,8 +934,8 @@ function editEvent(i){
   document.getElementById('fePasses').value=ev.tot||500;document.getElementById('feEmoji').value=ev.em||'🎪';
   openMo('moEvent');toast('✏️ Data load hua — edit karke save karo');
 }
-function toggleActive(i){evs[i].active=!evs[i].active;lsw(K.E,evs);renderEvents();toast('✅ Status update ho gaya!')}
-function deleteEvent(i){if(!confirm('Yeh event delete karna hai?'))return;evs.splice(i,1);lsw(K.E,evs);renderEvents();toast('🗑 Event deleted!')}
+function toggleActive(i){evs[i].active=!evs[i].active;lsw(K.E,evs);fbSaveAll();renderEvents();toast('✅ Status update ho gaya!')}
+function deleteEvent(i){if(!confirm('Yeh event delete karna hai?'))return;evs.splice(i,1);lsw(K.E,evs);fbSaveAll();renderEvents();toast('🗑 Event deleted!')}
 
 // ═══════════════════════════════════════
 // PASSES CRUD
@@ -1160,8 +966,8 @@ function savePass(){
   const feats=(document.getElementById('fpFeats').value||'').split('\n').map(s=>s.trim()).filter(Boolean);
   const pop=document.getElementById('fpPop').checked;
   if(!name||!price){toast('⚠️ Name aur price bharo!');return}
-  pss.push({id:'ps_'+Date.now(),name,icon,price,color,feats:feats.length?feats:['Single entry','All 9 nights'],pop});
-  lsw(K.P,pss);closeMo('moPass');renderPasses();
+  pss.push({id:'ps_'+Date.now(),name:name,icon:icon,price:price,color:color,feats:feats.length?feats:['Single entry','All 9 nights'],features:feats.length?feats:['Single entry','All 9 nights'],pop:pop,popular:pop});
+  lsw(K.P,pss);fbSaveAll();closeMo('moPass');renderPasses();
   ['fpName','fpIcon','fpFeats'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   document.getElementById('fpPrice').value='';document.getElementById('fpPop').checked=false;
   toast('✅ Pass add ho gaya! Website pe bhi dikhega.');
@@ -1173,7 +979,7 @@ function editPass(i){
   document.getElementById('fpFeats').value=(p.feats||[]).join('\n');document.getElementById('fpPop').checked=!!p.pop;
   openMo('moPass');toast('✏️ Data load hua — edit karke save karo');
 }
-function deletePass(i){if(!confirm('Pass delete karna hai?'))return;pss.splice(i,1);lsw(K.P,pss);renderPasses();toast('🗑 Pass deleted!')}
+function deletePass(i){if(!confirm('Pass delete karna hai?'))return;pss.splice(i,1);lsw(K.P,pss);fbSaveAll();renderPasses();toast('🗑 Pass deleted!')}
 function resetPasses(){if(!confirm('Sab passes reset ho jayenge!'))return;lsw(K.P,DEF_PS);pss=JSON.parse(JSON.stringify(DEF_PS));renderPasses();toast('✅ Passes reset ho gaye!')}
 
 // ═══════════════════════════════════════
@@ -1213,16 +1019,18 @@ function saveCostume(){
   const desc=document.getElementById('fcDesc').value.trim();
   if(!name||!price){toast('⚠️ Name aur price bharo!');return}
   css_.push({
-    id:'c_'+Date.now(), name,
-    em, emoji:em,
-    cl:'ci'+(Math.floor(Math.random()*5)+1), colorClass:'ci'+(Math.floor(Math.random()*5)+1),
-    desc:desc||name, tags,
-    price, pricePerDay:price,
-    dep, deposit:dep,
-    sizes, avail, available:avail,
-    rating:5.0, rvs:0, reviews:0
+    id:'c_'+Date.now(),
+    name:name,
+    em:em, emoji:em,
+    cl:'ci'+(Math.floor(Math.random()*5)+1),
+    colorClass:'ci'+(Math.floor(Math.random()*5)+1),
+    desc:desc||name, tags:tags||[],
+    price:price, pricePerDay:price,
+    dep:dep, deposit:dep,
+    sizes:sizes||[], avail:avail, available:avail,
+    rating:5.0, reviews:0
   });
-  lsw(K.C,css_);closeMo('moCostume');renderCostumes();
+  lsw(K.C,css_);fbSaveAll();closeMo('moCostume');renderCostumes();
   ['fcName','fcDesc','fcEmoji','fcSizes','fcTags'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   ['fcPrice','fcDep','fcAvail'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   toast('✅ Costume add ho gaya! Website pe bhi dikhega.');
@@ -1239,9 +1047,9 @@ function editCostume(i){
 function updateStock(i){
   const n=prompt(`"${css_[i].name}" ki available qty:`,css_[i].avail);
   if(n===null)return;const v=parseInt(n);if(isNaN(v)||v<0){toast('⚠️ Valid number daalo!');return}
-  css_[i].avail=v;lsw(K.C,css_);renderCostumes();toast('✅ Stock updated: '+v+' available');
+  css_[i].avail=v;lsw(K.C,css_);fbSaveAll();renderCostumes();toast('✅ Stock updated: '+v+' available');
 }
-function deleteCostume(i){if(!confirm('Costume delete karna hai?'))return;css_.splice(i,1);lsw(K.C,css_);renderCostumes();toast('🗑 Costume deleted!')}
+function deleteCostume(i){if(!confirm('Costume delete karna hai?'))return;css_.splice(i,1);lsw(K.C,css_);fbSaveAll();renderCostumes();toast('🗑 Costume deleted!')}
 function resetCostumes(){if(!confirm('Sab costumes reset ho jayenge!'))return;lsw(K.C,DEF_CS);css_=JSON.parse(JSON.stringify(DEF_CS));renderCostumes();toast('✅ Costumes reset ho gaye!')}
 
 // ═══════════════════════════════════════
